@@ -54,6 +54,7 @@ contract CrowdFunder {
 
   function cancelCampaign (address _campaignAddress) public {
     delete(campaigns[_campaignAddress]);
+    delete(campaignAddresses[_campaignAddress]);
     // emit CampaignCanceled(_campaignAddress, campaigns[_campaignAddress].creator(), campaigns[_campaignAddress].goalAmount());
     emit CampaignCanceled(_campaignAddress);
   }
@@ -69,6 +70,7 @@ contract CrowdFunder {
   }
 
   function getCampaign(address _campaignAddress) external view returns (Campaign.CampaignObject memory) {
+    if(!campaignAddresses[_campaignAddress]){revert CrowdFunder__NoSuchCampaign(_campaignAddress);}
     return campaigns[_campaignAddress].getCampaignDetails();
   }
 }

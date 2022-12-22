@@ -12,6 +12,7 @@ error Campaign__PayoutFailed();
 error Campaign__NoDonationsHere(address _donatorAddress);
 error Campaign__RefundFailed();
 error Campaign__UpkeepNotNeeded();
+error Campaign__NotWithrawable(address _campaignAddress);
 
 contract Campaign is KeeperCompatibleInterface {
   using SafeMath for uint256;
@@ -41,6 +42,8 @@ contract Campaign is KeeperCompatibleInterface {
   uint256 private s_lastTimeStamp;
   State public state = State.Fundraising; // default state
   mapping (address => uint256) public donations;
+  bool public nowPayable;
+  bool public nowRefunding;
 
 
   struct CampaignObject {
@@ -78,9 +81,8 @@ contract Campaign is KeeperCompatibleInterface {
     _;
   }
 
-
   constructor (
-    address payable _creator,
+    address _creator,
     uint64 _creatorType,
     string memory _title,
     string memory _description,
@@ -88,7 +90,7 @@ contract Campaign is KeeperCompatibleInterface {
     uint256 _goalAmount,
     uint256 _duration
   ) {
-    creator = _creator;
+    creator = payable(_creator);
     creatorType = CreatorType(_creatorType);
     title = _title;
     description = _description;
@@ -97,6 +99,8 @@ contract Campaign is KeeperCompatibleInterface {
     duration = _duration;
     s_lastTimeStamp = block.timestamp;
     currentBalance = 0;
+    nowPayable = false;
+    nowRefunding = false;
   }
 
   function donate() external inState(State.Fundraising) payable {
@@ -126,15 +130,18 @@ contract Campaign is KeeperCompatibleInterface {
     if(!upkeepNeeded){revert Campaign__UpkeepNotNeeded();}
     if((block.timestamp - s_lastTimeStamp) > duration){
       state = State.Expired;
+      // allow creator withdraw funds
+      nowPayable = true; 
     }
     else if(currentBalance >= goalAmount){
       state = State.Successful;
-      payout();
+      nowPayable = true;
       emit CampaignSuccessful(address(this));
     }
   }
 
-  function payout() internal inState(State.Successful) isCreator {
+  function payout() internal isCreator {
+    if(!nowPayable){revert Campaign__NotWithrawable(address(this));}
     uint256 totalRaised = currentBalance;
     currentBalance = 0;
     (bool success, ) = creator.call{value: totalRaised}("");
@@ -142,19 +149,19 @@ contract Campaign is KeeperCompatibleInterface {
     else{revert Campaign__PayoutFailed();}
   }
 
-  function refund() public inState(State.Expired) {
-    if(donations[msg.sender] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
-    uint256 amountToRefund = donations[msg.sender];
-    donations[msg.sender] = 0;
+  function refund(address _donator) public inState(State.Expired) {
+    if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
+    uint256 amountToRefund = donations[_donator];
+    donations[_donator] = 0;
     currentBalance = currentBalance.sub(amountToRefund);
-    (bool success, ) = payable(msg.sender).call{value: amountToRefund}("");
+    (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns the money to mapping
   }
 
 
   // update functions
   function updateDuration(uint256 _addedTime) public {
-    duration = duration + _addedTime;
+    duration = duration.add(_addedTime);
   }
 
   function updateTitle(string memory _newTitle) public {
@@ -165,6 +172,9 @@ contract Campaign is KeeperCompatibleInterface {
     description = _newDescription;
   }
   
+  function allowRefunds() public {
+    nowRefunding = true;
+  }
 
   // getter functions
   function getBalance() public view returns(uint256) {

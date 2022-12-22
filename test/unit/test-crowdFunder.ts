@@ -1,5 +1,5 @@
 import { assert, expect } from "chai"
-import { BigNumber, ContractTransaction } from "ethers"
+import { BigNumber, ContractReceipt, ContractTransaction } from "ethers"
 import { network, deployments, ethers, getNamedAccounts } from "hardhat"
 import { developmentChains } from "../../helper-hardhat-config"
 import { CrowdFunder } from "../../typechain-types"
@@ -12,6 +12,8 @@ import { CrowdFunder } from "../../typechain-types"
     let crowdFunderContract: CrowdFunder
     let deployer: string
     let addCampaignTx: ContractTransaction
+    let addCampaignTxR: ContractReceipt
+    let campaignAddress: any
     
     beforeEach(async () => {
       deployer = (await getNamedAccounts()).deployer
@@ -23,8 +25,10 @@ import { CrowdFunder } from "../../typechain-types"
         "help Jane Lynn reach her goal",
         ["movie", "acting", "fundraise"],
         10,
-        10000000000
+        BigNumber.from("10000000000")
       )
+      addCampaignTxR = await addCampaignTx.wait(1)
+      campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
     })
 
     describe("addCampaign", function ()
@@ -35,11 +39,8 @@ import { CrowdFunder } from "../../typechain-types"
       })
 
       it("gives the campaign contract an address", async () => {
-        console.log(network.config.chainId)
-        const addCampaignTxR = await addCampaignTx.wait(1)
-        // console.log(addCampaignTxR)
-        const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
-        console.log(campaignAddress)
+        // console.log(network.config.chainId)
+        // console.log(campaignAddress)
         assert(campaignAddress)
       })
     })
@@ -47,8 +48,6 @@ import { CrowdFunder } from "../../typechain-types"
     describe("cancelCampaign", function()
     {
       it("emits campaign canceled event", async () => {
-        const addCampaignTxR = await addCampaignTx.wait(1)
-        const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
         const cancelCampaignTx = await crowdFunder.cancelCampaign(campaignAddress)
         expect(cancelCampaignTx).to.emit(crowdFunder, "CampaignCanceled")
       })
@@ -57,16 +56,26 @@ import { CrowdFunder } from "../../typechain-types"
     describe("updateCampaign", function()
     {
       it("emits campaign updated event with details", async () => {
-        const addCampaignTxR = await addCampaignTx.wait(1)
-        // console.log(addCampaignTxR)
-        const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
         const getCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
         const updateCampaignTx = await crowdFunder.updateCampaign(campaignAddress, "Jane Lynn", "", BigNumber.from("30000"))
         await updateCampaignTx.wait(1)
         const getNewCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
-        console.log(getNewCampaignDetails)
+        // console.log(getNewCampaignDetails)
         expect(updateCampaignTx).to.emit(crowdFunder, "CampaignUpdated")
       })
     })
 
+    describe("getCampaign", function()
+    {
+      it("returns campaign object if it exists", async () => {
+        const getCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
+        // console.log(getCampaignDetails)
+        assert(getCampaignDetails.creator.length > 0)
+      })
+
+      it("reverts if campaign doesn't exist", async () => {
+        await expect(crowdFunder.getCampaign("0xe8387C8a8c1B74bB0A8d6c19b313468e3071E8D3"))
+          .to.be.revertedWith("CrowdFunder__NoSuchCampaign")
+      })
+    })
   })

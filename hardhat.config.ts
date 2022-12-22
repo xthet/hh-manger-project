@@ -43,6 +43,9 @@ const config: HardhatUserConfig =
   namedAccounts: {
     deployer: {
       default: 0, // here this will by default take the first account as deployer
+    },
+    donator: {
+      default: 1,
     }
   },
   gasReporter: {
