@@ -13,6 +13,7 @@ error Campaign__NoDonationsHere(address _donatorAddress);
 error Campaign__RefundFailed();
 error Campaign__UpkeepNotNeeded();
 error Campaign__NotWithrawable(address _campaignAddress);
+error Campaign__AlreadyExpired(address _campaignAddress);
 
 contract Campaign is KeeperCompatibleInterface {
   using SafeMath for uint256;
@@ -158,6 +159,10 @@ contract Campaign is KeeperCompatibleInterface {
     if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns the money to mapping
   }
 
+  function endCampaign() public {
+    if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
+    state = State.Expired;
+  }
 
   // update functions
   function updateDuration(uint256 _addedTime) public {

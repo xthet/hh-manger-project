@@ -32,6 +32,10 @@ contract CrowdFunder {
     address indexed _campaignAddress
   );
 
+  event CampaignEnded(
+    address indexed _campaignAddress
+  );
+
 
   mapping (address => Campaign) campaigns;
   mapping (address => bool) campaignAddresses;
@@ -72,5 +76,10 @@ contract CrowdFunder {
   function getCampaign(address _campaignAddress) external view returns (Campaign.CampaignObject memory) {
     if(!campaignAddresses[_campaignAddress]){revert CrowdFunder__NoSuchCampaign(_campaignAddress);}
     return campaigns[_campaignAddress].getCampaignDetails();
+  }
+
+  function endCampaign(address _campaignAddress) public {
+    campaigns[_campaignAddress].endCampaign();
+    emit CampaignEnded(_campaignAddress);
   }
 }
