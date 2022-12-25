@@ -113,7 +113,7 @@ contract Campaign is KeeperCompatibleInterface {
   }
 
   /**
-    @dev this is the function chainlink keepers call
+    @dev this is the function chainlink keepers calls
     chekupkeep returns true to trigger the action after the interval has passed
    */
   function checkUpkeep(bytes memory /**checkData */) public view override

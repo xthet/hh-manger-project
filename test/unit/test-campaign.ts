@@ -10,13 +10,16 @@ import { Campaign } from "../../typechain-types"
     let campaign: Campaign
     let deployer: string
     let campaignAddress: any
-    const donationAmount = ethers.utils.parseEther("0.5")
+    let timeGiven: number
+    const donationAmount = ethers.utils.parseEther("5")
 
     beforeEach(async () => {
       deployer = (await getNamedAccounts()).deployer
       await deployments.fixture(["campaign"])
       campaign = await ethers.getContract("Campaign", deployer)
       campaignAddress = campaign.address
+      const { duration } = await campaign.getCampaignDetails()
+      timeGiven = duration.toNumber()
     })
 
     describe("constructor", function ()
@@ -51,6 +54,35 @@ import { Campaign } from "../../typechain-types"
 
         expect(donateTx).to.emit(campaign, "FundingRecieved")
       })
+    })
+
+    describe("checkUpkeep", function ()
+    {
+      it("emits campaign successful if goal is reached", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        const donateTxR = await donateTx.wait(1)
+
+        const performUpkeepTx = await campaign.performUpkeep([])
+
+        const campaignState = await campaign.getCampaignState()
+
+        const { upkeepNeeded } = await campaign.callStatic.checkUpkeep("0x")
+        assert(upkeepNeeded) // because goalReached == true
+        assert(campaignState.toString() == "0")
+        expect(performUpkeepTx).to.emit(campaign, "CampaignSuccessful")
+      })
+
+      it("returns false if there is no balance", async () => {
+        await network.provider.send("evm_increaseTime", [timeGiven + 1]) // bool timepassed is now = true
+        await network.provider.send("evm_mine", [])
+        const { upkeepNeeded } = await campaign.callStatic.checkUpkeep("0x")
+        assert(!upkeepNeeded) // because hasBalance == false
+      })
+
+
     })
 
     describe("getCampaignDetails", function () {

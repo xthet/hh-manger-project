@@ -19,8 +19,8 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
     "Help Jane Lynn", 
     "help Jane Lynn reach her goal",
     ["movie", "acting", "fundraise"],
-    ethers.utils.parseEther("3"),
-    BigNumber.from("10000000000")
+    ethers.utils.parseEther("3"), // 3 eth 
+    BigNumber.from("345600") // 3 days
   ]
 
   const campaign = await deploy("Campaign", {
