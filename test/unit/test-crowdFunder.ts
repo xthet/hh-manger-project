@@ -78,4 +78,14 @@ import { CrowdFunder } from "../../typechain-types"
           .to.be.revertedWith("CrowdFunder__NoSuchCampaign")
       })
     })
+
+    describe("endCampaign", function()
+    {
+      it("emits event and ends campaign", async () => {
+        const endCampaignTx = await crowdFunder.endCampaign(campaignAddress)
+        const { currentState } = await crowdFunder.getCampaign(campaignAddress)
+        assert(currentState == 2)
+        expect(endCampaignTx).to.emit(crowdFunder, "CampaignEnded")
+      })
+    })
   })

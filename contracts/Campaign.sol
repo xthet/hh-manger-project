@@ -14,6 +14,7 @@ error Campaign__RefundFailed();
 error Campaign__UpkeepNotNeeded();
 error Campaign__NotWithrawable(address _campaignAddress);
 error Campaign__AlreadyExpired(address _campaignAddress);
+error Campaign__NotRefundable(address _campaignAddress);
 
 contract Campaign is KeeperCompatibleInterface {
   using SafeMath for uint256;
@@ -132,11 +133,13 @@ contract Campaign is KeeperCompatibleInterface {
     if((block.timestamp - s_lastTimeStamp) > duration){
       state = State.Expired;
       // allow creator withdraw funds
-      nowPayable = true; 
+      nowPayable = true;
+      nowRefunding = true; 
     }
     else if(currentBalance >= goalAmount){
       state = State.Successful;
       nowPayable = true;
+      nowRefunding = true;
       emit CampaignSuccessful(address(this));
     }
   }
@@ -150,7 +153,8 @@ contract Campaign is KeeperCompatibleInterface {
     else{revert Campaign__PayoutFailed();}
   }
 
-  function refund(address _donator) public inState(State.Expired) {
+  function refund(address _donator) public isCreator {
+    if(!nowRefunding){revert Campaign__NotRefundable(address(this));}
     if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
     uint256 amountToRefund = donations[_donator];
     donations[_donator] = 0;
