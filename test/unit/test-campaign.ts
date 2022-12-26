@@ -11,7 +11,7 @@ import { Campaign } from "../../typechain-types"
     let deployer: string
     let campaignAddress: any
     let timeGiven: number
-    const donationAmount = ethers.utils.parseEther("5")
+    const donationAmount = ethers.utils.parseEther("1")
 
     beforeEach(async () => {
       deployer = (await getNamedAccounts()).deployer
@@ -82,7 +82,25 @@ import { Campaign } from "../../typechain-types"
         assert(!upkeepNeeded) // because hasBalance == false
       })
 
+      it("returns false if it is not fundraising", async () => {
+        await network.provider.send("evm_increaseTime", [timeGiven + 1]) // bool timepassed is now = true
+        await network.provider.send("evm_mine", [])
 
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        const donateTxR = await donateTx.wait(1)
+
+        const performUpkeepTx = await campaign.performUpkeep([]) // changes state to Expired
+        
+        const campaignState = await campaign.getCampaignState()
+        const { upkeepNeeded } = await campaign.callStatic.checkUpkeep("0x") 
+        // checking again after state has changed isOpen is now false
+        assert.equal(campaignState == 2, upkeepNeeded == false)
+      })
+
+      it("returns false if ")
     })
 
     describe("getCampaignDetails", function () {
