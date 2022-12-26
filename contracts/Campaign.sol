@@ -135,6 +135,7 @@ contract Campaign is KeeperCompatibleInterface {
       // allow creator withdraw funds
       nowPayable = true;
       nowRefunding = true; 
+      emit CampaignExpired(address(this));
     }
     else if(currentBalance >= goalAmount){
       state = State.Successful;
@@ -166,6 +167,7 @@ contract Campaign is KeeperCompatibleInterface {
   function endCampaign() public {
     if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
     state = State.Expired;
+    emit CampaignExpired(address(this));
   }
 
   // update functions
