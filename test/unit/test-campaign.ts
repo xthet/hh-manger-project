@@ -11,7 +11,7 @@ import { Campaign } from "../../typechain-types"
     let deployer: string
     let campaignAddress: any
     let timeGiven: number
-    const donationAmount = ethers.utils.parseEther("1")
+    const donationAmount = ethers.utils.parseEther("5")
 
     beforeEach(async () => {
       deployer = (await getNamedAccounts()).deployer
@@ -26,7 +26,7 @@ import { Campaign } from "../../typechain-types"
     {
       it("campaign is in fundraising state", async () => {
         const campaignState = await campaign.getCampaignState()
-        assert(campaignState.toString() == "1") // 1 means fundraising
+        assert(campaignState.toString() == "5") // 1 means fundraising
       })
     })
 
@@ -63,8 +63,9 @@ import { Campaign } from "../../typechain-types"
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
-
+        // goalReached == true
         const performUpkeepTx = await campaign.performUpkeep([])
 
         const campaignState = await campaign.getCampaignState()
@@ -91,16 +92,58 @@ import { Campaign } from "../../typechain-types"
         const donatorCampaign = campaign.connect(accounts[1])
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
-
+        // here donationAmount was 1 eth goalAmount is 3 eth
         const performUpkeepTx = await campaign.performUpkeep([]) // changes state to Expired
         
         const campaignState = await campaign.getCampaignState()
         const { upkeepNeeded } = await campaign.callStatic.checkUpkeep("0x") 
-        // checking again after state has changed isOpen is now false
+        // checking again after state has changed; isOpen is now false
         assert.equal(campaignState == 2, upkeepNeeded == false)
       })
+    })
 
-      it("returns false if ")
+    describe("performUpkeep", function () {
+      it("only runs if checkUpkeep is true", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == true
+        const performUpkeepTx = await campaign.performUpkeep([])
+        assert(performUpkeepTx)
+      })
+
+      it("reverts if checkupKeep is false", async () => {
+        await expect(campaign.performUpkeep("0x")).to.be.reverted
+      })
+
+      it("updates the campaign state and emits an event", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == true
+        const performUpkeepTx = await campaign.performUpkeep([])
+        const campaignState = await campaign.getCampaignState()
+        assert(campaignState == 0)
+        expect(performUpkeepTx).to.emit(campaign, "CampaignSuccessful")
+      })
+    })
+
+    describe("payout", function () {
+      it("fails if not called by creator", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == true
+        const performUpkeepTx = await campaign.performUpkeep([])
+      })
     })
 
     describe("getCampaignDetails", function () {
