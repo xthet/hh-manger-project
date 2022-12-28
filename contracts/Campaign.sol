@@ -15,6 +15,8 @@ error Campaign__UpkeepNotNeeded();
 error Campaign__NotWithrawable(address _campaignAddress);
 error Campaign__AlreadyExpired(address _campaignAddress);
 error Campaign__NotRefundable(address _campaignAddress);
+error Campaign__CampaignBankrupt(address _campaignAddress);
+
 
 contract Campaign is KeeperCompatibleInterface {
   using SafeMath for uint256;
@@ -150,7 +152,10 @@ contract Campaign is KeeperCompatibleInterface {
     uint256 totalRaised = currentBalance;
     currentBalance = 0;
     (bool success, ) = creator.call{value: totalRaised}("");
-    if(success){emit CreatorPaid(creator, address(this));}
+    if(success){
+      nowRefunding = false;
+      emit CreatorPaid(creator, address(this));
+    }
     else{revert Campaign__PayoutFailed();}
   }
 
@@ -159,6 +164,7 @@ contract Campaign is KeeperCompatibleInterface {
     if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
     uint256 amountToRefund = donations[_donator];
     donations[_donator] = 0;
+    if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt(address(this));}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns the money to mapping
@@ -168,6 +174,11 @@ contract Campaign is KeeperCompatibleInterface {
     if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
     state = State.Expired;
     emit CampaignExpired(address(this));
+  }
+
+  function allowRefunds() public isCreator {
+    if(currentBalance <= 0){revert Campaign__CampaignBankrupt(address(this));}
+    else{nowRefunding = true;}
   }
 
   // update functions
@@ -183,10 +194,6 @@ contract Campaign is KeeperCompatibleInterface {
     description = _newDescription;
   }
   
-  function allowRefunds() public isCreator {
-    nowRefunding = true;
-  }
-
   // getter functions
   function getBalance() public view returns(uint256) {
     return currentBalance;

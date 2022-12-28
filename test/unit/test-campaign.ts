@@ -26,7 +26,7 @@ import { Campaign } from "../../typechain-types"
     {
       it("campaign is in fundraising state", async () => {
         const campaignState = await campaign.getCampaignState()
-        assert(campaignState.toString() == "5") // 1 means fundraising
+        assert(campaignState.toString() == "1") // 1 means fundraising
       })
     })
 
@@ -142,7 +142,74 @@ import { Campaign } from "../../typechain-types"
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
         // goalReached == true
+        const performUpkeepTx = await donatorCampaign.performUpkeep([])
+        await performUpkeepTx.wait(1)
+        await expect(donatorCampaign.payout()).to.be.reverted
+      })
+
+      it("fails if it is still fundraising", async () => {
+        const campaignState = await campaign.getCampaignState()
+        assert(campaignState == 1)
+        await expect(campaign.payout()).to.be.reverted
+      })
+
+      it("pays out for a successful campaign", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == true
         const performUpkeepTx = await campaign.performUpkeep([])
+        await performUpkeepTx.wait(1)
+
+        const payoutTx = await campaign.payout()
+        await payoutTx.wait(1)
+        const newBalance = await campaign.getBalance()
+
+        assert(newBalance.toString() == "0")
+      })
+
+      it("pays out for an expired campaign", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 1 eth 
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == false, hasBalance == true
+
+        await network.provider.send("evm_increaseTime", [timeGiven + 1]) // bool timepassed is now = true
+        await network.provider.send("evm_mine", [])
+
+        const performUpkeepTx = await campaign.performUpkeep([])
+        await performUpkeepTx.wait(1)
+
+        const payoutTx = await campaign.payout()
+        await payoutTx.wait(1)
+        const newBalance = await campaign.getBalance()
+
+        assert(newBalance.toString() == "0")        
+      })
+
+      it("disables refunds and emits event", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
+        const donateTxR = await donateTx.wait(1)
+        // goalReached == true
+        const performUpkeepTx = await campaign.performUpkeep([])
+        await performUpkeepTx.wait(1)
+
+        const payoutTx = await campaign.payout()
+        await payoutTx.wait(1)
+
+        const isRefunding = await campaign.nowRefunding()
+        assert(!isRefunding)
+        expect(payoutTx).to.emit(campaign, "CreatorPaid")
       })
     })
 

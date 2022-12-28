@@ -6,6 +6,7 @@ import "./Campaign.sol";
 
 // errors
 error CrowdFunder__NoSuchCampaign(address _campaignAddress);
+error CrowdFunder__NotCreator(address _caller, address _campaignAddress);
 
 contract CrowdFunder {
   using SafeMath for uint256;
@@ -38,7 +39,13 @@ contract CrowdFunder {
 
 
   mapping (address => Campaign) campaigns;
+  mapping (Campaign => address) campaignCreators;
   mapping (address => bool) campaignAddresses;
+
+  modifier isCreator(address _campaignAddress) {
+    if(msg.sender != campaignCreators[campaigns[_campaignAddress]]){revert CrowdFunder__NotCreator(msg.sender, _campaignAddress);}
+    _;
+  }
 
 
   function addCampaign (
@@ -53,17 +60,20 @@ contract CrowdFunder {
     Campaign newCampaign = new Campaign(payable(msg.sender), _creatorType, _title, _description, _tags, _goalAmount, _duration);
     campaigns[address(newCampaign)] = newCampaign;
     campaignAddresses[address(newCampaign)] = true;
+    campaignCreators[newCampaign] = msg.sender;
     emit CampaignAdded(address(newCampaign), msg.sender, _creatorType, _title, _description, _tags, _goalAmount, _duration);
   }
 
-  function cancelCampaign (address _campaignAddress) public {
+  function cancelCampaign (address _campaignAddress) public isCreator(_campaignAddress) {
     delete(campaigns[_campaignAddress]);
     delete(campaignAddresses[_campaignAddress]);
     // emit CampaignCanceled(_campaignAddress, campaigns[_campaignAddress].creator(), campaigns[_campaignAddress].goalAmount());
     emit CampaignCanceled(_campaignAddress);
   }
 
-  function updateCampaign(address _campaignAddress, string memory  _newTitle, string memory _newDescription, uint256 _addedTime) public {
+  function updateCampaign(address _campaignAddress, string memory  _newTitle, string memory _newDescription, uint256 _addedTime) public 
+  isCreator(_campaignAddress)
+  {
     if(!campaignAddresses[_campaignAddress]){revert CrowdFunder__NoSuchCampaign(_campaignAddress);}
     Campaign campaign = campaigns[_campaignAddress];
     if(bytes(_newTitle).length > 0){campaign.updateTitle(_newTitle);}
@@ -78,7 +88,7 @@ contract CrowdFunder {
     return campaigns[_campaignAddress].getCampaignDetails();
   }
 
-  function endCampaign(address _campaignAddress) public {
+  function endCampaign(address _campaignAddress) public isCreator(_campaignAddress) {
     campaigns[_campaignAddress].endCampaign();
     emit CampaignEnded(_campaignAddress);
   }
