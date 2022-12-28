@@ -11,7 +11,6 @@ import { Campaign } from "../../typechain-types"
     let deployer: string
     let campaignAddress: any
     let timeGiven: number
-    const donationAmount = ethers.utils.parseEther("5")
 
     beforeEach(async () => {
       deployer = (await getNamedAccounts()).deployer
@@ -33,6 +32,7 @@ import { Campaign } from "../../typechain-types"
     describe("donate", function ()
     {
       it("reverts if creator tries to donate", async () => {
+        const donationAmount = ethers.utils.parseEther("5")
         await expect(campaign.donate({ value: donationAmount })).to.be.reverted
       })
 
@@ -42,6 +42,7 @@ import { Campaign } from "../../typechain-types"
         const donatorCampaign = campaign.connect(accounts[1])
 
         const oldBalance = await campaign.getBalance()
+        const donationAmount = ethers.utils.parseEther("5")
 
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
@@ -62,6 +63,8 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
+
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
@@ -90,6 +93,8 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("1")
+
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
         // here donationAmount was 1 eth goalAmount is 3 eth
@@ -107,6 +112,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
         // goalReached == true
@@ -122,6 +128,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
@@ -138,6 +145,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
@@ -157,6 +165,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
@@ -175,6 +184,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("1")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 1 eth 
         const donateTxR = await donateTx.wait(1)
@@ -197,6 +207,7 @@ import { Campaign } from "../../typechain-types"
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
@@ -211,6 +222,10 @@ import { Campaign } from "../../typechain-types"
         assert(!isRefunding)
         expect(payoutTx).to.emit(campaign, "CreatorPaid")
       })
+    })
+
+    describe("refund", function () {
+      it("only runs if refunds are enabled")
     })
 
     describe("getCampaignDetails", function () {
