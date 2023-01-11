@@ -225,7 +225,30 @@ import { Campaign } from "../../typechain-types"
     })
 
     describe("refund", function () {
-      it("only runs if refunds are enabled")
+      it("only runs if refunds are enabled", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("1")
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 1 eth 
+        const donateTxR = await donateTx.wait(1)
+        await expect(donatorCampaign.refund(donator)).to.be.reverted
+      })
+
+      it("fails if caller has no donations", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        const donatorCampaign = campaign.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("5")
+        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        // here donationAmount was 5 eth 
+        const donateTxR = await donateTx.wait(1)
+        const performUpkeepTx = await campaign.performUpkeep([])
+        await performUpkeepTx.wait(1)
+
+        await expect(campaign.refund(accounts[2].address)).to.be.reverted
+      })
     })
 
     describe("getCampaignDetails", function () {

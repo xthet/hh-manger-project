@@ -37,6 +37,7 @@ contract Campaign is KeeperCompatibleInterface {
   // state variables
   address payable public creator;
   CreatorType public creatorType;
+  string public creatorName;
   string public title;
   string public description;
   string[] public tags;
@@ -53,6 +54,7 @@ contract Campaign is KeeperCompatibleInterface {
   struct CampaignObject {
     address creator;
     CreatorType creatorType;
+    string creatorName;
     string title;
     string description;
     string[] tags;
@@ -88,6 +90,7 @@ contract Campaign is KeeperCompatibleInterface {
   constructor (
     address _creator,
     uint64 _creatorType,
+    string memory _creatorName,
     string memory _title,
     string memory _description,
     string[] memory _tags,
@@ -96,6 +99,7 @@ contract Campaign is KeeperCompatibleInterface {
   ) {
     creator = payable(_creator);
     creatorType = CreatorType(_creatorType);
+    creatorName = _creatorName;
     title = _title;
     description = _description;
     tags = _tags;
@@ -170,9 +174,10 @@ contract Campaign is KeeperCompatibleInterface {
     if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns the money to mapping
   }
 
-  function endCampaign() public {
+  function endCampaign() public isCreator {
     if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
     state = State.Expired;
+    if(currentBalance > 0){nowPayable = true;}
     emit CampaignExpired(address(this));
   }
 
@@ -182,15 +187,15 @@ contract Campaign is KeeperCompatibleInterface {
   }
 
   // update functions
-  function updateDuration(uint256 _addedTime) public {
+  function updateDuration(uint256 _addedTime) public isCreator {
     duration = duration.add(_addedTime);
   }
 
-  function updateTitle(string memory _newTitle) public {
+  function updateTitle(string memory _newTitle) public isCreator {
     title = _newTitle;
   }
 
-  function updateDescription(string memory _newDescription) public {
+  function updateDescription(string memory _newDescription) public isCreator {
     description = _newDescription;
   }
   
@@ -211,6 +216,7 @@ contract Campaign is KeeperCompatibleInterface {
     return CampaignObject(
       creator,
       creatorType,
+      creatorName,
       title,
       description,
       tags,
