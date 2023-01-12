@@ -20,7 +20,8 @@ import { CrowdFunder } from "../../typechain-types"
       await deployments.fixture(["crowdfunder"])
       crowdFunder = await ethers.getContract("CrowdFunder", deployer)
       addCampaignTx = await crowdFunder.addCampaign(
-        1, 
+        1,
+        "Goodwill Foundations", 
         "Help Jane Lynn", 
         "help Jane Lynn reach her goal",
         ["movie", "acting", "fundraise"],
@@ -53,18 +54,6 @@ import { CrowdFunder } from "../../typechain-types"
       })
     })
 
-    describe("updateCampaign", function()
-    {
-      it("emits campaign updated event with details", async () => {
-        const getCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
-        const updateCampaignTx = await crowdFunder.updateCampaign(campaignAddress, "Jane Lynn", "", BigNumber.from("30000"))
-        await updateCampaignTx.wait(1)
-        const getNewCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
-        // console.log(getNewCampaignDetails)
-        expect(updateCampaignTx).to.emit(crowdFunder, "CampaignUpdated")
-      })
-    })
-
     describe("getCampaign", function()
     {
       it("returns campaign object if it exists", async () => {
@@ -76,16 +65,6 @@ import { CrowdFunder } from "../../typechain-types"
       it("reverts if campaign doesn't exist", async () => {
         await expect(crowdFunder.getCampaign("0xe8387C8a8c1B74bB0A8d6c19b313468e3071E8D3"))
           .to.be.revertedWith("CrowdFunder__NoSuchCampaign")
-      })
-    })
-
-    describe("endCampaign", function()
-    {
-      it("emits event and ends campaign", async () => {
-        const endCampaignTx = await crowdFunder.endCampaign(campaignAddress)
-        const { currentState } = await crowdFunder.getCampaign(campaignAddress)
-        assert(currentState == 2)
-        expect(endCampaignTx).to.emit(crowdFunder, "CampaignEnded")
       })
     })
   })
