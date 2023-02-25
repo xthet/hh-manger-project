@@ -112,11 +112,10 @@ contract Campaign is KeeperCompatibleInterface {
   function checkUpkeep(bytes memory /**checkData */) public view override
   returns (bool upkeepNeeded, bytes memory /**performData */) 
   {
-    bool goalReached = currentBalance >= goalAmount;
     bool isOpen = state == State.Fundraising;
     bool timePassed = ((block.timestamp - s_lastTimeStamp) > duration);
     bool hasBalance = address(this).balance > 0;
-    upkeepNeeded = (goalReached || timePassed && isOpen && hasBalance) ;
+    upkeepNeeded = (timePassed && isOpen && hasBalance) ;
     return (upkeepNeeded, "0x0");
   }
 
@@ -131,10 +130,9 @@ contract Campaign is KeeperCompatibleInterface {
       state = State.Expired;
       nowRefundable = false; 
       emit CampaignExpired(address(this));
-    }
-    else if(currentBalance >= goalAmount){
-      state = State.Successful;
-      emit CampaignSuccessful(address(this));
+      if(currentBalance >= goalAmount){
+        emit CampaignSuccessful(address(this));
+      }
     }
   }
 
@@ -164,14 +162,10 @@ contract Campaign is KeeperCompatibleInterface {
   function endCampaign() public isCreator {
     if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
     state = State.Expired;
+    nowRefundable = false;
     if(currentBalance > 0){nowPayable = true;}
     emit CampaignExpired(address(this));
   }
-
-  // function allowRefunds() public isCreator {
-  //   if(currentBalance <= 0){revert Campaign__CampaignBankrupt(address(this));}
-  //   else{nowRefundable = true;}
-  // }
 
   // update functions
   function updateTitle(string memory _newTitle) public isCreator {

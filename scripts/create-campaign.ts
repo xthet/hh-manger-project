@@ -14,11 +14,10 @@ async function makeCampaign()
   console.log(crowdFunder.address)
 
   addCampaignTx = await crowdFunder.addCampaign(
-    1,
-    "Goodwill Foundations", 
     "Help Jane Lynn", 
-    "Help Jane Lynn reach her goal", 
-    ["crowdfund", "actor", "film making"], 
+    "Help Jane Lynn reach her goal",
+    "Goodwill", 
+    ["crowdfund", "actor", "film making"],
     2, 
     BigNumber.from("259200")
   )
