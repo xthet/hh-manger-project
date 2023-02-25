@@ -12,13 +12,20 @@ error CrowdFunder__CampaignStillActive(address _campaignAddress);
 contract CrowdFunder {
   using SafeMath for uint256;
 
+  event UserAdded(
+    address indexed _address,
+    string _username,
+    string _twitter,
+    string _email,
+    string _bio
+  );
+
   event CampaignAdded(
     address indexed _campaignAddress,
     address indexed _creator,
-    uint256 _creatorType,
-    string _creatorName,
     string _title,
     string _description,
+    string _category,
     string[] _tags,
     uint256 _goalAmount,
     uint256 _duration
@@ -40,28 +47,29 @@ contract CrowdFunder {
     _;
   }
 
+  function addUser(address _address, string memory _username, string memory _twitter, string memory _email, string memory _bio) public {
+    emit UserAdded(_address, _username, _twitter, _email, _bio);
+  }
+
   function addCampaign (
-    uint64 _creatorType,
-    string memory _creatorName,
     string memory _title, 
     string memory _description,
+    string memory _category,
     string[] memory _tags, 
     uint256 _goalAmount,
     uint256 _duration
     ) external {
-    // uint256 raiseUntil = block.timestamp.add(duration.mul(1 days));
-    Campaign newCampaign = new Campaign(payable(msg.sender), _creatorType, _creatorName, _title, _description, _tags, _goalAmount, _duration);
+    Campaign newCampaign = new Campaign(payable(msg.sender), _title, _description, _category, _tags, _goalAmount, _duration);
     campaigns[address(newCampaign)] = newCampaign;
     campaignAddresses[address(newCampaign)] = true;
     campaignCreators[address(newCampaign)] = msg.sender;
-    emit CampaignAdded(address(newCampaign), msg.sender, _creatorType, _creatorName, _title, _description, _tags, _goalAmount, _duration);
+    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _goalAmount, _duration);
   }
 
   function cancelCampaign (address _campaignAddress) public isCreator(_campaignAddress) {
     if(uint(campaigns[_campaignAddress].getCampaignState()) == 1){revert CrowdFunder__CampaignStillActive(_campaignAddress);}
     delete(campaigns[_campaignAddress]);
     delete(campaignAddresses[_campaignAddress]);
-    // emit CampaignCanceled(_campaignAddress, campaigns[_campaignAddress].creator(), campaigns[_campaignAddress].goalAmount());
     emit CampaignCanceled(_campaignAddress);
   }
 

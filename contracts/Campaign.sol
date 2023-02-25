@@ -28,18 +28,12 @@ contract Campaign is KeeperCompatibleInterface {
     Expired
   }
 
-  enum CreatorType {
-    Sole,
-    Team
-  }
-
 
   // state variables
   address payable public creator;
-  CreatorType public creatorType;
-  string public creatorName;
   string public title;
   string public description;
+  string public category;
   string[] public tags;
   uint256 public goalAmount;
   uint256 public duration;
@@ -48,15 +42,14 @@ contract Campaign is KeeperCompatibleInterface {
   State public state = State.Fundraising; // default state
   mapping (address => uint256) public donations;
   bool public nowPayable;
-  bool public nowRefunding;
+  bool public nowRefundable;
 
 
   struct CampaignObject {
     address creator;
-    CreatorType creatorType;
-    string creatorName;
     string title;
     string description;
+    string category;
     string[] tags;
     uint256 goalAmount;
     uint256 duration;
@@ -77,11 +70,6 @@ contract Campaign is KeeperCompatibleInterface {
 
 
   // modifiers
-  modifier inState(State _state) {
-    if (state != _state){revert Campaign__NotInState();}
-    _;
-  }
-
   modifier isCreator() {
     if(msg.sender != creator){revert Campaign__NotCreator(msg.sender);}
     _;
@@ -89,29 +77,28 @@ contract Campaign is KeeperCompatibleInterface {
 
   constructor (
     address _creator,
-    uint64 _creatorType,
-    string memory _creatorName,
     string memory _title,
     string memory _description,
+    string memory _category,
     string[] memory _tags,
     uint256 _goalAmount,
     uint256 _duration
   ) {
     creator = payable(_creator);
-    creatorType = CreatorType(_creatorType);
-    creatorName = _creatorName;
     title = _title;
     description = _description;
+    category = _category;
     tags = _tags;
     goalAmount = _goalAmount;
     duration = _duration;
     s_lastTimeStamp = block.timestamp;
     currentBalance = 0;
     nowPayable = false;
-    nowRefunding = false;
+    nowRefundable = true;
   }
 
-  function donate() external inState(State.Fundraising) payable {
+  function donate() external payable {
+    if(state == State.Fundraising || state == State.Successful){revert Campaign__AlreadyExpired(address(this));}
     if (msg.sender == creator){revert Campaign__DonatorIsCreator(msg.sender);}
     donations[msg.sender] = donations[msg.sender].add(msg.value);
     currentBalance = currentBalance.add(msg.value);
@@ -139,10 +126,10 @@ contract Campaign is KeeperCompatibleInterface {
 
     // allow creator withdraw funds
     nowPayable = true;
-    nowRefunding = true;
 
     if((block.timestamp - s_lastTimeStamp) > duration){
-      state = State.Expired; 
+      state = State.Expired;
+      nowRefundable = false; 
       emit CampaignExpired(address(this));
     }
     else if(currentBalance >= goalAmount){
@@ -157,14 +144,14 @@ contract Campaign is KeeperCompatibleInterface {
     currentBalance = 0;
     (bool success, ) = creator.call{value: totalRaised}("");
     if(success){
-      nowRefunding = false;
+      nowRefundable = false;
       emit CreatorPaid(creator, address(this));
     }
     else{revert Campaign__PayoutFailed();}
   }
 
   function refund(address _donator) public {
-    if(!nowRefunding){revert Campaign__NotRefundable(address(this));}
+    if(!nowRefundable){revert Campaign__NotRefundable(address(this));}
     if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
     uint256 amountToRefund = donations[_donator];
     donations[_donator] = 0;
@@ -181,16 +168,12 @@ contract Campaign is KeeperCompatibleInterface {
     emit CampaignExpired(address(this));
   }
 
-  function allowRefunds() public isCreator {
-    if(currentBalance <= 0){revert Campaign__CampaignBankrupt(address(this));}
-    else{nowRefunding = true;}
-  }
+  // function allowRefunds() public isCreator {
+  //   if(currentBalance <= 0){revert Campaign__CampaignBankrupt(address(this));}
+  //   else{nowRefundable = true;}
+  // }
 
   // update functions
-  function updateDuration(uint256 _addedTime) public isCreator {
-    duration = duration.add(_addedTime);
-  }
-
   function updateTitle(string memory _newTitle) public isCreator {
     title = _newTitle;
   }
@@ -215,10 +198,9 @@ contract Campaign is KeeperCompatibleInterface {
   function getCampaignDetails() public view returns(CampaignObject memory) {
     return CampaignObject(
       creator,
-      creatorType,
-      creatorName,
       title,
       description,
+      category,
       tags,
       goalAmount,
       duration,
