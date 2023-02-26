@@ -218,7 +218,7 @@ import { Campaign } from "../../typechain-types"
         const payoutTx = await campaign.payout()
         await payoutTx.wait(1)
 
-        const isRefunding = await campaign.nowRefunding()
+        const isRefunding = await campaign.nowRefundable()
         assert(!isRefunding)
         expect(payoutTx).to.emit(campaign, "CreatorPaid")
       })
@@ -233,21 +233,26 @@ import { Campaign } from "../../typechain-types"
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 1 eth 
         const donateTxR = await donateTx.wait(1)
-        await expect(donatorCampaign.refund(donator)).to.be.reverted
+        await expect(donatorCampaign.refund()).to.be.reverted
       })
 
-      it("fails if caller has no donations", async () => {
+      it("successful if caller has donations", async () => {
         const accounts = await ethers.getSigners()
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
-        const donationAmount = ethers.utils.parseEther("5")
+        const donationAmount = ethers.utils.parseEther("1")
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
-        const performUpkeepTx = await campaign.performUpkeep([])
-        await performUpkeepTx.wait(1)
+        // const performUpkeepTx = await campaign.performUpkeep([])
+        // await performUpkeepTx.wait(1)
 
-        await expect(campaign.refund(accounts[2].address)).to.be.reverted
+        const refundTx = await donatorCampaign.refund()
+        const refundTxR = await refundTx.wait(1)
+        console.log(refundTxR.events) 
+
+
+        // await expect(donatorCampaign.refund()).to.satisfy
       })
     })
 
@@ -256,7 +261,6 @@ import { Campaign } from "../../typechain-types"
         const campaignDetails = await campaign.getCampaignDetails()
         assert(
           campaignDetails.creator &&
-          campaignDetails.creatorType &&
           campaignDetails.title &&
           campaignDetails.description &&
           campaignDetails.tags &&

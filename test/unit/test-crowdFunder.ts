@@ -20,13 +20,13 @@ import { CrowdFunder } from "../../typechain-types"
       await deployments.fixture(["crowdfunder"])
       crowdFunder = await ethers.getContract("CrowdFunder", deployer)
       addCampaignTx = await crowdFunder.addCampaign(
-        1,
-        "Goodwill Foundations", 
-        "Help Jane Lynn", 
-        "help Jane Lynn reach her goal",
-        ["movie", "acting", "fundraise"],
-        10,
-        BigNumber.from("10000000000")
+        "Furry Mittens",
+        "Making mittens furry.",
+        "Cooking",
+        ["cooking", "household", "culinary"],
+        2,
+        BigNumber.from("1296000"),
+        "ipfs://campaignuri"
       )
       addCampaignTxR = await addCampaignTx.wait(1)
       campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
@@ -43,6 +43,41 @@ import { CrowdFunder } from "../../typechain-types"
         // console.log(network.config.chainId)
         // console.log(campaignAddress)
         assert(campaignAddress)
+      })
+    })
+
+    describe("fundCampaign", function ()
+    {
+      it("donates to campaign successfully", async () => {
+        const accounts = await ethers.getSigners()
+        const donator = accounts[1].address
+        console.log(donator)
+        const crowdFunderv2 = crowdFunder.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("1")
+        console.log(campaignAddress)
+        const donateTx = await crowdFunderv2.donateToCampaign(campaignAddress,{ value: donationAmount })
+        const donateTxR = await donateTx.wait(1)
+        console.log(donateTxR.events)
+      })
+    })
+
+    describe("getRefund", async function () 
+    {
+      it("refunds successfully", async () => {
+        const accounts = await ethers.getSigners()
+        // const donator = accounts[1].address
+        // console.log(donator)
+        const crowdFunderv2 = crowdFunder.connect(accounts[1])
+        const donationAmount = ethers.utils.parseEther("1")
+        const donateTx = await crowdFunderv2.donateToCampaign(campaignAddress,{ value: donationAmount })
+        const donateTxR = await donateTx.wait(1)
+        console.log(campaignAddress)
+        const getCampaignDetails = await crowdFunderv2.getCampaign(campaignAddress)
+        console.log(getCampaignDetails)
+        const refundTx = await crowdFunderv2.refundFromCampaign(campaignAddress)
+        const refundTxR = await refundTx.wait(1)
+        console.log(refundTxR.events)
+        console.log("successful")
       })
     })
 

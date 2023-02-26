@@ -15,12 +15,13 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
   log("==========================")
   const args:any[] = [
     deployer,
-    1, 
-    "Help Jane Lynn", 
-    "help Jane Lynn reach her goal",
-    ["movie", "acting", "fundraise"],
-    ethers.utils.parseEther("3"), // 3 eth 
-    BigNumber.from("345600") // 3 days
+    "Furry Mittens",
+    "Making mittens furry.",
+    "Cooking",
+    ["cooking", "household", "culinary"],
+    2,
+    BigNumber.from("1296000"), // 15days
+    "ipfs://campaignuri"
   ]
 
   const campaign = await deploy("Campaign", {
