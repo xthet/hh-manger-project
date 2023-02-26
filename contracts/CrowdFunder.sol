@@ -88,15 +88,13 @@ contract CrowdFunder {
     }
   }
 
-  function refundFromCampaign(address _campaignAddress) public {
+  function refundFromCampaign(address _campaignAddress, address _donator) public {
     if(campaigns[_campaignAddress].getNowRefundable()){
-      (bool success, bytes memory data) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund()"));
-      // campaigns[_campaignAddress].refund(msg.sender);
+      (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _donator));
       if(success){
         emit CampaignShrunk(msg.sender, _campaignAddress);
       }else{
-        revert(string(abi.encode(data)));
-        // revert CrowdFunder__RefundFailed(_campaignAddress);
+        revert CrowdFunder__RefundFailed(_campaignAddress);
       }
     }else{
       revert CrowdFunder__CampaignNotRefundable(_campaignAddress);

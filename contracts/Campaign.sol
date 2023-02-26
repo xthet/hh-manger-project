@@ -77,6 +77,11 @@ contract Campaign is KeeperCompatibleInterface {
     _;
   }
 
+  modifier isRefundable() {
+    if(!nowRefundable){revert Campaign__NotRefundable(address(this));}
+    _;
+  }
+
   constructor (
     address _creator,
     string memory _title,
@@ -154,14 +159,14 @@ contract Campaign is KeeperCompatibleInterface {
     else{revert Campaign__PayoutFailed();}
   }
 
-  function refund() public {
-    if(!nowRefundable){revert Campaign__NotRefundable(address(this));}
-    if(donations[msg.sender] <= 0){revert Campaign__NoDonationsHere(msg.sender);}
-    uint256 amountToRefund = donations[msg.sender];
-    donations[msg.sender] = 0;
+  function refund(address _donator) public {
+    if(state == State.Expired){revert Campaign__AlreadyExpired(address(this));}
+    if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(_donator);}
+    uint256 amountToRefund = donations[_donator];
+    donations[_donator] = 0;
     if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt(address(this));}
     currentBalance = currentBalance.sub(amountToRefund);
-    (bool success, ) = payable(msg.sender).call{value: amountToRefund}("");
+    (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns value (the money) to mapping
   }
 
@@ -197,6 +202,10 @@ contract Campaign is KeeperCompatibleInterface {
     else{
       duration += _additionalTime;
     }
+  }
+
+  function updateCampaignURI(string memory _campaignURI) public isCreator {
+    campaignURI = _campaignURI;
   }
   
   // getter functions

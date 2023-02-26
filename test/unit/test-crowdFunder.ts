@@ -65,17 +65,22 @@ import { CrowdFunder } from "../../typechain-types"
     {
       it("refunds successfully", async () => {
         const accounts = await ethers.getSigners()
-        // const donator = accounts[1].address
-        // console.log(donator)
+        const donator = accounts[1].address
         const crowdFunderv2 = crowdFunder.connect(accounts[1])
+        console.log(crowdFunderv2.address)
         const donationAmount = ethers.utils.parseEther("1")
         const donateTx = await crowdFunderv2.donateToCampaign(campaignAddress,{ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
-        console.log(campaignAddress)
-        const getCampaignDetails = await crowdFunderv2.getCampaign(campaignAddress)
-        console.log(getCampaignDetails)
-        const refundTx = await crowdFunderv2.refundFromCampaign(campaignAddress)
+        const oldBalance = (await accounts[1].getBalance()).toString()
+        // console.log(donateTxR.events)
+        console.log(oldBalance)
+        // const getCampaignDetails = await crowdFunderv2.getCampaign(campaignAddress)
+        // console.log(getCampaignDetails)
+        const refundTx = await crowdFunderv2.refundFromCampaign(campaignAddress, donator)
         const refundTxR = await refundTx.wait(1)
+        const newBalance = (await accounts[1].getBalance()).toString()
+        console.log(newBalance)
+
         console.log(refundTxR.events)
         console.log("successful")
       })

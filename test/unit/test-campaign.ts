@@ -150,6 +150,8 @@ import { Campaign } from "../../typechain-types"
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
         // goalReached == true
+        await network.provider.send("evm_increaseTime", [timeGiven + 1])
+        await network.provider.send("evm_mine", [])
         const performUpkeepTx = await donatorCampaign.performUpkeep([])
         await performUpkeepTx.wait(1)
         await expect(donatorCampaign.payout()).to.be.reverted
@@ -157,7 +159,7 @@ import { Campaign } from "../../typechain-types"
 
       it("fails if it is still fundraising", async () => {
         const campaignState = await campaign.getCampaignState()
-        assert(campaignState == 1)
+        assert(campaignState == 0)
         await expect(campaign.payout()).to.be.reverted
       })
 
@@ -170,6 +172,10 @@ import { Campaign } from "../../typechain-types"
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
         // goalReached == true
+
+        await network.provider.send("evm_increaseTime", [timeGiven + 1])
+        await network.provider.send("evm_mine", [])
+
         const performUpkeepTx = await campaign.performUpkeep([])
         await performUpkeepTx.wait(1)
 
@@ -211,7 +217,9 @@ import { Campaign } from "../../typechain-types"
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
-        // goalReached == true
+        await network.provider.send("evm_increaseTime", [timeGiven + 1]) // bool timepassed is now = true
+        await network.provider.send("evm_mine", [])
+        
         const performUpkeepTx = await campaign.performUpkeep([])
         await performUpkeepTx.wait(1)
 
@@ -233,7 +241,7 @@ import { Campaign } from "../../typechain-types"
         const donateTx = await donatorCampaign.donate({ value: donationAmount })
         // here donationAmount was 1 eth 
         const donateTxR = await donateTx.wait(1)
-        await expect(donatorCampaign.refund()).to.be.reverted
+        await expect(donatorCampaign.refund(donator)).to.be.reverted
       })
 
       it("successful if caller has donations", async () => {
@@ -247,7 +255,7 @@ import { Campaign } from "../../typechain-types"
         // const performUpkeepTx = await campaign.performUpkeep([])
         // await performUpkeepTx.wait(1)
 
-        const refundTx = await donatorCampaign.refund()
+        const refundTx = await donatorCampaign.refund(donator)
         const refundTxR = await refundTx.wait(1)
         console.log(refundTxR.events) 
 
