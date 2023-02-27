@@ -71,9 +71,11 @@ contract CrowdFunder {
     string[] memory _tags, 
     uint256 _goalAmount,
     uint256 _duration,
-    string memory _campaignURI
+    string memory _campaignURI,
+    address _registryAddress, 
+    address _linkTokenAddress
     ) external {
-    Campaign newCampaign = new Campaign(payable(msg.sender), _title, _description, _category, _tags, _goalAmount, _duration, _campaignURI);
+    Campaign newCampaign = new Campaign(payable(msg.sender), _title, _description, _category, _tags, _goalAmount, _duration, _campaignURI, _registryAddress, _linkTokenAddress);
     campaigns[address(newCampaign)] = newCampaign;
     emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _goalAmount, _duration, _campaignURI);
   }

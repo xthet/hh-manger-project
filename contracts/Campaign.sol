@@ -3,6 +3,7 @@ pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+import "./UpkeepCreator.sol";
 
 // errors
 error Campaign__NotInState();
@@ -18,7 +19,7 @@ error Campaign__NotRefundable(address _campaignAddress);
 error Campaign__CampaignBankrupt(address _campaignAddress);
 
 
-contract Campaign is KeeperCompatibleInterface {
+contract Campaign is KeeperCompatibleInterface{
   using SafeMath for uint256;
 
   // enums
@@ -77,10 +78,6 @@ contract Campaign is KeeperCompatibleInterface {
     _;
   }
 
-  modifier isRefundable() {
-    if(!nowRefundable){revert Campaign__NotRefundable(address(this));}
-    _;
-  }
 
   constructor (
     address _creator,
@@ -90,7 +87,9 @@ contract Campaign is KeeperCompatibleInterface {
     string[] memory _tags,
     uint256 _goalAmount,
     uint256 _duration,
-    string memory _campaignURI
+    string memory _campaignURI,
+    address _registryAddress,
+    address _linkTokenAddress
   ) {
     creator = payable(_creator);
     title = _title;
@@ -109,6 +108,12 @@ contract Campaign is KeeperCompatibleInterface {
     currentBalance = 0;
     nowPayable = false;
     nowRefundable = true;
+
+    UpkeepCreator newUpkeepCreator = new UpkeepCreator(_registryAddress, _linkTokenAddress);
+    ILinkToken ERC677Linker = ILinkToken(_linkTokenAddress);
+    ERC677Linker.approve(creator, 8000000000000000000);
+    ERC677Linker.transferFrom(creator, address(newUpkeepCreator), 8000000000000000000);
+    // newUpkeepCreator.createUpkeep(address(this), title, 500000);
   }
 
   function donate() external payable {
@@ -179,17 +184,17 @@ contract Campaign is KeeperCompatibleInterface {
   }
 
   // update functions
-  function updateTitle(string memory _newTitle) public isCreator {
-    title = _newTitle;
-  }
+  // function updateTitle(string memory _newTitle) public isCreator {
+  //   title = _newTitle;
+  // }
 
-  function updateDescription(string memory _newDescription) public isCreator {
-    description = _newDescription;
-  }
+  // function updateDescription(string memory _newDescription) public isCreator {
+  //   description = _newDescription;
+  // }
 
-  function updateCategory(string memory _newCategory) public isCreator {
-    category = _newCategory;
-  }
+  // function updateCategory(string memory _newCategory) public isCreator {
+  //   category = _newCategory;
+  // }
 
   function updateGoalAmount(uint256 _newGoalAmount) public isCreator {
     goalAmount = _newGoalAmount;
