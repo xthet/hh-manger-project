@@ -10,22 +10,22 @@ let addCampaignTxR: ContractReceipt
 
 async function makeCampaign()
 {
-  crowdFunder = await ethers.getContract("CrowdFunder")
-  console.log(crowdFunder.address)
+  // crowdFunder = await ethers.getContract("CrowdFunder")
+  // console.log(crowdFunder.address)
 
-  addCampaignTx = await crowdFunder.addCampaign(
-    "Help Jane Lynn", 
-    "Help Jane Lynn reach her goal",
-    "Goodwill", 
-    ["crowdfund", "actor", "film making"],
-    2, 
-    BigNumber.from("259200")
-  )
-  addCampaignTxR = await addCampaignTx.wait(1)
-  const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
-  console.log("Campaign Added")
-  // console.log(addCampaignTxR)
-  console.log(campaignAddress)
+  // addCampaignTx = await crowdFunder.addCampaign(
+  //   "Help Jane Lynn", 
+  //   "Help Jane Lynn reach her goal",
+  //   "Goodwill", 
+  //   ["crowdfund", "actor", "film making"],
+  //   2, 
+  //   BigNumber.from("259200")
+  // )
+  // addCampaignTxR = await addCampaignTx.wait(1)
+  // const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
+  // console.log("Campaign Added")
+  // // console.log(addCampaignTxR)
+  // console.log(campaignAddress)
 }
 
 makeCampaign()

@@ -8,6 +8,6 @@
     "skipLibCheck": true,
     "outDir": "dist"
   },
-  "include": ["./scripts", "./test", "./deploy", "./deploy-helpers"],
+  "include": ["./scripts", "./test", "./deploy", "./deploy-helpers", "00-deploy-crowdFunder.ts"],
   "files": ["./hardhat.config.ts", "./helper-hardhat-config.ts"]
 }

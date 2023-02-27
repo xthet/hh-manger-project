@@ -1,8 +1,8 @@
 import { network, ethers } from "hardhat"
 import { DeployFunction } from "hardhat-deploy/dist/types"
 import { HardhatRuntimeEnvironment } from "hardhat/types"
-import { developmentChains } from "../helper-hardhat-config"
-import verify from "../utils/verify"
+import { developmentChains } from "./helper-hardhat-config"
+import verify from "./utils/verify"
 
 const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre
