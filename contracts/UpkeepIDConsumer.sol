@@ -43,7 +43,7 @@ contract UpkeepIDConsumer {
     bytes calldata checkData,
     uint96 amount,
     uint8 source
-  ) public {
+  ) public returns(uint){
     (State memory state, Config memory _c, address[] memory _k) = i_registry.getState();
     uint256 oldNonce = state.nonce;
     bytes memory payload = abi.encode(
@@ -76,6 +76,7 @@ contract UpkeepIDConsumer {
         )
       );
       // DEV - Use the upkeepID however you see fit
+      return upkeepID;
     } else {
       revert("auto-approve disabled");
     }

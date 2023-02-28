@@ -42,15 +42,9 @@ contract Campaign is KeeperCompatibleInterface{
   uint256 private maxTimeStamp;
   C_State public c_state = C_State.Fundraising; // default c_state
   mapping (address => uint256) public donations;
-  bool public nowPayable;
-  bool public nowRefundable;
-  bytes4 private constant FUNC_SELECTOR = bytes4(keccak256("createUpkeep(address,string,uint32)"));
-  uint public minFund;
-  address private registryAddress;
-  address private registrarAddress;
   address private linkTokenAddress;
-
-
+  address private upkeepCreatorAddress;
+  uint256 private rId;
 
   struct CampaignObject {
     address creator;
@@ -62,7 +56,7 @@ contract Campaign is KeeperCompatibleInterface{
     uint256 duration;
     uint256 currentBalance;
     C_State currentC_State;
-    bool nowRefundable;
+    string campaignURI;
   }
 
 
@@ -93,9 +87,8 @@ contract Campaign is KeeperCompatibleInterface{
     uint256 _goalAmount,
     uint256 _duration,
     string memory _campaignURI,
-    address _registryAddress,
-    address _registrarAddress,
-    address _linkTokenAddress
+    address _linkTokenAddress,
+    address _upkeepCreatorAddress
   ) {
     creator = payable(_creator);
     title = _title;
@@ -112,16 +105,15 @@ contract Campaign is KeeperCompatibleInterface{
     }
     campaignURI = _campaignURI;
     currentBalance = 0;
-    nowPayable = false;
-    nowRefundable = true;
-    registryAddress = _registryAddress;
-    registrarAddress = _registrarAddress;
     linkTokenAddress = _linkTokenAddress;
+    upkeepCreatorAddress = _upkeepCreatorAddress;
   }
 
   function timeBox() public {
-    UpkeepIDConsumer newUpkeepCreator = new UpkeepIDConsumer(linkTokenAddress, registrarAddress, registryAddress);
-    newUpkeepCreator.registerAndPredictID(title, "0x", address(this), 500000, creator, "0x", 5000000000000000000, 0);
+    UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(upkeepCreatorAddress);
+    LinkTokenInterface token = LinkTokenInterface(linkTokenAddress);
+    if(token.balanceOf(upkeepCreatorAddress) <= 0){revert("no funds");}
+    rId = newUpkeepCreator.registerAndPredictID(title, "0x", address(this), 500000, creator, "0x", 10000000000000000000, 0);
   }
 
   function donate() external payable {
@@ -149,10 +141,6 @@ contract Campaign is KeeperCompatibleInterface{
   function performUpkeep(bytes calldata /**performData */) external override {
     (bool upkeepNeeded, ) = checkUpkeep("");
     if(!upkeepNeeded){revert Campaign__UpkeepNotNeeded();}
-
-    // allow creator withdraw funds
-    nowPayable = true;
-    nowRefundable = false;
     c_state = C_State.Expired;
     emit CampaignExpired(address(this));
     if(currentBalance >= goalAmount){
@@ -161,12 +149,11 @@ contract Campaign is KeeperCompatibleInterface{
   }
 
   function payout() public isCreator {
-    if(!nowPayable){revert Campaign__NotWithrawable(address(this));}
+    if(c_state != C_State.Expired){revert Campaign__NotWithrawable(address(this));}
     uint256 totalRaised = currentBalance;
     currentBalance = 0;
     (bool success, ) = creator.call{value: totalRaised}("");
     if(success){
-      nowRefundable = false;
       emit CreatorPaid(creator, address(this));
     }
     else{revert Campaign__PayoutFailed();}
@@ -180,64 +167,34 @@ contract Campaign is KeeperCompatibleInterface{
     if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt(address(this));}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
-    if(!success){revert Campaign__RefundFailed();} // TODO: test if it returns value (the money) to mapping
+    if(!success){revert Campaign__RefundFailed();}
   }
 
   function endCampaign() public isCreator {
     if(c_state == C_State.Expired){revert Campaign__AlreadyExpired(address(this));}
     c_state = C_State.Expired;
-    nowRefundable = false;
-    if(currentBalance > 0){nowPayable = true;}
     emit CampaignExpired(address(this));
   }
 
   // update functions
-  // function updateTitle(string memory _newTitle) public isCreator {
-  //   title = _newTitle;
-  // }
+  function updateGoalAmount(uint256 _newGoalAmount) public isCreator {
+    goalAmount = _newGoalAmount;
+  }
 
-  // function updateDescription(string memory _newDescription) public isCreator {
-  //   description = _newDescription;
-  // }
-
-  // function updateCategory(string memory _newCategory) public isCreator {
-  //   category = _newCategory;
-  // }
-
-  // function updateGoalAmount(uint256 _newGoalAmount) public isCreator {
-  //   goalAmount = _newGoalAmount;
-  // }
-
-  // function updateDuration(uint256 _additionalTime) public isCreator {
-  //   if(_additionalTime + duration > (maxTimeStamp.sub(s_lastTimeStamp))){
-  //     duration = maxTimeStamp.sub(s_lastTimeStamp); // 30days
-  //   }
-  //   else{
-  //     duration += _additionalTime;
-  //   }
-  // }
+  function updateDuration(uint256 _additionalTime) public isCreator {
+    if(_additionalTime + duration > (maxTimeStamp.sub(s_lastTimeStamp))){
+      duration = maxTimeStamp.sub(s_lastTimeStamp); // 30days
+    }
+    else{
+      duration += _additionalTime;
+    }
+  }
 
   function updateCampaignURI(string memory _campaignURI) public isCreator {
     campaignURI = _campaignURI;
   }
   
   // getter functions
-  function getCreator() public view returns(address) {
-    return creator;
-  }
-
-  function getBalance() public view returns(uint256) {
-    return currentBalance;
-  }
-
-  function getNowRefundable() public view returns(bool) {
-    return nowRefundable;
-  }
-
-  function getCampaignC_State() public view returns(C_State) {
-    return c_state;
-  }
-
   function getDonations(address _donator) public view returns(uint256) {
     return donations[_donator];
   }
@@ -253,7 +210,7 @@ contract Campaign is KeeperCompatibleInterface{
       duration,
       currentBalance,
       c_state,
-      nowRefundable
+      campaignURI
     );
   }
 }
