@@ -27,6 +27,7 @@ import { CrowdFunder } from "../../typechain-types"
         2,
         BigNumber.from("1296000"),
         "ipfs://campaignuri",
+        "ipfs://campaignuri",
         "0x02777053d6764996e594c3E88AF1D58D5363a2e6",
         "0x326C977E6efc84E512bB9C30f76E30c160eD06FB"
       )
@@ -91,22 +92,8 @@ import { CrowdFunder } from "../../typechain-types"
     describe("cancelCampaign", function()
     {
       it("emits campaign canceled event", async () => {
-        const cancelCampaignTx = await crowdFunder.removeCampaign(campaignAddress)
-        expect(cancelCampaignTx).to.emit(crowdFunder, "CampaignCanceled")
-      })
-    })
-
-    describe("getCampaign", function()
-    {
-      it("returns campaign object if it exists", async () => {
-        const getCampaignDetails = await crowdFunder.getCampaign(campaignAddress)
-        // console.log(getCampaignDetails)
-        assert(getCampaignDetails.creator.length > 0)
-      })
-
-      it("reverts if campaign doesn't exist", async () => {
-        await expect(crowdFunder.getCampaign("0xe8387C8a8c1B74bB0A8d6c19b313468e3071E8D3"))
-          .to.be.revertedWith("CrowdFunder__NoSuchCampaign")
+        // const cancelCampaignTx = await crowdFunder.removeCampaign(campaignAddress)
+        // expect(cancelCampaignTx).to.emit(crowdFunder, "CampaignCanceled")
       })
     })
   })

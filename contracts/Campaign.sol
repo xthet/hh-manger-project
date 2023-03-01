@@ -41,8 +41,8 @@ contract Campaign is KeeperCompatibleInterface{
   uint256 public currentBalance;
   uint256 private immutable i_lastTimeStamp;
   uint256 private immutable i_maxTimeStamp;
+  uint256 public deadline;
   C_State public c_state = C_State.Fundraising; // default c_state
-  mapping (address => uint256) public donations;
   address private immutable i_linkTokenAddress;
   address private immutable i_upkeepCreatorAddress;
   uint256 private rId;
@@ -59,8 +59,29 @@ contract Campaign is KeeperCompatibleInterface{
     C_State currentC_State;
     string s_imageURI;
     string s_campaignURI;
-    uint256 i_lastTimeStamp;
+    uint256 i_deadline;
   }
+
+  struct phyReward {
+    uint256 price;
+    string title;
+    string description;
+    string[] perks;
+    uint256 delDate;
+    uint256 quantity;
+  }
+
+  struct digReward {
+    uint256 price;
+    string title;
+    string description;
+    string[] perks;
+    uint256 delDate;
+  }
+
+  mapping (uint256 => phyReward) public phyRewards;
+  mapping (uint256 => digReward) public digRewards;
+  mapping (address => uint256[]) public donations;
 
 
   // events
@@ -108,6 +129,7 @@ contract Campaign is KeeperCompatibleInterface{
     }else{
       duration = _duration;
     }
+    deadline = i_lastTimeStamp + duration;
     s_imageURI = _imageURI;
     s_campaignURI = _campaignURI;
     currentBalance = 0;
@@ -125,7 +147,7 @@ contract Campaign is KeeperCompatibleInterface{
   function donate() external payable {
     if(c_state != C_State.Fundraising){revert Campaign__NotInC_State();}
     if (msg.sender == i_creator){revert Campaign__DonatorIsCreator(msg.sender);}
-    donations[msg.sender] = donations[msg.sender].add(msg.value);
+    donations[msg.sender].push(msg.value);
     currentBalance = currentBalance.add(msg.value);
     emit FundingRecieved(msg.sender, msg.value, currentBalance);
   }
@@ -167,13 +189,36 @@ contract Campaign is KeeperCompatibleInterface{
 
   function refund(address _donator) public {
     if(c_state == C_State.Expired){revert Campaign__AlreadyExpired(address(this));}
-    if(donations[_donator] <= 0){revert Campaign__NoDonationsHere(_donator);}
-    uint256 amountToRefund = donations[_donator];
-    donations[_donator] = 0;
+    if(donations[_donator].length == 0 ){revert Campaign__NoDonationsHere(_donator);}
+    uint256 amountToRefund = calcFunderDonations(donations[_donator]);
+    delete(donations[_donator]);
     if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt(address(this));}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Campaign__RefundFailed();}
+  }
+
+  function calcFunderDonations(uint256[] memory _funderArr) private pure returns(uint256 result){
+    for (uint256 i = 0; i < _funderArr.length; i++) {
+      result += _funderArr[i];
+    }
+    return result;
+  }
+
+  function makeDigitalReward(
+    uint256 _price, string memory _title, 
+    string memory _description, 
+    string[] memory _perks
+    ) public {
+    digRewards[_price] = digReward(_price, _title, _description, _perks, deadline);
+  }
+
+  function makePhysicalReward( 
+    uint256 _price, string memory _title, 
+    string memory _description, string[] memory _perks, 
+    uint256 _deadline, uint256 _quantity
+    ) public {
+    phyRewards[_price] = phyReward(_price, _title, _description, _perks, _deadline, _quantity);
   }
 
   function endCampaign() public isCreator {
@@ -202,7 +247,7 @@ contract Campaign is KeeperCompatibleInterface{
   
 
   // getter functions
-  function getDonations(address _donator) public view returns(uint256) {
+  function getDonations(address _donator) public view returns(uint256[] memory) {
     return donations[_donator];
   }
 
