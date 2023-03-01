@@ -91,7 +91,7 @@ import { CrowdFunder } from "../../typechain-types"
     describe("cancelCampaign", function()
     {
       it("emits campaign canceled event", async () => {
-        const cancelCampaignTx = await crowdFunder.cancelCampaign(campaignAddress)
+        const cancelCampaignTx = await crowdFunder.removeCampaign(campaignAddress)
         expect(cancelCampaignTx).to.emit(crowdFunder, "CampaignCanceled")
       })
     })

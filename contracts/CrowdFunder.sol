@@ -24,14 +24,7 @@ contract CrowdFunder {
 
   event CampaignAdded(
     address indexed _campaignAddress,
-    address indexed _creator,
-    string _title,
-    string _description,
-    string _category,
-    string[] _tags,
-    uint256 _goalAmount,
-    uint256 _duration,
-    string _campaignURI
+    address indexed _creator
   );
 
   event CampaignFunded(
@@ -44,17 +37,16 @@ contract CrowdFunder {
     address indexed _campaignAddress
   );
 
-  event CampaignCanceled(
+  event CampaignRemoved(
     address indexed _campaignAddress
   );
 
-
+  uint256 public campaignCounter;
   mapping (address => Campaign) campaigns;
-  mapping (address => address[]) campaignsBacked;
 
 
   modifier isCreator(address _campaignAddress) {
-    if(campaigns[_campaignAddress].getCreator() != msg.sender){
+    if(campaigns[_campaignAddress].i_creator() != msg.sender){
       revert CrowdFunder__NotCreator(msg.sender, _campaignAddress);
     }
     _;
@@ -71,45 +63,45 @@ contract CrowdFunder {
     string[] memory _tags, 
     uint256 _goalAmount,
     uint256 _duration,
+    string memory _imageURI,
     string memory _campaignURI,
-    address _registryAddress, 
-    address _linkTokenAddress
+    address _linkTokenAddress,
+    address _upkeepCreatorAddress
     ) external {
-    Campaign newCampaign = new Campaign(payable(msg.sender), _title, _description, _category, _tags, _goalAmount, _duration, _campaignURI, _registryAddress, _linkTokenAddress);
+    Campaign newCampaign = new Campaign(
+      payable(msg.sender), _title, 
+      _description, _category, 
+      _tags, _goalAmount, 
+      _duration, _imageURI, _campaignURI, 
+      _linkTokenAddress, _upkeepCreatorAddress
+    );
     campaigns[address(newCampaign)] = newCampaign;
-    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _goalAmount, _duration, _campaignURI);
+    campaignCounter+=1;
+    emit CampaignAdded(address(newCampaign), msg.sender);
   }
 
   function donateToCampaign (address _campaignAddress) public payable {
-    (bool success, bytes memory data) = _campaignAddress.delegatecall(abi.encodeWithSignature("donate()"));
+    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("donate()"));
     if(success){
       emit CampaignFunded(msg.sender, _campaignAddress);
     }else{
-      if(data.length>0){revert(string(abi.encodePacked(data)));}
-      else{revert CrowdFunder__DonationFailed(_campaignAddress);}
+      revert CrowdFunder__DonationFailed(_campaignAddress);
     }
   }
 
   function refundFromCampaign(address _campaignAddress, address _donator) public {
-    if(campaigns[_campaignAddress].getNowRefundable()){
-      (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _donator));
-      if(success){
-        emit CampaignShrunk(msg.sender, _campaignAddress);
-      }else{
-        revert CrowdFunder__RefundFailed(_campaignAddress);
-      }
+    (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _donator));
+    if(success){
+      emit CampaignShrunk(msg.sender, _campaignAddress);
     }else{
-      revert CrowdFunder__CampaignNotRefundable(_campaignAddress);
+      revert CrowdFunder__RefundFailed(_campaignAddress);
     }
   }
 
-  function cancelCampaign (address _campaignAddress) public isCreator(_campaignAddress) {
-    if(uint(campaigns[_campaignAddress].getCampaignState()) == 1){revert CrowdFunder__CampaignStillActive(_campaignAddress);}
+  function removeCampaign (address _campaignAddress) public isCreator(_campaignAddress) {
+    if(uint(campaigns[_campaignAddress].c_state()) == 0){revert CrowdFunder__CampaignStillActive(_campaignAddress);}
     delete(campaigns[_campaignAddress]);
-    emit CampaignCanceled(_campaignAddress);
-  }
-
-  function getCampaign(address _campaignAddress) external view returns (Campaign.CampaignObject memory) {
-    return campaigns[_campaignAddress].getCampaignDetails();
+    campaignCounter-=1;
+    emit CampaignRemoved(_campaignAddress);
   }
 }

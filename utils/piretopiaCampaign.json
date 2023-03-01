@@ -1,0 +1,23 @@
+{
+  "creator": "0x4B5a2B7b5438A79797698570AC9D45155D3Bb0e3",
+  "title": "Piratopia: Raiders of Pirate Bay",
+  "tagline": "Conquer the Seven Seas in this open-world Pirate Ship multiplayer game for PC!",
+  "imageURI": "https://ipfs.io/ipfs/QmRxwthL5Ti5Aex5cRr1hySgoGpAQ3ZiCPa2kD5PfpiMAx?filename=piretopia_card_image.png",
+  "httpImageURI": "https://ipfs.io/ipfs/QmRxwthL5Ti5Aex5cRr1hySgoGpAQ3ZiCPa2kD5PfpiMAx?filename=piretopia_card_image.png",
+  "category": "Video Games",
+  "tags": ["adventure games", "video games", "arcade games"],
+  "duration": "1296000",
+  "faq": {
+    "When is your game going to be launched?": "The original Piratopia is already available as a free-to-play demo on Steam. We are aiming for the new game, Piratopia: Raiders of Pirate Bay, to be accessible for beta or early access around Nov 2023.",
+    "Will there be a demo version available?": "Yes! The original Piratopia is available as a free demo on Steam here: https://store.steampowered.com/app/1681160/Piratopia/.",
+    "When will rewards be delivered?": "We are expecting manufacturing to be completed and shipping to begin Nov 2023."
+  },
+  "rewards": {
+    "0.012": {
+      "price": "0.012",
+      "title": "Early Bird Digital Copy",
+      "description": "A digital copy of the game for STEAM (PC/MAC). Includes digital wallpaper.",
+      "perks": []
+    }
+  }
+}
