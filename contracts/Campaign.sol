@@ -137,7 +137,7 @@ contract Campaign is KeeperCompatibleInterface{
     i_upkeepCreatorAddress = _upkeepCreatorAddress;
   }
 
-  function timeBox() public {
+  function timeBox() public isCreator {
     UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(i_upkeepCreatorAddress);
     LinkTokenInterface token = LinkTokenInterface(i_linkTokenAddress);
     if(token.balanceOf(i_upkeepCreatorAddress) <= 0){revert("no funds");}
@@ -205,11 +205,11 @@ contract Campaign is KeeperCompatibleInterface{
     return result;
   }
 
-  function makeDigitalReward(
+  function makeDigitalReward (
     uint256 _price, string memory _title, 
     string memory _description, 
     string[] memory _perks
-    ) public {
+    ) public isCreator {
     digRewards[_price] = digReward(_price, _title, _description, _perks, deadline);
   }
 
@@ -217,8 +217,13 @@ contract Campaign is KeeperCompatibleInterface{
     uint256 _price, string memory _title, 
     string memory _description, string[] memory _perks, 
     uint256 _deadline, uint256 _quantity
-    ) public {
+    ) public isCreator {
     phyRewards[_price] = phyReward(_price, _title, _description, _perks, _deadline, _quantity);
+  }
+
+  function deleteReward(uint256 _priceID) public isCreator {
+    if(phyRewards[_priceID].price > 0){delete(phyRewards[_priceID]);}
+    if(digRewards[_priceID].price > 0){delete(digRewards[_priceID]);}
   }
 
   function endCampaign() public isCreator {
