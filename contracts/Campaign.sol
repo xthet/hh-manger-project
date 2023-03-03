@@ -69,6 +69,7 @@ contract Campaign is KeeperCompatibleInterface{
     string[] perks;
     uint256 delDate;
     uint256 quantity;
+    string[] shipsTo;
   }
 
   struct digReward {
@@ -77,6 +78,8 @@ contract Campaign is KeeperCompatibleInterface{
     string description;
     string[] perks;
     uint256 delDate;
+    uint256 quantity;
+    bool infinite;
   }
 
   mapping (uint256 => phyReward) public phyRewards;
@@ -208,17 +211,19 @@ contract Campaign is KeeperCompatibleInterface{
   function makeDigitalReward (
     uint256 _price, string memory _title, 
     string memory _description, 
-    string[] memory _perks
+    string[] memory _perks,
+    uint256 _quantity,
+    bool _infinite
     ) public isCreator {
-    digRewards[_price] = digReward(_price, _title, _description, _perks, deadline);
+    digRewards[_price] = digReward(_price, _title, _description, _perks, deadline, _quantity, _infinite);
   }
 
   function makePhysicalReward( 
     uint256 _price, string memory _title, 
     string memory _description, string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity
+    uint256 _deadline, uint256 _quantity, string[] memory _shipsTo
     ) public isCreator {
-    phyRewards[_price] = phyReward(_price, _title, _description, _perks, _deadline, _quantity);
+    phyRewards[_price] = phyReward(_price, _title, _description, _perks, _deadline, _quantity, _shipsTo);
   }
 
   function deleteReward(uint256 _priceID) public isCreator {

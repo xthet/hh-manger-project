@@ -19,6 +19,7 @@ contract CrowdFunder {
     string _username,
     string _twitter,
     string _email,
+    string _location,
     string _bio
   );
 
@@ -41,6 +42,11 @@ contract CrowdFunder {
     address indexed _campaignAddress
   );
 
+  event UserHomeAddrAdded(
+    address _userAddress,
+    string _homeAddr
+  );
+
   uint256 public campaignCounter;
   mapping (address => Campaign) campaigns;
 
@@ -52,8 +58,12 @@ contract CrowdFunder {
     _;
   }
 
-  function addUser(address _address, string memory _username, string memory _twitter, string memory _email, string memory _bio) public {
-    emit UserAdded(_address, _username, _twitter, _email, _bio);
+  function addUser(
+    address _address, string memory _username, 
+    string memory _twitter, string memory _email, 
+    string memory _location, string memory _bio
+    ) public {
+    emit UserAdded(_address, _username, _twitter, _email, _location, _bio);
   }
 
   function addCampaign (
@@ -103,5 +113,9 @@ contract CrowdFunder {
     delete(campaigns[_campaignAddress]);
     campaignCounter-=1;
     emit CampaignRemoved(_campaignAddress);
+  }
+
+  function addUserHomeAddr (address _userAddress, string memory _homeAddr) public {
+    emit UserHomeAddrAdded(_userAddress, _homeAddr);
   }
 }

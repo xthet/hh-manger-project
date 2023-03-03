@@ -9,7 +9,7 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
   const { deploy, log } = deployments
   const { deployer } = await getNamedAccounts()
   const chainId = network.config.chainId
-  const waitBlockConfirmations = chainId?.toString() == "31337" ? 1 : 4
+  const waitBlockConfirmations = chainId?.toString() == "31337" ? 1 : 5
 
   log("==========================")
   const args:any[] = []
