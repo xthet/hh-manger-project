@@ -10,22 +10,30 @@ let addCampaignTxR: ContractReceipt
 
 async function makeCampaign()
 {
-  // crowdFunder = await ethers.getContract("CrowdFunder")
-  // console.log(crowdFunder.address)
+  crowdFunder = await ethers.getContract("CrowdFunder")
+  console.log(crowdFunder.address)
 
-  // addCampaignTx = await crowdFunder.addCampaign(
-  //   "Help Jane Lynn", 
-  //   "Help Jane Lynn reach her goal",
-  //   "Goodwill", 
-  //   ["crowdfund", "actor", "film making"],
-  //   2, 
-  //   BigNumber.from("259200")
-  // )
-  // addCampaignTxR = await addCampaignTx.wait(1)
-  // const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
-  // console.log("Campaign Added")
-  // // console.log(addCampaignTxR)
-  // console.log(campaignAddress)
+  const { creator } = await getNamedAccounts()
+  console.log(`creator: ${creator}`)
+
+  addCampaignTx = await crowdFunder.addCampaign(
+    "Piratopia: Raiders of Pirate Bay",
+    "Conquer the Seven Seas in this open-world Pirate Ship multiplayer game for PC!",
+    "P2E",
+    ["adventure games", "video games", "play to earn games"],
+    ethers.utils.parseEther("5.25"),
+    BigNumber.from("1296000"),
+    "ipfs://QmRxwthL5Ti5Aex5cRr1hySgoGpAQ3ZiCPa2kD5PfpiMAx?filename=piretopia_card_image.png",
+    "ipfs://QmZ6gfftPLcahgD9BDs3X7MNQ2DsH3F61LpmKTGBnpo5qD?filename=piretopiaCampaign.json",
+    "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+    "0x3A7ec66b1054330976E2F0fD1296720e3eBc0Ff8"
+  )
+  addCampaignTxR = await addCampaignTx.wait(1)
+  const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
+  const creatorAddr = addCampaignTxR.events![0].args!._creator
+  console.log("Campaign Added")
+  console.log(`creator: ${creatorAddr}`)
+  console.log(`Campaign Address at: ${campaignAddress}`)
 }
 
 makeCampaign()

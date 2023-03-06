@@ -48,7 +48,7 @@ contract CrowdFunder {
   );
 
   uint256 public campaignCounter;
-  mapping (address => Campaign) campaigns;
+  mapping (address => Campaign) private campaigns;
 
 
   modifier isCreator(address _campaignAddress) {

@@ -59,7 +59,7 @@ contract Campaign is KeeperCompatibleInterface{
     C_State currentC_State;
     string s_imageURI;
     string s_campaignURI;
-    uint256 i_deadline;
+    uint256 deadline;
   }
 
   struct phyReward {
@@ -254,7 +254,6 @@ contract Campaign is KeeperCompatibleInterface{
   function updateCampaignURI(string memory _campaignURI) public isCreator {
     s_campaignURI = _campaignURI;
   }
-  
 
   // getter functions
   function getDonations(address _donator) public view returns(uint256[] memory) {
@@ -274,7 +273,7 @@ contract Campaign is KeeperCompatibleInterface{
       c_state,
       s_imageURI,
       s_campaignURI,
-      i_lastTimeStamp
+      deadline
     );
   }
 }
