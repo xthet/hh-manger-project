@@ -39,6 +39,13 @@ const config: HardhatUserConfig =
       accounts: [process.env.PRIVATE_KEY!],
       timeout: 1000000
     }
+    // sepolia:{
+    //   chainId: 11155111,
+    //   // blockConfirmations: 6,
+    //   url: process.env.SEPOLIA_RPC_URL,
+    //   accounts: [process.env.ALP_PRIVATE_KEY!],
+    //   timeout: 1000000
+    // }
   },
   namedAccounts: {
     deployer: {

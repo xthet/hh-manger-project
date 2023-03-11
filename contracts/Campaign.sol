@@ -76,7 +76,7 @@ contract Campaign is KeeperCompatibleInterface{
   mapping (uint256 => reward) public rewards;
   mapping (address => uint256[]) public donations;
 
-  uint256[] rKeys;
+  uint256[] public rKeys;
 
 
   // events
@@ -138,12 +138,14 @@ contract Campaign is KeeperCompatibleInterface{
   function donate() external payable {
     if(c_state != C_State.Fundraising){revert Campaign__NotInC_State();}
     if(msg.sender == i_creator){revert Campaign__DonatorIsCreator();}
+    currentBalance = currentBalance.add(msg.value);
     if(rewards[msg.value].price > 0  //exists
       && !rewards[msg.value].infinite // is not infinite
-      && rewards[msg.value].quantity > 0  // its quantity > 0
-    ){rewards[msg.value].quantity - 1;}
+    ){
+      rewards[msg.value].quantity - 1;
+      if(rewards[msg.value].quantity <= 0){delete(rewards[msg.value]);}
+    }
     donations[msg.sender].push(msg.value);
-    currentBalance = currentBalance.add(msg.value);
     emit FundingRecieved(msg.sender, msg.value, currentBalance);
   }
 
@@ -233,6 +235,10 @@ contract Campaign is KeeperCompatibleInterface{
   // getter functions
   function getDonations(address _donator) public view returns(uint256[] memory) {
     return donations[_donator];
+  }
+
+  function getRewardKeys() public view returns(uint256[] memory){
+    return rKeys;
   }
 
   function getCampaignDetails() public view returns(CampaignObject memory) {
