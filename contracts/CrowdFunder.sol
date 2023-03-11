@@ -25,7 +25,9 @@ contract CrowdFunder {
 
   event CampaignAdded(
     address indexed _campaignAddress,
-    address indexed _creator
+    address indexed _creator,
+    string _category,
+    string[] _tags
   );
 
   event CampaignFunded(
@@ -87,7 +89,7 @@ contract CrowdFunder {
     );
     campaigns[address(newCampaign)] = newCampaign;
     campaignCounter+=1;
-    emit CampaignAdded(address(newCampaign), msg.sender);
+    emit CampaignAdded(address(newCampaign), msg.sender, _category, _tags);
   }
 
   function donateToCampaign (address _campaignAddress) public payable {

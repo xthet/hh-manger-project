@@ -7,15 +7,15 @@ import "./UpkeepIDConsumer.sol";
 
 // errors
 error Campaign__NotInC_State();
-error Campaign__NotCreator(address _address);
-error Campaign__DonatorIsCreator(address _address);
+error Campaign__NotCreator();
+error Campaign__DonatorIsCreator();
 error Campaign__PayoutFailed();
 error Campaign__NoDonationsHere(address _donatorAddress);
 error Campaign__RefundFailed();
 error Campaign__UpkeepNotNeeded();
-error Campaign__AlreadyExpired(address _campaignAddress);
-error Campaign__NotRefundable(address _campaignAddress);
-error Campaign__CampaignBankrupt(address _campaignAddress);
+error Campaign__AlreadyExpired();
+error Campaign__NotRefundable();
+error Campaign__CampaignBankrupt();
 
 
 contract Campaign is KeeperCompatibleInterface{
@@ -40,7 +40,7 @@ contract Campaign is KeeperCompatibleInterface{
   uint256 public duration;
   uint256 public currentBalance;
   uint256 private immutable i_lastTimeStamp;
-  uint256 private immutable i_maxTimeStamp;
+  // uint256 private immutable i_maxTimeStamp;
   uint256 public deadline;
   C_State public c_state = C_State.Fundraising; // default c_state
   address private immutable i_linkTokenAddress;
@@ -62,17 +62,7 @@ contract Campaign is KeeperCompatibleInterface{
     uint256 deadline;
   }
 
-  struct phyReward {
-    uint256 price;
-    string title;
-    string description;
-    string[] perks;
-    uint256 delDate;
-    uint256 quantity;
-    string[] shipsTo;
-  }
-
-  struct digReward {
+  struct reward {
     uint256 price;
     string title;
     string description;
@@ -80,11 +70,13 @@ contract Campaign is KeeperCompatibleInterface{
     uint256 delDate;
     uint256 quantity;
     bool infinite;
+    string[] shipsTo;
   }
 
-  mapping (uint256 => phyReward) public phyRewards;
-  mapping (uint256 => digReward) public digRewards;
+  mapping (uint256 => reward) public rewards;
   mapping (address => uint256[]) public donations;
+
+  uint256[] rKeys;
 
 
   // events
@@ -101,7 +93,7 @@ contract Campaign is KeeperCompatibleInterface{
 
   // modifiers
   modifier isCreator() {
-    if(msg.sender != i_creator){revert Campaign__NotCreator(msg.sender);}
+    if(msg.sender != i_creator){revert Campaign__NotCreator();}
     _;
   }
 
@@ -126,12 +118,8 @@ contract Campaign is KeeperCompatibleInterface{
     s_tags = _tags;
     goalAmount = _goalAmount;
     i_lastTimeStamp = block.timestamp;
-    i_maxTimeStamp = i_lastTimeStamp + 5184000; // 60days
-    if(_duration > (i_maxTimeStamp.sub(i_lastTimeStamp))){
-      duration = i_maxTimeStamp.sub(i_lastTimeStamp);
-    }else{
-      duration = _duration;
-    }
+    // i_maxTimeStamp = i_lastTimeStamp + 5184000; // 60days
+    duration = _duration;
     deadline = i_lastTimeStamp + duration;
     s_imageURI = _imageURI;
     s_campaignURI = _campaignURI;
@@ -149,7 +137,11 @@ contract Campaign is KeeperCompatibleInterface{
 
   function donate() external payable {
     if(c_state != C_State.Fundraising){revert Campaign__NotInC_State();}
-    if (msg.sender == i_creator){revert Campaign__DonatorIsCreator(msg.sender);}
+    if(msg.sender == i_creator){revert Campaign__DonatorIsCreator();}
+    if(rewards[msg.value].price > 0  //exists
+      && !rewards[msg.value].infinite // is not infinite
+      && rewards[msg.value].quantity > 0  // its quantity > 0
+    ){rewards[msg.value].quantity - 1;}
     donations[msg.sender].push(msg.value);
     currentBalance = currentBalance.add(msg.value);
     emit FundingRecieved(msg.sender, msg.value, currentBalance);
@@ -191,11 +183,11 @@ contract Campaign is KeeperCompatibleInterface{
   }
 
   function refund(address _donator) public {
-    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired(address(this));}
+    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired();}
     if(donations[_donator].length == 0 ){revert Campaign__NoDonationsHere(_donator);}
     uint256 amountToRefund = calcFunderDonations(donations[_donator]);
     delete(donations[_donator]);
-    if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt(address(this));}
+    if(currentBalance < amountToRefund){revert Campaign__CampaignBankrupt();}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Campaign__RefundFailed();}
@@ -208,47 +200,30 @@ contract Campaign is KeeperCompatibleInterface{
     return result;
   }
 
-  function makeDigitalReward (
-    uint256 _price, string memory _title, 
-    string memory _description, 
-    string[] memory _perks,
-    uint256 _quantity,
-    bool _infinite
-    ) public isCreator {
-    digRewards[_price] = digReward(_price, _title, _description, _perks, deadline, _quantity, _infinite);
-  }
-
-  function makePhysicalReward( 
+  function makeReward( 
     uint256 _price, string memory _title, 
     string memory _description, string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity, string[] memory _shipsTo
+    uint256 _deadline, uint256 _quantity, bool _infinite, string[] memory _shipsTo
     ) public isCreator {
-    phyRewards[_price] = phyReward(_price, _title, _description, _perks, _deadline, _quantity, _shipsTo);
+    rKeys.push(_price);
+    // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
+    rewards[_price] = reward(_price, _title, _description, _perks, _deadline, _quantity, _infinite, _shipsTo);
   }
 
   function deleteReward(uint256 _priceID) public isCreator {
-    if(phyRewards[_priceID].price > 0){delete(phyRewards[_priceID]);}
-    if(digRewards[_priceID].price > 0){delete(digRewards[_priceID]);}
+    if(rewards[_priceID].price > 0){delete(rewards[_priceID]);}
   }
 
   function endCampaign() public isCreator {
-    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired(address(this));}
+    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired();}
     c_state = C_State.Canceled;
     emit CampaignCanceled();
   }
 
   // update functions
-  function updateGoalAmount(uint256 _newGoalAmount) public isCreator {
-    goalAmount = _newGoalAmount;
-  }
-
   function updateDuration(uint256 _additionalTime) public isCreator {
-    if((_additionalTime + duration) > (i_maxTimeStamp.sub(i_lastTimeStamp))){
-      duration = i_maxTimeStamp.sub(i_lastTimeStamp); // 60days
-    }
-    else{
-      duration += _additionalTime;
-    }
+    duration += _additionalTime;
+    deadline = i_lastTimeStamp + duration;
   }
 
   function updateCampaignURI(string memory _campaignURI) public isCreator {
