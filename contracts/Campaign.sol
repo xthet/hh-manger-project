@@ -240,6 +240,10 @@ contract Campaign is KeeperCompatibleInterface{
   function getRewardKeys() public view returns(uint256[] memory){
     return rKeys;
   }
+  
+  function getReward(uint256 _priceID) public view returns (reward memory) {
+    return rewards[_priceID];
+  }
 
   function getCampaignDetails() public view returns(CampaignObject memory) {
     return CampaignObject(

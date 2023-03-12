@@ -1,7 +1,7 @@
 import { network, deployments, ethers, getNamedAccounts } from "hardhat"
 
 let campaign
-const campaignAddress = "0x485E7959d7944D677f00761286296651D667B891"
+const campaignAddress = "0x2d6A68233AEAc3De13622F593212b9D5a59e54B8"
 
 async function makeReward(){
   campaign = await ethers.getContractAt("Campaign", campaignAddress)
