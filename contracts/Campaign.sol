@@ -43,8 +43,8 @@ contract Campaign is KeeperCompatibleInterface{
   // uint256 private immutable i_maxTimeStamp;
   uint256 public deadline;
   C_State public c_state = C_State.Fundraising; // default c_state
-  address private immutable i_linkTokenAddress;
-  address private immutable i_upkeepCreatorAddress;
+  // address private immutable i_linkTokenAddress;
+  // address private immutable i_upkeepCreatorAddress;
   uint256 private rId;
 
   struct CampaignObject {
@@ -106,10 +106,7 @@ contract Campaign is KeeperCompatibleInterface{
     string[] memory _tags,
     uint256 _goalAmount,
     uint256 _duration,
-    string memory _imageURI,
-    string memory _campaignURI,
-    address _linkTokenAddress,
-    address _upkeepCreatorAddress
+    string memory _imageURI
   ) {
     i_creator = payable(_creator);
     s_title = _title;
@@ -122,16 +119,13 @@ contract Campaign is KeeperCompatibleInterface{
     duration = _duration;
     deadline = i_lastTimeStamp + duration;
     s_imageURI = _imageURI;
-    s_campaignURI = _campaignURI;
     currentBalance = 0;
-    i_linkTokenAddress = _linkTokenAddress;
-    i_upkeepCreatorAddress = _upkeepCreatorAddress;
   }
 
-  function timeBox() public isCreator {
-    UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(i_upkeepCreatorAddress);
-    LinkTokenInterface token = LinkTokenInterface(i_linkTokenAddress);
-    if(token.balanceOf(i_upkeepCreatorAddress) <= 0){revert("no funds");}
+  function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress) public isCreator {
+    UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreatorAddress);
+    LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
+    if(token.balanceOf(_upkeepCreatorAddress) <= 0){revert("no funds");}
     rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", address(this), 500000, i_creator, "0x", 10000000000000000000, 0);
   }
 

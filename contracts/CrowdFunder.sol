@@ -19,8 +19,7 @@ contract CrowdFunder {
     string _username,
     string _twitter,
     string _email,
-    string _location,
-    string _bio
+    string _sig
   );
 
   event CampaignAdded(
@@ -63,9 +62,9 @@ contract CrowdFunder {
   function addUser(
     address _address, string memory _username, 
     string memory _twitter, string memory _email, 
-    string memory _location, string memory _bio
+    string memory _sig
     ) public {
-    emit UserAdded(_address, _username, _twitter, _email, _location, _bio);
+    emit UserAdded(_address, _username, _twitter, _email, _sig);
   }
 
   function addCampaign (
@@ -75,17 +74,13 @@ contract CrowdFunder {
     string[] memory _tags, 
     uint256 _goalAmount,
     uint256 _duration,
-    string memory _imageURI,
-    string memory _campaignURI,
-    address _linkTokenAddress,
-    address _upkeepCreatorAddress
+    string memory _imageURI
     ) external {
     Campaign newCampaign = new Campaign(
       payable(msg.sender), _title, 
       _description, _category, 
       _tags, _goalAmount, 
-      _duration, _imageURI, _campaignURI, 
-      _linkTokenAddress, _upkeepCreatorAddress
+      _duration, _imageURI
     );
     campaigns[address(newCampaign)] = newCampaign;
     campaignCounter+=1;

@@ -1,17 +1,17 @@
 import { network, deployments, ethers, getNamedAccounts } from "hardhat"
 
 let campaign
-const campaignAddress = "0x2d6A68233AEAc3De13622F593212b9D5a59e54B8"
+const campaignAddress = "0x3e3FDACb5148f11FDCc489483748195755e52c6f"
 
 async function makeReward(){
   campaign = await ethers.getContractAt("Campaign", campaignAddress)
   try {
     const getDeadline = await campaign.deadline()
     const addRewardTx = await campaign.makeReward(
-      ethers.utils.parseEther("0.045"),
-      "Special Backer Edition",
-      "A digital copy of the game for STEAM (PC/MAC) and includes exclusive backer-only",
-      ["Digital Artbook", "Original Soundtrack", "Discord Title", "Digital Wallpaper", "Beta Access to the Game during development"],
+      ethers.utils.parseEther("0.022"),
+      "Digital Copy with OST",
+      "A digital copy of the game for STEAM (PC/MAC).",
+      ["Digital Artbook", "Original Soundtrack"],
       getDeadline,
       100,
       true,
