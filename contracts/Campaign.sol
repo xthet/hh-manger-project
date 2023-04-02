@@ -9,14 +9,11 @@ import "./UpkeepIDConsumer.sol";
 error Campaign__NotInC_State();
 error Campaign__NotCreator();
 error Campaign__DonatorIsCreator();
-error Campaign__PayoutFailed();
 error Campaign__NoDonationsHere(address _donatorAddress);
 error Campaign__RefundFailed();
 error Campaign__UpkeepNotNeeded();
-error Campaign__AlreadyExpired();
 error Campaign__NotRefundable();
 error Campaign__CampaignBankrupt();
-
 
 contract Campaign is KeeperCompatibleInterface{
   using SafeMath for uint256;
@@ -26,6 +23,11 @@ contract Campaign is KeeperCompatibleInterface{
     Fundraising,
     Expired,
     Canceled
+  }
+
+  enum C_Mode {
+    Draft,
+    Published
   }
 
   // c_state variables
@@ -42,6 +44,7 @@ contract Campaign is KeeperCompatibleInterface{
   uint256 private immutable i_lastTimeStamp;
   // uint256 private immutable i_maxTimeStamp;
   uint256 public deadline;
+  C_Mode public c_mode = C_Mode.Draft;
   C_State public c_state = C_State.Fundraising; // default c_state
   // address private immutable i_linkTokenAddress;
   // address private immutable i_upkeepCreatorAddress;
@@ -127,15 +130,15 @@ contract Campaign is KeeperCompatibleInterface{
     LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
     if(token.balanceOf(_upkeepCreatorAddress) <= 0){revert("no funds");}
     rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", address(this), 500000, i_creator, "0x", 10000000000000000000, 0);
+    c_mode = C_Mode.Published;
   }
 
   function donate() external payable {
     if(c_state != C_State.Fundraising){revert Campaign__NotInC_State();}
     if(msg.sender == i_creator){revert Campaign__DonatorIsCreator();}
     currentBalance = currentBalance.add(msg.value);
-    if(rewards[msg.value].price > 0  //exists
-      && !rewards[msg.value].infinite // is not infinite
-    ){
+    if(rewards[msg.value].price > 0 && !rewards[msg.value].infinite) //exists and is not infinite
+    {
       rewards[msg.value].quantity - 1;
       if(rewards[msg.value].quantity <= 0){delete(rewards[msg.value]);}
     }
@@ -175,11 +178,11 @@ contract Campaign is KeeperCompatibleInterface{
     if(success){
       emit CreatorPaid(i_creator, address(this));
     }
-    else{revert Campaign__PayoutFailed();}
+    else{revert();}
   }
 
   function refund(address _donator) public {
-    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired();}
+    if(c_state == C_State.Expired){revert Campaign__NotInC_State();}
     if(donations[_donator].length == 0 ){revert Campaign__NoDonationsHere(_donator);}
     uint256 amountToRefund = calcFunderDonations(donations[_donator]);
     delete(donations[_donator]);
@@ -207,21 +210,17 @@ contract Campaign is KeeperCompatibleInterface{
   }
 
   function deleteReward(uint256 _priceID) public isCreator {
+    if(c_mode != C_Mode.Draft){revert();}
     if(rewards[_priceID].price > 0){delete(rewards[_priceID]);}
   }
 
   function endCampaign() public isCreator {
-    if(c_state == C_State.Expired){revert Campaign__AlreadyExpired();}
+    if(c_state == C_State.Expired){revert();}
     c_state = C_State.Canceled;
     emit CampaignCanceled();
   }
 
   // update functions
-  function updateDuration(uint256 _additionalTime) public isCreator {
-    duration += _additionalTime;
-    deadline = i_lastTimeStamp + duration;
-  }
-
   function updateCampaignURI(string memory _campaignURI) public isCreator {
     s_campaignURI = _campaignURI;
   }

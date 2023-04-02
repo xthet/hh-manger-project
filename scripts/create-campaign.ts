@@ -23,10 +23,10 @@ async function makeCampaign()
     ["adventure games", "video games", "play to earn games"],
     ethers.utils.parseEther("5.25"),
     BigNumber.from("1296000"),
-    "ipfs://QmYZ5bafXB6ttnfAFQT9mQEMNto9h6iDEtaHhj3GvcLhBJ?filename=piratopiaart.jpg",
-    "ipfs://QmZLsHtDgbFNezw3refECF4frX9KrFJJjPMEtCYyPSEfAS?filename=piretopiaCampaign.json",
-    "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
-    "0x3A7ec66b1054330976E2F0fD1296720e3eBc0Ff8"
+    "ipfs://QmYZ5bafXB6ttnfAFQT9mQEMNto9h6iDEtaHhj3GvcLhBJ?filename=piratopiaart.jpg"
+    // "ipfs://QmZLsHtDgbFNezw3refECF4frX9KrFJJjPMEtCYyPSEfAS?filename=piretopiaCampaign.json"
+    // "0x326C977E6efc84E512bB9C30f76E30c160eD06FB",
+    // "0x3A7ec66b1054330976E2F0fD1296720e3eBc0Ff8"
   )
   addCampaignTxR = await addCampaignTx.wait(1)
   const campaignAddress = addCampaignTxR.events![0].args!._campaignAddress

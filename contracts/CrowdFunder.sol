@@ -10,6 +10,7 @@ error CrowdFunder__CampaignStillActive(address _campaignAddress);
 error CrowdFunder__DonationFailed(address _campaignAddress);
 error CrowdFunder__RefundFailed(address _campaignAddress);
 error CrowdFunder__CampaignNotRefundable(address _campaignAddress);
+// error CrowdFunder__PublishFailed(address _campaignAddress);
 
 contract CrowdFunder {
   using SafeMath for uint256;
@@ -19,6 +20,7 @@ contract CrowdFunder {
     string _username,
     string _twitter,
     string _email,
+    string _homeAddress,
     string _sig
   );
 
@@ -43,14 +45,12 @@ contract CrowdFunder {
     address indexed _campaignAddress
   );
 
-  event UserHomeAddrAdded(
-    address _userAddress,
-    string _homeAddr
+  event CampaignPublished(
+    address _campaignAddress
   );
 
   uint256 public campaignCounter;
   mapping (address => Campaign) private campaigns;
-
 
   modifier isCreator(address _campaignAddress) {
     if(campaigns[_campaignAddress].i_creator() != msg.sender){
@@ -62,9 +62,10 @@ contract CrowdFunder {
   function addUser(
     address _address, string memory _username, 
     string memory _twitter, string memory _email, 
+    string memory _homeAddress,
     string memory _sig
     ) public {
-    emit UserAdded(_address, _username, _twitter, _email, _sig);
+    emit UserAdded(_address, _username, _twitter, _email, _homeAddress, _sig);
   }
 
   function addCampaign (
@@ -83,7 +84,6 @@ contract CrowdFunder {
       _duration, _imageURI
     );
     campaigns[address(newCampaign)] = newCampaign;
-    campaignCounter+=1;
     emit CampaignAdded(address(newCampaign), msg.sender, _category, _tags);
   }
 
@@ -112,7 +112,11 @@ contract CrowdFunder {
     emit CampaignRemoved(_campaignAddress);
   }
 
-  function addUserHomeAddr (address _userAddress, string memory _homeAddr) public {
-    emit UserHomeAddrAdded(_userAddress, _homeAddr);
+  function publishCampaign(address _campaignAddress, address _upkeepCreator, address _linkToken) public isCreator(_campaignAddress) {
+    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timebox(address,address)", _upkeepCreator, _linkToken));
+    if(success){
+      campaignCounter+=1;
+      emit CampaignPublished(_campaignAddress);
+    }else{revert();}
   }
 }

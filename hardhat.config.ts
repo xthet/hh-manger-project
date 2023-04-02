@@ -27,29 +27,26 @@ const config: HardhatUserConfig =
     },
     rinkeby:{
       chainId: 4,
-      // blockConfirmations: 7,
       url: process.env.RINKEBY_RPC_URL,
       accounts: [process.env.PRIVATE_KEY!],
       timeout: 1000000
     },
     goerli:{
       chainId: 5,
-      // blockConfirmations: 6,
       url: process.env.GOERLI_RPC_URL,
       accounts: [process.env.PRIVATE_KEY!],
       timeout: 1000000
+    },
+    fuji:{
+      chainId: 43113,
+      url: process.env.FUJI_RPC_URL,
+      accounts: [process.env.ALPHA_PRIVATE_KEY!],
+      timeout: 1000000
     }
-    // sepolia:{
-    //   chainId: 11155111,
-    //   // blockConfirmations: 6,
-    //   url: process.env.SEPOLIA_RPC_URL,
-    //   accounts: [process.env.ALP_PRIVATE_KEY!],
-    //   timeout: 1000000
-    // }
   },
   namedAccounts: {
     deployer: {
-      default: 0, // here this will by default take the first account as deployer
+      default: 0, 
     },
     donator: {
       default: 1,
@@ -66,8 +63,8 @@ const config: HardhatUserConfig =
     apiKey: process.env.ETHERSCAN_API_KEY,
   },
   mocha: {
-    timeout: 100000000, // tests: asking mocha to give the testnet more time (100000s)
-  },
+    timeout: 100000000,
+  }
 }
 
 export default config
