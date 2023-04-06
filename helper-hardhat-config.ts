@@ -24,6 +24,6 @@ export const networkConfig:networkConfig = {
     linkTokenAddress: "0x0b9d5D9136855f6FEc3c0993feE6E9CE8a297846",
     registrarAddress: "0x57A4a13b35d25EE78e084168aBaC5ad360252467",
     registryAddress: "0xE16Df59B887e3Caa439E0b29B42bA2e7976FD8b2",
-    upkeepCreatorAddress: "0xE8Db971CF3693154167431D389CA58d7D7917dC1"
+    upkeepCreatorAddress: "0x7CC5f4f242DCAc2b79d8c803408e9256dc958c65"
   }
 }

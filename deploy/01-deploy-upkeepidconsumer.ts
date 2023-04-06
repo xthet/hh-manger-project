@@ -14,10 +14,10 @@ const deployUpkeepIDConsumer: DeployFunction = async function (hre: HardhatRunti
 
   log("==========================")
   if(hasKey(networkConfig, chainId!))
-  { const args:any[] = [networkConfig[5].linkTokenAddress, networkConfig[chainId].registrarAddress, networkConfig[chainId].registryAddress]
+  { const args:any[] = [networkConfig[chainId].linkTokenAddress, networkConfig[chainId].registrarAddress, networkConfig[chainId].registryAddress]
     const upkeepIDConsumer = await deploy("UpkeepIDConsumer", {
       from: deployer,
-      args: args,
+      args,
       log: true,
       waitConfirmations: waitBlockConfirmations
     })

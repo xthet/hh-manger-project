@@ -5,12 +5,11 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Campaign.sol";
 
 // errors
-error CrowdFunder__NotCreator(address _caller, address _campaignAddress);
-error CrowdFunder__CampaignStillActive(address _campaignAddress);
-error CrowdFunder__DonationFailed(address _campaignAddress);
-error CrowdFunder__RefundFailed(address _campaignAddress);
-error CrowdFunder__CampaignNotRefundable(address _campaignAddress);
-// error CrowdFunder__PublishFailed(address _campaignAddress);
+error Crf_NotCrtr();
+error Crf_CSA(); /** cmp still active */
+error Crf_DonF();
+error Crf_RefF();
+error Crf_PubF();
 
 contract CrowdFunder {
   using SafeMath for uint256;
@@ -52,19 +51,12 @@ contract CrowdFunder {
   uint256 public campaignCounter;
   mapping (address => Campaign) private campaigns;
 
-  modifier isCreator(address _campaignAddress) {
-    if(campaigns[_campaignAddress].i_creator() != msg.sender){
-      revert CrowdFunder__NotCreator(msg.sender, _campaignAddress);
-    }
-    _;
-  }
-
   function addUser(
     address _address, string memory _username, 
     string memory _twitter, string memory _email, 
     string memory _homeAddress,
     string memory _sig
-    ) public {
+    ) external {
     emit UserAdded(_address, _username, _twitter, _email, _homeAddress, _sig);
   }
 
@@ -87,36 +79,36 @@ contract CrowdFunder {
     emit CampaignAdded(address(newCampaign), msg.sender, _category, _tags);
   }
 
-  function donateToCampaign (address _campaignAddress) public payable {
+  function donateToCampaign (address _campaignAddress) external payable {
     (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("donate()"));
     if(success){
       emit CampaignFunded(msg.sender, _campaignAddress);
     }else{
-      revert CrowdFunder__DonationFailed(_campaignAddress);
+      revert Crf_DonF();
     }
   }
 
-  function refundFromCampaign(address _campaignAddress, address _donator) public {
+  function refundFromCampaign(address _campaignAddress, address _donator) external {
     (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _donator));
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress);
     }else{
-      revert CrowdFunder__RefundFailed(_campaignAddress);
+      revert Crf_RefF();
     }
   }
 
-  function removeCampaign (address _campaignAddress) public isCreator(_campaignAddress) {
-    if(uint(campaigns[_campaignAddress].c_state()) == 0){revert CrowdFunder__CampaignStillActive(_campaignAddress);}
+  function removeCampaign (address _campaignAddress) external {
+    if(campaigns[_campaignAddress].i_creator() != msg.sender){revert Crf_NotCrtr();}
+    if(uint(campaigns[_campaignAddress].c_state()) == 0){revert Crf_CSA();}
     delete(campaigns[_campaignAddress]);
-    campaignCounter-=1;
     emit CampaignRemoved(_campaignAddress);
   }
 
-  function publishCampaign(address _campaignAddress, address _upkeepCreator, address _linkToken) public isCreator(_campaignAddress) {
-    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timebox(address,address)", _upkeepCreator, _linkToken));
+  function publishCampaign(address _campaignAddress, address _upkeepCreator, address _linkToken) external {
+    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timeBox(address,address)", _upkeepCreator, _linkToken));
     if(success){
-      campaignCounter+=1;
+      campaignCounter = campaignCounter.add(1);
       emit CampaignPublished(_campaignAddress);
-    }else{revert();}
+    }else{revert Crf_PubF();}
   }
 }
