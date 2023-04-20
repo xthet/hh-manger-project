@@ -2,6 +2,7 @@
 pragma solidity ^0.8.8;
 
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
 import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
@@ -16,7 +17,7 @@ error Cmp_UpkNN();
 error Cmp_NotRef();
 error Cmp_Bankrupt();
 
-contract Campaign is KeeperCompatibleInterface{
+contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   using SafeMath for uint256;
 
   // enums
@@ -38,7 +39,7 @@ contract Campaign is KeeperCompatibleInterface{
   string public s_category;
   string public s_imageURI;
   string public s_campaignURI;
-  string[] public s_tags;
+  string public s_tags;
   uint256 public goalAmount;
   uint256 public duration;
   uint256 public currentBalance;
@@ -54,7 +55,7 @@ contract Campaign is KeeperCompatibleInterface{
     string s_title;
     string s_description;
     string s_category;
-    string[] s_tags;
+    string s_tags;
     uint256 goalAmount;
     uint256 duration;
     uint256 currentBalance;
@@ -106,7 +107,7 @@ contract Campaign is KeeperCompatibleInterface{
     string memory _title,
     string memory _description,
     string memory _category,
-    string[] memory _tags,
+    string memory _tags,
     uint256 _goalAmount,
     uint256 _duration,
     string memory _imageURI
@@ -132,7 +133,7 @@ contract Campaign is KeeperCompatibleInterface{
     c_mode = C_Mode.Published;
   }
 
-  function donate() external payable {
+  function donate() public payable nonReentrant{
     if(c_state != C_State.Fundraising){revert Cmp_NIS();}
     if(msg.sender == i_creator){revert Cmp_DIC();}
     currentBalance = currentBalance.add(msg.value);
@@ -170,7 +171,7 @@ contract Campaign is KeeperCompatibleInterface{
     }
   }
 
-  function payout() external isCreator {
+  function payout() external isCreator{
     if(c_state != C_State.Expired){revert Cmp_NIS();}
     uint256 totalRaised = currentBalance;
     currentBalance = 0;
@@ -181,7 +182,7 @@ contract Campaign is KeeperCompatibleInterface{
     else{revert();}
   }
 
-  function refund(address _donator) external {
+  function refund(address _donator) external nonReentrant{
     if(c_state == C_State.Expired){revert Cmp_NIS();}
     if(aggrDonations[_donator] == 0 ){revert Cmp_NoDns();}
     uint256 amountToRefund = aggrDonations[_donator];
@@ -252,5 +253,13 @@ contract Campaign is KeeperCompatibleInterface{
       s_campaignURI,
       deadline
     );
+  }
+
+  // fallback functions
+  fallback() external payable {
+    donate();
+  }
+  receive() external payable {
+    donate();
   }
 }

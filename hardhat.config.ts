@@ -25,22 +25,22 @@ const config: HardhatUserConfig =
       chainId: 31337,
       allowUnlimitedContractSize: true
     },
-    rinkeby:{
-      chainId: 4,
-      url: process.env.RINKEBY_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY!],
-      timeout: 1000000
-    },
     goerli:{
       chainId: 5,
       url: process.env.GOERLI_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY!],
+      accounts: [process.env.FORMIC_PRIVATE_KEY!],
       timeout: 1000000
     },
     fuji:{
       chainId: 43113,
       url: process.env.FUJI_RPC_URL,
-      accounts: [process.env.ALPHA_PRIVATE_KEY!],
+      accounts: [process.env.FORMIC_PRIVATE_KEY!],
+      timeout: 1000000
+    },
+    sepolia:{
+      chainId: 11155111,
+      url: process.env.SEPOLIA_RPC_URL,
+      accounts: [process.env.FORMIC_PRIVATE_KEY!],
       timeout: 1000000
     }
   },

@@ -26,8 +26,10 @@ contract CrowdFunder {
   event CampaignAdded(
     address indexed _campaignAddress,
     address indexed _creator,
+    string _title,
+    string _description,
     string _category,
-    string[] _tags
+    string _tags
   );
 
   event CampaignFunded(
@@ -64,7 +66,7 @@ contract CrowdFunder {
     string memory _title, 
     string memory _description,
     string memory _category,
-    string[] memory _tags, 
+    string memory _tags, 
     uint256 _goalAmount,
     uint256 _duration,
     string memory _imageURI
@@ -76,7 +78,7 @@ contract CrowdFunder {
       _duration, _imageURI
     );
     campaigns[address(newCampaign)] = newCampaign;
-    emit CampaignAdded(address(newCampaign), msg.sender, _category, _tags);
+    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags);
   }
 
   function donateToCampaign (address _campaignAddress) external payable {
@@ -111,4 +113,7 @@ contract CrowdFunder {
       emit CampaignPublished(_campaignAddress);
     }else{revert Crf_PubF();}
   }
+
+  fallback() external payable{}
+  receive() external payable{}
 }

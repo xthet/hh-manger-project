@@ -22,10 +22,10 @@ const deployUpkeepIDConsumer: DeployFunction = async function (hre: HardhatRunti
       waitConfirmations: waitBlockConfirmations
     })
 
-    // if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-    //   log("Verifying...")
-    //   await verify(upkeepIDConsumer.address, args)
-    // }
+    if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+      log("Verifying...")
+      await verify(upkeepIDConsumer.address, args)
+    }
     log("==========================")
   }
 }

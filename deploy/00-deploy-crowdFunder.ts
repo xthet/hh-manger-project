@@ -20,10 +20,10 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
     waitConfirmations: waitBlockConfirmations
   })
 
-  // if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
-  //   log("Verifying...")
-  //   await verify(crowdFunder.address, args)
-  // }
+  if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+    log("Verifying...")
+    await verify(crowdFunder.address, args)
+  }
   log("==========================")
 }
 
