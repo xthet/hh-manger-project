@@ -18,7 +18,7 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
     "Piratopia: Raiders of Pirate Bay",
     "A P2E masterpiece on the AVAX chain",
     "P2E",
-    ["arcade games", "adventure games", "web3 gaming"],
+    "arcade games/adventure games/web3 gaming",
     ethers.utils.parseEther("6.75"),
     BigNumber.from("1296000"),
     "ipfs://QmV9inF2YC5MFUHWwWaCBEVJzj9aGSKmpay7mPSJDjBC4w"

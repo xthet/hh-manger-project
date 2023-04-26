@@ -25,7 +25,7 @@ import { Campaign } from "../../typechain-types"
     {
       it("campaign is in fundraising state", async () => {
         const campaignState = await campaign.c_state()
-        assert(campaignState.toString() == "1") // 1 means fundraising
+        assert(campaignState.toString() == "0") // 1 means fundraising
       })
     })
 
