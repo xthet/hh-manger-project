@@ -33,7 +33,8 @@ contract CrowdFunder {
 
   event CampaignFunded(
     address indexed _funder,
-    address indexed _campaignAddress
+    address indexed _campaignAddress,
+    uint256 _val
   );
 
   event CampaignShrunk(
@@ -82,7 +83,7 @@ contract CrowdFunder {
   function donateToCampaign(address _campaignAddress) external payable {
     (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature("donate(address)",msg.sender));
     if(success){
-      emit CampaignFunded(msg.sender, _campaignAddress);
+      emit CampaignFunded(msg.sender, _campaignAddress, msg.value);
     }else{
       revert Crf_DonF();
     }

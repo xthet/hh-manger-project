@@ -33,7 +33,7 @@ import { Campaign } from "../../typechain-types"
     {
       it("reverts if creator tries to donate", async () => {
         const donationAmount = ethers.utils.parseEther("5")
-        await expect(campaign.donate({ value: donationAmount })).to.be.reverted
+        await expect(campaign.donate(deployer,{ value: donationAmount })).to.be.reverted
       })
 
       // it("successfully adds donations and emits event", async ()=>{
