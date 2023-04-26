@@ -19,8 +19,7 @@ contract CrowdFunder {
     string _username,
     string _twitter,
     string _email,
-    string _homeAddress,
-    string _sig
+    string _homeAddress
   );
 
   event CampaignAdded(
@@ -56,10 +55,9 @@ contract CrowdFunder {
   function addUser(
     address _address, string memory _username, 
     string memory _twitter, string memory _email, 
-    string memory _homeAddress,
-    string memory _sig
+    string memory _homeAddress
     ) external {
-    emit UserAdded(_address, _username, _twitter, _email, _homeAddress, _sig);
+    emit UserAdded(_address, _username, _twitter, _email, _homeAddress);
   }
 
   function addCampaign (
@@ -107,7 +105,7 @@ contract CrowdFunder {
   }
 
   function publishCampaign(address _campaignAddress, address _upkeepCreator, address _linkToken) external {
-    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timeBox(address,address)", _upkeepCreator, _linkToken));
+    (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timeBox(address,address,address)", _upkeepCreator, _linkToken, _campaignAddress));
     if(success){
       campaignCounter = campaignCounter.add(1);
       emit CampaignPublished(_campaignAddress);

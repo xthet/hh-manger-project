@@ -125,11 +125,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     currentBalance = 0;
   }
 
-  function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress) external isCreator {
+  function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress, address _campaignAddress) external isCreator {
     UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreatorAddress);
     LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
     if(token.balanceOf(_upkeepCreatorAddress) == 0){revert("no funds");}
-    rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", address(this), 500000, i_creator, "0x", "0x", 2000000000000000000);
+    rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
     c_mode = C_Mode.Published;
   }
 
@@ -221,7 +221,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function updateDur(uint256 _addedDur) external isCreator {
-    duration = (duration.add(_addedDur) > i_maxDur) ? i_maxDur : duration.add(_addedDur);
+    duration = ((duration.add(_addedDur)) > i_maxDur) ? i_maxDur : duration.add(_addedDur);
     deadline = i_initTimeStamp.add(duration);
   }
 
