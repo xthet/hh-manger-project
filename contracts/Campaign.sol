@@ -133,18 +133,18 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     c_mode = C_Mode.Published;
   }
 
-  function donate() public payable nonReentrant{
+  function donate(address _donator) public payable nonReentrant{
     if(c_state != C_State.Fundraising){revert Cmp_NIS();}
-    if(msg.sender == i_creator){revert Cmp_DIC();}
+    if(_donator == i_creator){revert Cmp_DIC();}
     currentBalance = currentBalance.add(msg.value);
     if(rewards[msg.value].price > 0 && !rewards[msg.value].infinite) //exists and is not infinite
     {
       rewards[msg.value].quantity.sub(1);
       if(rewards[msg.value].quantity == 0){delete(rewards[msg.value]);}
     }
-    donations[msg.sender].push(msg.value);
-    aggrDonations[msg.sender].add(msg.value);
-    emit FundingRecieved(msg.sender, msg.value, currentBalance);
+    donations[_donator].push(msg.value);
+    aggrDonations[_donator].add(msg.value);
+    emit FundingRecieved(_donator, msg.value, currentBalance);
   }
 
   /**
@@ -257,9 +257,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   // fallback functions
   fallback() external payable {
-    donate();
+    donate(msg.sender);
   }
   receive() external payable {
-    donate();
+    donate(msg.sender);
   }
 }

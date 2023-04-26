@@ -23,13 +23,10 @@ import { CrowdFunder } from "../../typechain-types"
         "Furry Mittens",
         "Making mittens furry.",
         "Cooking",
-        ["cooking", "household", "culinary"],
+        "cooking/household/culinary",
         2,
         BigNumber.from("1296000"),
         "ipfs://campaignuri",
-        "ipfs://campaignuri",
-        "0x02777053d6764996e594c3E88AF1D58D5363a2e6",
-        "0x326C977E6efc84E512bB9C30f76E30c160eD06FB"
       )
       addCampaignTxR = await addCampaignTx.wait(1)
       campaignAddress = addCampaignTxR.events![0].args!._campaignAddress
