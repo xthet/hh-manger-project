@@ -48,7 +48,8 @@ contract CrowdFunder {
   );
 
   event CampaignPublished(
-    address _campaignAddress
+    address _campaignAddress,
+    address _creator
   );
 
   uint256 public campaignCounter;
@@ -111,7 +112,7 @@ contract CrowdFunder {
     (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timeBox(address,address,address)", _upkeepCreator, _linkToken, _campaignAddress));
     if(success){
       campaignCounter = campaignCounter.add(1);
-      emit CampaignPublished(_campaignAddress);
+      emit CampaignPublished(_campaignAddress, msg.sender);
     }else{revert Crf_PubF();}
   }
 
