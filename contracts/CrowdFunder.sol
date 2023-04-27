@@ -39,7 +39,8 @@ contract CrowdFunder {
 
   event CampaignShrunk(
     address indexed _withdrawer,
-    address indexed _campaignAddress
+    address indexed _campaignAddress,
+    uint256 _val
   );
 
   event CampaignRemoved(
@@ -89,10 +90,11 @@ contract CrowdFunder {
     }
   }
 
-  function refundFromCampaign(address _campaignAddress, address _donator) external {
-    (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _donator));
+  function refundFromCampaign(address _campaignAddress, address _collector) external {
+    uint256 refVal = campaigns[_campaignAddress].aggrDonations(_collector);
+    (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _collector));
     if(success){
-      emit CampaignShrunk(msg.sender, _campaignAddress);
+      emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     }else{
       revert Crf_RefF();
     }
