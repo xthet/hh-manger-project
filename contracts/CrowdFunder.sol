@@ -92,7 +92,7 @@ contract CrowdFunder {
 
   function refundFromCampaign(address _campaignAddress, address _collector) external {
     uint256 refVal = campaigns[_campaignAddress].aggrDonations(_collector);
-    (bool success,) = _campaignAddress.delegatecall(abi.encodeWithSignature("refund(address)", _collector));
+    (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", _collector));
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     }else{
