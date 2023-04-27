@@ -186,12 +186,12 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(c_state == C_State.Expired){revert Cmp_NIS();}
     if(aggrDonations[_donator] == 0 ){revert Cmp_NoDns();}
     uint256 amountToRefund = aggrDonations[_donator];
-    delete(donations[_donator]);
-    delete(aggrDonations[_donator]);
     if(currentBalance < amountToRefund){revert Cmp_Bankrupt();}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Cmp_RefF();}
+    delete(donations[_donator]);
+    delete(aggrDonations[_donator]);
   }
 
   function makeReward( 
