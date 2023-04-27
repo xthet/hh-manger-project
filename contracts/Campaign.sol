@@ -210,7 +210,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function endCampaign() external isCreator {
-    if(c_state == C_State.Expired){revert();}
+    if(currentBalance > 0){revert();}
+    // either payout or leave for refunds
     c_state = C_State.Canceled;
     emit CampaignCanceled();
   }
