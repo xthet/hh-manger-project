@@ -249,15 +249,19 @@ import { Campaign } from "../../typechain-types"
         const donator = accounts[1].address
         const donatorCampaign = campaign.connect(accounts[1])
         const donationAmount = ethers.utils.parseEther("1")
-        const donateTx = await donatorCampaign.donate({ value: donationAmount })
+        const donateTx = await donatorCampaign.donate(donator,{ value: donationAmount })
         // here donationAmount was 5 eth 
         const donateTxR = await donateTx.wait(1)
+        console.log(donateTxR.events![0].args)
+        const bal = await campaign.aggrDonations(donator)
+        const bals = await campaign.getDonations(donator)
+        console.log(bal, bals)
         // const performUpkeepTx = await campaign.performUpkeep([])
         // await performUpkeepTx.wait(1)
 
         const refundTx = await donatorCampaign.refund(donator)
         const refundTxR = await refundTx.wait(1)
-        console.log(refundTxR.events) 
+        // console.log(refundTxR.events) 
 
 
         // await expect(donatorCampaign.refund()).to.satisfy

@@ -143,7 +143,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
       if(rewards[msg.value].quantity == 0){delete(rewards[msg.value]);}
     }
     donations[_donator].push(msg.value);
-    aggrDonations[_donator].add(msg.value);
+    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
     emit FundingRecieved(_donator, msg.value, currentBalance);
   }
 
@@ -182,7 +182,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     else{revert();}
   }
 
-  function refund(address _donator) external nonReentrant{
+  function refund(address _donator) internal nonReentrant{
     if(c_state == C_State.Expired){revert Cmp_NIS();}
     if(aggrDonations[_donator] == 0 ){revert Cmp_NoDns();}
     uint256 amountToRefund = aggrDonations[_donator];
