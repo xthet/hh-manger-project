@@ -103,8 +103,8 @@ contract CrowdFunder {
 
   function removeCampaign (address _campaignAddress) external {
     if(campaigns[_campaignAddress].i_creator() != msg.sender){revert Crf_NotCrtr();}
-    if(uint(campaigns[_campaignAddress].c_state()) != 2){revert Crf_CSA();}
-    // only canceled campaigns
+    if(campaigns[_campaignAddress].currentBalance() > 0){revert Crf_CSA();}
+    // either payout or leave for refunds
     delete(campaigns[_campaignAddress]);
     emit CampaignRemoved(_campaignAddress);
   }
