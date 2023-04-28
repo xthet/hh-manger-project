@@ -93,9 +93,10 @@ contract CrowdFunder {
     }
   }
 
-  function refundFromCampaign(address _campaignAddress) external {
+  function refundFromCampaign(address _campaignAddress, address _collector) external {
     uint256 refVal = campaigns[_campaignAddress].aggrDonations(msg.sender);
-    (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
+    if(!(refVal > 0)){revert();}
+    (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", _collector));
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     }else{
