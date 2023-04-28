@@ -33,6 +33,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   // c_state variables
+  address immutable private i_crf;
   address payable immutable public i_creator;
   string public s_title;
   string public s_description;
@@ -103,6 +104,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
 
   constructor (
+    address _crowdfunder,
     address _creator,
     string memory _title,
     string memory _description,
@@ -112,6 +114,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 _duration,
     string memory _imageURI
   ) {
+    i_crf = _crowdfunder;
     i_creator = payable(_creator);
     s_title = _title;
     s_description = _description;
@@ -134,6 +137,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function donate(address _donator) public payable nonReentrant{
+    if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert Cmp_NIS();}
     if(_donator == i_creator){revert Cmp_DIC();}
     currentBalance = currentBalance.add(msg.value);
@@ -183,6 +187,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function refund(address _donator) external nonReentrant{
+    if(msg.sender != i_crf){revert();}
     if(c_state == C_State.Expired){revert Cmp_NIS();}
     if(aggrDonations[_donator] == 0 ){revert Cmp_NoDns();}
     uint256 amountToRefund = aggrDonations[_donator];

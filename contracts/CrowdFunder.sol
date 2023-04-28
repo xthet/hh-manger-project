@@ -75,6 +75,7 @@ contract CrowdFunder {
     string memory _imageURI
     ) external {
     Campaign newCampaign = new Campaign(
+      address(this),
       payable(msg.sender), _title, 
       _description, _category, 
       _tags, _goalAmount, 
@@ -93,10 +94,12 @@ contract CrowdFunder {
     }
   }
 
-  function refundFromCampaign(address _campaignAddress, address _collector) external {
+  function refundFromCampaign(address _campaignAddress) external {
     uint256 refVal = campaigns[_campaignAddress].aggrDonations(msg.sender);
     if(!(refVal > 0)){revert();}
-    (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", _collector));
+    (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
+    // campaigns[_campaignAddress].refund(msg.sender);
+    // emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     }else{
