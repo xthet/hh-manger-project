@@ -19,7 +19,8 @@ contract CrowdFunder {
     string _username,
     string _twitter,
     string _email,
-    string _homeAddress
+    string _homeAddress,
+    string _pfp
   );
 
   event CampaignAdded(
@@ -58,9 +59,10 @@ contract CrowdFunder {
   function addUser(
     address _address, string memory _username, 
     string memory _twitter, string memory _email, 
-    string memory _homeAddress
+    string memory _homeAddress,
+    string memory _pfp
     ) external {
-    emit UserAdded(_address, _username, _twitter, _email, _homeAddress);
+    emit UserAdded(_address, _username, _twitter, _email, _homeAddress, _pfp);
   }
 
   function addCampaign (
