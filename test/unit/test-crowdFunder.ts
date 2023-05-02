@@ -24,7 +24,7 @@ import { CrowdFunder } from "../../typechain-types"
         "Making mittens furry.",
         "Cooking",
         "cooking/household/culinary",
-        2,
+        "2",
         BigNumber.from("1296000"),
         "ipfs://campaignuri",
       )
