@@ -78,7 +78,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   mapping (uint256 => reward) public rewards;
-  mapping (address => uint256[]) public donations;
+  mapping (address => uint256[]) public entDonations;
   mapping (address => uint256) public aggrDonations;
 
   uint256[] public rKeys;
@@ -141,12 +141,16 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(c_state != C_State.Fundraising){revert Cmp_NIS();}
     if(_donator == i_creator){revert Cmp_DIC();}
     currentBalance = currentBalance.add(msg.value);
-    if(rewards[msg.value].price > 0 && !rewards[msg.value].infinite) //exists and is not infinite
+    if((rewards[msg.value].price > 0) && !(rewards[msg.value].infinite)) // exists and is not infinite
     {
-      rewards[msg.value].quantity.sub(1);
-      if(rewards[msg.value].quantity == 0){delete(rewards[msg.value]);}
+      if(rewards[msg.value].quantity > 0){ // if the rwd is still available
+        rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
+        entDonations[_donator].push(msg.value); // only donations tied to rwds
+      }
     }
-    donations[_donator].push(msg.value);
+    if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
+      entDonations[_donator].push(msg.value); // only donations tied to rwds
+    }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
     emit FundingRecieved(_donator, msg.value, currentBalance);
   }
@@ -195,7 +199,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Cmp_RefF();}
-    delete(donations[_donator]);
+    delete(entDonations[_donator]);
     delete(aggrDonations[_donator]);
   }
 
@@ -232,7 +236,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   // getter functions
   function getDonations(address _donator) external view returns(uint256[] memory) {
-    return donations[_donator];
+    return entDonations[_donator];
   }
 
   function getRewardKeys() external view returns(uint256[] memory){
