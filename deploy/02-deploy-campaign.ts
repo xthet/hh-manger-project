@@ -14,6 +14,7 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
 
   log("==========================")
   const args:any[] = [
+    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     deployer,
     "Piratopia: Raiders of Pirate Bay",
     "A P2E masterpiece on the AVAX chain",
