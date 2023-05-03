@@ -282,6 +282,36 @@ import { Campaign } from "../../typechain-types"
           true,
           ["_NW"] // digital
         )
+
+        const addRwdTxR = (await addRwdTx).wait(1)
+      })
+
+      it("fails on rwd edit", async ()=>{
+        const getDeadline = await campaign.deadline()
+        const addRwdTx = campaign.makeReward(
+          ethers.utils.parseEther("0.025"),
+          "Digital Copy with OST",
+          "A digital copy of the game for STEAM (PC/MAC).",
+          "ipfs://",
+          ["Digital Artbook", "Original Soundtrack"],
+          getDeadline,
+          100,
+          true,
+          ["_NW"] // digital
+        )
+        const addRwdTxR = (await addRwdTx).wait(1)
+
+        await expect( campaign.makeReward(
+          ethers.utils.parseEther("0.025"),
+          "Digital Copy with OST",
+          "A physical copy of the game for STEAM (PC/MAC).",
+          "ipfs://",
+          ["Digital Artbook", "Original Soundtrack"],
+          getDeadline,
+          100,
+          true,
+          ["_NW"] // digital
+        )).to.be.reverted
       })
     })
 
