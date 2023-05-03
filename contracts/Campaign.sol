@@ -70,6 +70,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 price;
     string title;
     string description;
+    string rpic;
     string[] perks;
     uint256 delDate;
     uint256 quantity;
@@ -205,12 +206,14 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   function makeReward( 
     uint256 _price, string memory _title, 
-    string memory _description, string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity, bool _infinite, string[] memory _shipsTo
+    string memory _description, string memory _rpic,
+    string[] memory _perks, 
+    uint256 _deadline, uint256 _quantity, bool _infinite, 
+    string[] memory _shipsTo
     ) external isCreator {
     rKeys.push(_price);
     // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
-    rewards[_price] = reward(_price, _title, _description, _perks, _deadline, _quantity, _infinite, _shipsTo);
+    rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
   }
 
   function deleteReward(uint256 _priceID) external isCreator {
