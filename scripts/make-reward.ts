@@ -4,7 +4,7 @@ let campaign
 const campaignAddress = "0x3e3FDACb5148f11FDCc489483748195755e52c6f"
 
 async function makeReward(){
-  campaign = await ethers.getContractAt("Campaign", campaignAddress)
+  campaign = await ethers.getContract("Campaign", campaignAddress)
   try {
     const getDeadline = await campaign.deadline()
     const addRewardTx = await campaign.makeReward(
