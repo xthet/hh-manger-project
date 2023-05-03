@@ -122,7 +122,4 @@ contract CrowdFunder {
       emit CampaignPublished(_campaignAddress, msg.sender);
     }else{revert Crf_PubF();}
   }
-
-  fallback() external payable{}
-  receive() external payable{}
 }

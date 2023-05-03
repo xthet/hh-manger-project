@@ -251,8 +251,4 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
       deadline
     );
   }
-
-  // fallback functions
-  fallback() external payable {}
-  receive() external payable {}
 }
