@@ -27,11 +27,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     Canceled
   }
 
-  enum C_Mode {
-    Draft,
-    Published
-  }
-
   // c_state variables
   address immutable private i_crf;
   address payable immutable public i_creator;
@@ -47,7 +42,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   uint256 private immutable i_initTimeStamp;
   uint256 private constant i_maxDur = 5184000;
   uint256 public deadline;
-  C_Mode public c_mode = C_Mode.Draft;
   C_State public c_state = C_State.Fundraising; // default c_state
   uint256 private rId;
 
@@ -92,7 +86,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 currentBalance
   );
   event CreatorPaid(address creator, address campaignAddress);
-  event CampaignSuccessful(address campaignAddress);
   event CampaignExpired(address campaignAddress);
   event CampaignCanceled();
 
@@ -134,7 +127,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
     if(token.balanceOf(_upkeepCreatorAddress) == 0){revert("no funds");}
     rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
-    c_mode = C_Mode.Published;
   }
 
   function donate(address _donator) public payable nonReentrant{
@@ -175,9 +167,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(!upkeepNeeded){revert Cmp_UpkNN();}
     c_state = C_State.Expired;
     emit CampaignExpired(address(this));
-    if(currentBalance >= goalAmount){
-      emit CampaignSuccessful(address(this));
-    }
   }
 
   function payout() external isCreator{
@@ -212,13 +201,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     string[] memory _shipsTo
     ) external isCreator {
     rKeys.push(_price);
+    if(rewards[_price].price != 0){revert();} // if it already existed
     // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
     rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
-  }
-
-  function deleteReward(uint256 _priceID) external isCreator {
-    if(c_mode != C_Mode.Draft){revert();}
-    if(rewards[_priceID].price > 0){delete(rewards[_priceID]);}
   }
 
   function endCampaign() external isCreator {
