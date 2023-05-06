@@ -74,7 +74,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   mapping (uint256 => reward) public rewards;
-  mapping (address => uint256[]) public entDonations;
+  // mapping (address => uint256[]) public entDonations;
   mapping (address => uint256) public aggrDonations;
 
   uint256[] public rKeys;
@@ -139,12 +139,12 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     {
       if(rewards[msg.value].quantity > 0){ // if the rwd is still available
         rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
-        entDonations[_donator].push(msg.value); // only donations tied to rwds
+        // entDonations[_donator].push(msg.value); // only donations tied to rwds
         rewards[msg.value].donators.push(_donator);
       }
     }
     if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
-      entDonations[_donator].push(msg.value); // only donations tied to rwds
+      // entDonations[_donator].push(msg.value); // only donations tied to rwds
       rewards[msg.value].donators.push(_donator);
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
@@ -191,7 +191,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Cmp_RefF();}
-    delete(entDonations[_donator]);
+    // delete(entDonations[_donator]);
     delete(aggrDonations[_donator]);
   }
 
@@ -226,9 +226,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   // getter functions
-  function getDonations(address _donator) external view returns(uint256[] memory) {
-    return entDonations[_donator];
-  }
+  // function getDonations(address _donator) external view returns(uint256[] memory) {
+  //   return entDonations[_donator];
+  // }
 
   function getRewardKeys() external view returns(uint256[] memory){
     return rKeys;

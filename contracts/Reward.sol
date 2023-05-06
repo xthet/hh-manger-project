@@ -16,16 +16,16 @@ contract Reward{
 
   constructor(
     uint256 _price,
-    string title,
-    string description,
-    string rpic,
-    string[] perks,
-    uint256 delDate,
-    uint256 quantity,
-    bool infinite,
-    string[] shipsTo,
-    address[] donators,
+    string memory _title,
+    string memory _description,
+    string memory _rpic,
+    string[] memory _perks,
+    uint256 _delDate,
+    uint256 _quantity,
+    bool _infinite,
+    string[] memory _shipsTo,
+    address[] memory _donators
   ){
-
+    
   }
 }
