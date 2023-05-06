@@ -70,6 +70,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 quantity;
     bool infinite;
     string[] shipsTo;
+    address[] donators;
   }
 
   mapping (uint256 => reward) public rewards;
@@ -139,10 +140,12 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
       if(rewards[msg.value].quantity > 0){ // if the rwd is still available
         rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
         entDonations[_donator].push(msg.value); // only donations tied to rwds
+        rewards[msg.value].donators.push(_donator);
       }
     }
     if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
       entDonations[_donator].push(msg.value); // only donations tied to rwds
+      rewards[msg.value].donators.push(_donator);
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
     emit FundingRecieved(_donator, msg.value, currentBalance);
@@ -202,7 +205,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     rKeys.push(_price);
     if(rewards[_price].price != 0){revert();} // if it already existed
     // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
-    rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
+    address[] memory _donators;
+    rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
   }
 
   function endCampaign() external isCreator {
