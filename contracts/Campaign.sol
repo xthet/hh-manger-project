@@ -157,8 +157,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   {
     bool isOpen = c_state == C_State.Fundraising;
     bool timePassed = ((block.timestamp.sub(i_initTimeStamp)) > duration);
-    bool hasBalance = address(this).balance > 0;
-    upkeepNeeded = (timePassed && isOpen && hasBalance) ;
+    upkeepNeeded = (timePassed && isOpen);
     return (upkeepNeeded, "0x0");
   }
 

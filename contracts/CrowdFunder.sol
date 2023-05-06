@@ -29,7 +29,8 @@ contract CrowdFunder {
     string _title,
     string _description,
     string _category,
-    string _tags
+    string _tags,
+    string _imageURI
   );
 
   event CampaignFunded(
@@ -82,7 +83,7 @@ contract CrowdFunder {
       _duration, _imageURI
     );
     campaigns[address(newCampaign)] = newCampaign;
-    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags);
+    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _imageURI);
   }
 
   function donateToCampaign(address _campaignAddress) external payable {
