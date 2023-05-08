@@ -139,12 +139,10 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     {
       if(rewards[msg.value].quantity > 0){ // if the rwd is still available
         rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
-        // entDonations[_donator].push(msg.value); // only donations tied to rwds
         rewards[msg.value].donators.push(_donator);
       }
     }
     if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
-      // entDonations[_donator].push(msg.value); // only donations tied to rwds
       rewards[msg.value].donators.push(_donator);
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
@@ -191,7 +189,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert Cmp_RefF();}
-    // delete(entDonations[_donator]);
     delete(aggrDonations[_donator]);
   }
 
@@ -202,18 +199,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 _deadline, uint256 _quantity, bool _infinite, 
     string[] memory _shipsTo
     ) external isCreator {
-    if(rewards[_price].price > 0){revert();} // if it already existed
+    if(rewards[_price].price > 0){revert();}
     rKeys.push(_price);
-    // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
     address[] memory _donators;
     rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
   }
-
-  // function makeReward(reward memory _reward) external isCreator {
-  //   // if(rewards[_reward.price].price > 0){revert();} 
-  //   rKeys.push(_reward.price);
-  //   rewards[_reward.price] = _reward;
-  // }
 
   function endCampaign() external isCreator {
     if(c_state == C_State.Expired){revert();}
@@ -232,10 +222,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   // getter functions
-  // function getDonations(address _donator) external view returns(uint256[] memory) {
-  //   return entDonations[_donator];
-  // }
-
   function getRewardKeys() external view returns(uint256[] memory){
     return rKeys;
   }
