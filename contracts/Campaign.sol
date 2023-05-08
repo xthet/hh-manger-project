@@ -211,7 +211,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   // }
 
   function makeReward(reward memory _reward) external isCreator {
-    if(rewards[_reward.price].price > 0){revert();} 
+    // if(rewards[_reward.price].price > 0){revert();} 
     rKeys.push(_reward.price);
     rewards[_reward.price] = _reward;
   }
