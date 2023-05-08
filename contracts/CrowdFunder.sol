@@ -67,13 +67,13 @@ contract CrowdFunder {
   }
 
   function addCampaign (
-    string memory _title, 
-    string memory _description,
-    string memory _category,
-    string memory _tags, 
+    string calldata _title, 
+    string calldata _description,
+    string calldata _category,
+    string calldata _tags, 
     uint256 _goalAmount,
     uint256 _duration,
-    string memory _imageURI
+    string calldata _imageURI
     ) external {
     Campaign newCampaign = new Campaign(
       address(this),
