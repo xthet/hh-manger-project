@@ -200,13 +200,13 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     string calldata _description, string calldata _rpic,
     string[] calldata _perks, 
     uint256 _deadline, uint256 _quantity, bool _infinite, 
-    string[] calldata _shipsTo
-    // address[] calldata _donators
+    string[] calldata _shipsTo,
+    address[] calldata _donators
     ) external isCreator {
-    rKeys.push(_price);
     if(rewards[_price].price > 0){revert();} // if it already existed
+    rKeys.push(_price);
     // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
-    address[] memory _donators;
+    // address[] memory _donators;
     rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
   }
 
