@@ -254,8 +254,8 @@ import { Campaign } from "../../typechain-types"
         const donateTxR = await donateTx.wait(1)
         console.log(donateTxR.events![0].args)
         const bal = await campaign.aggrDonations(donator)
-        const bals = await campaign.getDonations(donator)
-        console.log(bal, bals)
+        // const bals = await campaign.getDonations(donator)
+        console.log(bal)
         // const performUpkeepTx = await campaign.performUpkeep([])
         // await performUpkeepTx.wait(1)
 
