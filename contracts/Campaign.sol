@@ -196,11 +196,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function makeReward( 
-    uint256 _price, string memory _title, 
-    string memory _description, string memory _rpic,
-    string[] memory _perks, 
+    uint256 _price, string calldata _title, 
+    string calldata _description, string calldata _rpic,
+    string[] calldata _perks, 
     uint256 _deadline, uint256 _quantity, bool _infinite, 
-    string[] memory _shipsTo
+    string[] calldata _shipsTo
     ) external isCreator {
     rKeys.push(_price);
     if(rewards[_price].price != 0){revert();} // if it already existed
