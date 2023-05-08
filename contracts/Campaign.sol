@@ -199,7 +199,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 _deadline, uint256 _quantity, bool _infinite, 
     string[] memory _shipsTo
     ) external isCreator {
-    if(rewards[_price].price > 0){revert();}
+    if(rewards[_price].price != 0){revert();}
     rKeys.push(_price);
     address[] memory _donators;
     rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);

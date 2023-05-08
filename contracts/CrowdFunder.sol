@@ -99,8 +99,6 @@ contract CrowdFunder {
     uint256 refVal = campaigns[_campaignAddress].aggrDonations(msg.sender);
     if(!(refVal > 0)){revert();}
     (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
-    // campaigns[_campaignAddress].refund(msg.sender);
-    // emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
     }else{
