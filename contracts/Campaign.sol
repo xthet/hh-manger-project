@@ -195,26 +195,25 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     delete(aggrDonations[_donator]);
   }
 
-  // function makeReward( 
-  //   uint256 _price, string calldata _title, 
-  //   string calldata _description, string calldata _rpic,
-  //   string[] calldata _perks, 
-  //   uint256 _deadline, uint256 _quantity, bool _infinite, 
-  //   string[] calldata _shipsTo,
-  //   address[] calldata _donators
-  //   ) external isCreator {
-  //   if(rewards[_price].price > 0){revert();} // if it already existed
-  //   rKeys.push(_price);
-  //   // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
-  //   // address[] memory _donators;
-  //   rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
-  // }
-
-  function makeReward(reward memory _reward) external isCreator {
-    // if(rewards[_reward.price].price > 0){revert();} 
-    rKeys.push(_reward.price);
-    rewards[_reward.price] = _reward;
+  function makeReward( 
+    uint256 _price, string memory _title, 
+    string memory _description, string memory _rpic,
+    string[] memory _perks, 
+    uint256 _deadline, uint256 _quantity, bool _infinite, 
+    string[] memory _shipsTo
+    ) external isCreator {
+    if(rewards[_price].price > 0){revert();} // if it already existed
+    rKeys.push(_price);
+    // shipsto _NW, infinite true, quantitymax 100  (for digRewards)  shipsto _AITW for phyRewards
+    address[] memory _donators;
+    rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
   }
+
+  // function makeReward(reward memory _reward) external isCreator {
+  //   // if(rewards[_reward.price].price > 0){revert();} 
+  //   rKeys.push(_reward.price);
+  //   rewards[_reward.price] = _reward;
+  // }
 
   function endCampaign() external isCreator {
     if(c_state == C_State.Expired){revert();}
