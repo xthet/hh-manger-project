@@ -36,13 +36,15 @@ contract CrowdFunder {
   event CampaignFunded(
     address indexed _funder,
     address indexed _campaignAddress,
-    uint256 _val
+    uint256 _val,
+    address indexed _c_creator
   );
 
   event CampaignShrunk(
     address indexed _withdrawer,
     address indexed _campaignAddress,
-    uint256 _val
+    uint256 _val,
+    address indexed _c_creator
   );
 
   event CampaignRemoved(
@@ -87,20 +89,22 @@ contract CrowdFunder {
   }
 
   function donateToCampaign(address _campaignAddress) external payable {
+    address c_creator = campaigns[_campaignAddress].i_creator();
     (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature("donate(address)",msg.sender));
     if(success){
-      emit CampaignFunded(msg.sender, _campaignAddress, msg.value);
+      emit CampaignFunded(msg.sender, _campaignAddress, msg.value, c_creator);
     }else{
       revert Crf_DonF();
     }
   }
 
   function refundFromCampaign(address _campaignAddress) external {
+    address c_creator = campaigns[_campaignAddress].i_creator();
     uint256 refVal = campaigns[_campaignAddress].aggrDonations(msg.sender);
     if(!(refVal > 0)){revert();}
     (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
     if(success){
-      emit CampaignShrunk(msg.sender, _campaignAddress, refVal);
+      emit CampaignShrunk(msg.sender, _campaignAddress, refVal, c_creator);
     }else{
       revert Crf_RefF();
     }
