@@ -5,11 +5,11 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Campaign.sol";
 
 // errors
-error Crf_NotCrtr();
-error Crf_CSA(); /** cmp still active */
-error Crf_DonF();
-error Crf_RefF();
-error Crf_PubF();
+// error Crf_NotCrtr();
+// error Crf_CSA(); /** cmp still active */
+// error Crf_DonF();
+// error Crf_RefF();
+// error Crf_PubF();
 
 contract CrowdFunder {
   using SafeMath for uint256;
@@ -17,7 +17,6 @@ contract CrowdFunder {
   event UserAdded(
     address indexed _address,
     string _username,
-    string _twitter,
     string _email,
     string _homeAddress,
     string _pfp
@@ -61,11 +60,11 @@ contract CrowdFunder {
 
   function addUser(
     address _address, string memory _username, 
-    string memory _twitter, string memory _email, 
+    string memory _email, 
     string memory _homeAddress,
     string memory _pfp
     ) external {
-    emit UserAdded(_address, _username, _twitter, _email, _homeAddress, _pfp);
+    emit UserAdded(_address, _username, _email, _homeAddress, _pfp);
   }
 
   function addCampaign (
@@ -94,7 +93,7 @@ contract CrowdFunder {
     if(success){
       emit CampaignFunded(msg.sender, _campaignAddress, msg.value, c_creator);
     }else{
-      revert Crf_DonF();
+      revert();
     }
   }
 
@@ -106,13 +105,13 @@ contract CrowdFunder {
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal, c_creator);
     }else{
-      revert Crf_RefF();
+      revert();
     }
   }
 
   function removeCampaign (address _campaignAddress) external {
-    if(campaigns[_campaignAddress].i_creator() != msg.sender){revert Crf_NotCrtr();}
-    if(campaigns[_campaignAddress].currentBalance() > 0){revert Crf_CSA();}
+    if(campaigns[_campaignAddress].i_creator() != msg.sender){revert();}
+    if(campaigns[_campaignAddress].currentBalance() > 0){revert();}
     // either payout or leave for refunds
     delete(campaigns[_campaignAddress]);
     emit CampaignRemoved(_campaignAddress);
@@ -123,6 +122,6 @@ contract CrowdFunder {
     if(success){
       campaignCounter = campaignCounter.add(1);
       emit CampaignPublished(_campaignAddress, msg.sender);
-    }else{revert Crf_PubF();}
+    }else{revert();}
   }
 }
