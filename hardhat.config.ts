@@ -13,7 +13,13 @@ import { HardhatUserConfig } from "hardhat/config"
 const config: HardhatUserConfig = 
 {
   solidity: {
-    compilers: [{ version: "0.8.8" }, { version: "0.6.6" }, { version: "0.4.19" }, { version: "0.6.12" }, { version: "0.4.11" }]
+    compilers: [{ version: "0.8.8" }, { version: "0.6.6" }, { version: "0.4.19" }, { version: "0.6.12" }, { version: "0.4.11" }],
+    settings:{ 
+      optimizer: {
+        enabled: true,
+        runs: 200,
+      }, 
+    }
   },
   defaultNetwork: "hardhat",
   networks: {

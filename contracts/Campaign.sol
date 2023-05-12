@@ -79,7 +79,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   uint256[] public rKeys;
 
-
   // events
   event FundingRecieved (
     address indexed contributor,
@@ -90,13 +89,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   event CampaignExpired(address campaignAddress);
   event CampaignCanceled();
 
-
   // modifiers
   modifier isCreator() {
     if(msg.sender != i_creator){revert Cmp_NotCrtr();}
     _;
   }
-
 
   constructor (
     address _crowdfunder,
