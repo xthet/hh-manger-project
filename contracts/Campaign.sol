@@ -8,14 +8,14 @@ import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
 import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 
 // errors
-error Cmp_NIS(); /**not in state */
-error Cmp_NotCrtr();
-error Cmp_DIC(); /**donator is creator */
-error Cmp_NoDns();
-error Cmp_RefF();
-error Cmp_UpkNN();
-error Cmp_NotRef();
-error Cmp_Bankrupt();
+// error Cmp_NIS(); /**not in state */
+// error Cmp_NotCrtr();
+// error Cmp_DIC(); /**donator is creator */
+// error Cmp_NoDns();
+// error Cmp_RefF();
+// error Cmp_UpkNN();
+// error Cmp_NotRef();
+// error Cmp_Bankrupt();
 
 contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   using SafeMath for uint256;
@@ -91,7 +91,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   // modifiers
   modifier isCreator() {
-    if(msg.sender != i_creator){revert Cmp_NotCrtr();}
+    if(msg.sender != i_creator){revert();}
     _;
   }
 
@@ -129,8 +129,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   function donate(address _donator) public payable nonReentrant{
     if(msg.sender != i_crf){revert();}
-    if(c_state != C_State.Fundraising){revert Cmp_NIS();}
-    if(_donator == i_creator){revert Cmp_DIC();}
+    if(c_state != C_State.Fundraising){revert();}
+    if(_donator == i_creator){revert();}
     currentBalance = currentBalance.add(msg.value);
     if((rewards[msg.value].price > 0) && !(rewards[msg.value].infinite)) // exists and is not infinite
     {
@@ -161,13 +161,13 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   function performUpkeep(bytes calldata /**performData */) external override {
     (bool upkeepNeeded, ) = checkUpkeep("");
-    if(!upkeepNeeded){revert Cmp_UpkNN();}
+    if(!upkeepNeeded){revert();}
     c_state = C_State.Expired;
     emit CampaignExpired(address(this));
   }
 
   function payout() external isCreator{
-    if(c_state != C_State.Expired){revert Cmp_NIS();}
+    if(c_state != C_State.Expired){revert();}
     uint256 totalRaised = currentBalance;
     currentBalance = 0;
     (bool success, ) = i_creator.call{value: totalRaised}("");
@@ -179,13 +179,13 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   function refund(address _donator) external nonReentrant{
     if(msg.sender != i_crf){revert();}
-    if(c_state == C_State.Expired){revert Cmp_NIS();}
-    if(aggrDonations[_donator] == 0 ){revert Cmp_NoDns();}
+    if(c_state == C_State.Expired){revert();}
+    if(aggrDonations[_donator] == 0 ){revert();}
     uint256 amountToRefund = aggrDonations[_donator];
-    if(currentBalance < amountToRefund){revert Cmp_Bankrupt();}
+    if(currentBalance < amountToRefund){revert();}
     currentBalance = currentBalance.sub(amountToRefund);
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
-    if(!success){revert Cmp_RefF();}
+    if(!success){revert();}
     delete(aggrDonations[_donator]);
   }
 
