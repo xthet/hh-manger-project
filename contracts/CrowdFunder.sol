@@ -18,7 +18,7 @@ contract CrowdFunder {
     address indexed _address,
     string _username,
     string _email,
-    string _homeAddress,
+    string _shipAddress,
     string _pfp
   );
 
@@ -61,10 +61,10 @@ contract CrowdFunder {
   function addUser(
     address _address, string memory _username, 
     string memory _email, 
-    string memory _homeAddress,
+    string memory _shipAddress,
     string memory _pfp
     ) external {
-    emit UserAdded(_address, _username, _email, _homeAddress, _pfp);
+    emit UserAdded(_address, _username, _email, _shipAddress, _pfp);
   }
 
   function addCampaign (
