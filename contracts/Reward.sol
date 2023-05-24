@@ -33,6 +33,7 @@ contract Reward {
   }
 
   mapping (address => uint256) public true_donator;  
+  mapping (address => string) public surveyResponses;
 
   modifier isCreator() {
     if(msg.sender != i_creator){revert();}
@@ -96,15 +97,20 @@ contract Reward {
     return donators.length;
   }
 
-  // function removeDonator(address _donator) external {
-  //   uint256 index = true_donator[_donator] - 1;
-  //   delete donators[index];
-  // }
+  function removeDonator(address _donator) external {
+    uint256 index = true_donator[_donator] - 1;
+    delete donators[index];
+  }
 
   function getValidDonator(address _donator) external view returns(bool) {
     if((true_donator[_donator] > 0)){
       return false;
     }else{return true;}
+  }
+
+  function respondToSurvey(string memory _response) external{
+    if(!(true_donator[msg.sender] > 0)){revert();} // not a donator
+    surveyResponses[msg.sender] = _response;
   }
 
   function getRewardDetails() external view returns(rewardObject memory){
