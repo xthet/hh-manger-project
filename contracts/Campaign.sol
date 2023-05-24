@@ -172,8 +172,10 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert();}
     delete(aggrDonations[_donator]);
-    for(uint i=0; i<entDonations[_donator].length; i++){
-      Reward(rewards[i]).removeDonator(_donator);
+    if(entDonations[_donator].length > 0){    
+      for(uint i=0; i<entDonations[_donator].length; i++){
+        Reward(rewards[i]).removeDonator(_donator);
+      }
     }
     delete entDonations[_donator];
   }
