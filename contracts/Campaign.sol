@@ -117,7 +117,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function donate(address _donator, bool _rewardable) public payable nonReentrant{
-    if(msg.sender != i_crf){revert();}
+    // if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert();}
     if(_donator == i_creator){revert();}
     currentBalance = currentBalance.add(msg.value);
@@ -164,7 +164,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function refund(address _donator) external nonReentrant{
-    if(msg.sender != i_crf){revert();}
+    // if(msg.sender != i_crf){revert();}
     if(c_state == C_State.Expired){revert();}
     if(aggrDonations[_donator] == 0 ){revert();}
     uint256 amountToRefund = aggrDonations[_donator];
