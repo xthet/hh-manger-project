@@ -175,7 +175,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     delete aggrDonations[_donator];
     if(entDonations[_donator].length > 0){    
       for(uint i=0; i<entDonations[_donator].length; i++){
-        Reward(rewards[i]).removeDonator(_donator);
+        if(!(rewards[i] != address(0))){
+          // Reward(rewards[i]).removeDonator(_donator);
+        }
       }
     }
     delete entDonations[_donator];
@@ -215,9 +217,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     return rKeys;
   }
   
-  function getReward(uint256 _priceID) external view {
+  function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
     Reward reward = Reward(rewards[_priceID]);
-    reward.getRewardDetails();
+    return reward.getRewardDetails();
   }
 
   function getCampaignDetails() external view returns(CampaignObject memory) {

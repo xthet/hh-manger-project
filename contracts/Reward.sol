@@ -18,7 +18,7 @@ contract Reward {
   address[] public donators;
   string public surveyLink;
 
-  struct rewardObject {
+  struct RewardObject {
     uint256 price;
     string title;
     string description;
@@ -108,8 +108,8 @@ contract Reward {
     surveyResponses[msg.sender] = _response;
   }
 
-  function getRewardDetails() external view returns(rewardObject memory){
-    return rewardObject(
+  function getRewardDetails() external view returns(RewardObject memory){
+    return RewardObject(
       i_price,
       title,
       description,
