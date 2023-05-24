@@ -120,16 +120,33 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert();}
     if(_donator == i_creator){revert();}
-    currentBalance = currentBalance.add(msg.value);
-    if((rewards[msg.value].price > 0) && !(rewards[msg.value].infinite)) // exists and is not infinite
-    {
-      if(rewards[msg.value].quantity > 0){ // if the rwd is still available
-        rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
-        rewards[msg.value].donators.push(_donator);
-      }
-    }
-    if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
-      rewards[msg.value].donators.push(_donator);
+    // if(rewards[msg.value] != address(0)){
+    //   (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
+    //   if(!success){revert();}
+    // }
+    // if(!(Reward(rewards[msg.value]).getValidDonator(_donator))){revert();}
+    // currentBalance = currentBalance.add(msg.value);
+    // if((rewards[msg.value] != address(0)) && !(rewards[msg.value].infinite)) // exists and is not infinite
+    // {
+    //   if(rewards[msg.value].quantity > 0){ // if the rwd is still available
+    //     rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
+    //     rewards[msg.value].donators.push(_donator);
+    //   }
+    // }
+    // if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
+    //   rewards[msg.value].donators.push(_donator);
+    // }
+    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
+    emit FundingRecieved(_donator, msg.value, currentBalance);
+  }
+
+  function donateForReward(address _donator) public payable nonReentrant {
+    if(msg.sender != i_crf){revert();}
+    if(c_state != C_State.Fundraising){revert();}
+    if(_donator == i_creator){revert();}
+    if(rewards[msg.value] != address(0)){
+      (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
+      if(!success){revert();}
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
     emit FundingRecieved(_donator, msg.value, currentBalance);
@@ -187,8 +204,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     ) external isCreator {
     if(rewards[_price] != address(0)){revert();}
     rKeys.push(_price);
-    address[] memory _donators;
-    Reward newReward = new Reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
+    Reward newReward = new Reward(address(this), i_crf, i_creator, _price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
     rewards[_price] = address(newReward);
   }
 
@@ -213,8 +229,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     return rKeys;
   }
   
-  function getReward(uint256 _priceID) external view returns (reward memory) {
-    return rewards[_priceID];
+  function getReward(uint256 _priceID) external view {
+    Reward reward = Reward(rewards[_priceID]);
+    reward.getRewardDetails();
   }
 
   function getCampaignDetails() external view returns(CampaignObject memory) {

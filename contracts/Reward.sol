@@ -32,6 +32,8 @@ contract Reward {
     string surveyLink;
   }
 
+  mapping (address => uint256) public true_donator;  
+
   modifier isCreator() {
     if(msg.sender != i_creator){revert();}
     _;
@@ -68,6 +70,43 @@ contract Reward {
 
   function updateSurveyLink(string calldata _surveylink) external isCreator {
     surveyLink = _surveylink;
+  }
+
+  function addDonator(address _donator) external {
+    if(msg.sender != i_campaignAddress){revert();}
+    if((true_donator[_donator] > 0)){revert();} // already has id ...has therefor donated for this reward before
+
+    if(!infinite){
+      if(quantity > 0){
+        quantity = quantity - 1;
+        uint256 currNo = getNumDonators(); // get array length
+        true_donator[_donator] = currNo + 1; 
+        donators.push(_donator);
+      }else{revert();} // rwd has finished no longer available
+    }else{
+      uint256 currNo = getNumDonators(); // get array length
+      true_donator[_donator] = currNo + 1; 
+      donators.push(_donator);
+    }
+  }
+
+  function getDonators() external view returns(address[] memory){
+    return donators;
+  }
+
+  function getNumDonators() public view returns (uint256){
+    return donators.length;
+  }
+
+  function removeDonator(address _donator) external {
+    uint256 index = true_donator[_donator] - 1;
+    delete donators[index];
+  }
+
+  function getValidDonator(address _donator) external view returns(bool) {
+    if((true_donator[_donator] > 0)){
+      return false;
+    }else{return true;}
   }
 
   function getRewardDetails() external view returns(rewardObject memory){
