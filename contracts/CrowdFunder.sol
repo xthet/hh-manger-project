@@ -56,7 +56,7 @@ contract CrowdFunder {
   );
 
   uint256 public campaignCounter;
-  mapping (address => Campaign) private campaigns;
+  mapping (address => address) private campaigns;
 
   function addUser(
     address _address, string memory _username, 
@@ -83,12 +83,12 @@ contract CrowdFunder {
       _tags, _goalAmount, 
       _duration, _imageURI
     );
-    campaigns[address(newCampaign)] = newCampaign;
+    campaigns[address(newCampaign)] = address(newCampaign);
     emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _imageURI);
   }
 
   function donateToCampaign(address _campaignAddress) external payable {
-    address c_creator = campaigns[_campaignAddress].i_creator();
+    address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();
     (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature("donate(address)",msg.sender));
     if(success){
       emit CampaignFunded(msg.sender, _campaignAddress, msg.value, c_creator);
@@ -98,8 +98,8 @@ contract CrowdFunder {
   }
 
   function refundFromCampaign(address _campaignAddress) external {
-    address c_creator = campaigns[_campaignAddress].i_creator();
-    uint256 refVal = campaigns[_campaignAddress].aggrDonations(msg.sender);
+    address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();
+    uint256 refVal = Campaign(campaigns[_campaignAddress]).aggrDonations(msg.sender);
     if(!(refVal > 0)){revert();}
     (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
     if(success){
@@ -110,8 +110,8 @@ contract CrowdFunder {
   }
 
   function removeCampaign (address _campaignAddress) external {
-    if(campaigns[_campaignAddress].i_creator() != msg.sender){revert();}
-    if(campaigns[_campaignAddress].currentBalance() > 0){revert();}
+    if(Campaign(campaigns[_campaignAddress]).i_creator() != msg.sender){revert();}
+    if(Campaign(campaigns[_campaignAddress]).currentBalance() > 0){revert();}
     // either payout or leave for refunds
     delete(campaigns[_campaignAddress]);
     emit CampaignRemoved(_campaignAddress);

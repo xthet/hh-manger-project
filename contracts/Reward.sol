@@ -18,13 +18,27 @@ contract Reward {
   address[] public donators;
   string public surveyLink;
 
+  struct rewardObject {
+    uint256 price;
+    string title;
+    string description;
+    string rpic;
+    string[] perks;
+    uint256 delDate;
+    uint256 quantity;
+    bool infinite;
+    string[] shipsTo;
+    address[] donators;
+    string surveyLink;
+  }
+
   modifier isCreator() {
     if(msg.sender != i_creator){revert();}
     _;
   }
 
   constructor ( 
-    uint256 _id, 
+    uint256 _price, 
     address _campaignAddress, 
     address _cdf, address _creator
     string memory _title, 
@@ -33,7 +47,7 @@ contract Reward {
     uint256 _deadline, uint256 _quantity, bool _infinite, 
     string[] memory _shipsTo
     ) {
-    i_price = _id;
+    i_price = _price;
     i_campaignAddress = _campaignAddress;
     i_cdf = _cdf;
     i_creator = _creator;
@@ -48,7 +62,23 @@ contract Reward {
     shipsTo = _shipsTo;
   }
 
-  function updateSurveyLink(string calldata _surveylink) public isCreator {
+  function updateSurveyLink(string calldata _surveylink) external isCreator {
     surveyLink = _surveylink;
+  }
+
+  function getRewardDetails() external view returns(rewardObject memory){
+    return rewardObject(
+      i_price,
+      title,
+      description,
+      rpic,
+      perks,
+      delDate,
+      quantity,
+      infinite,
+      shipsTo,
+      donators,
+      surveyLink
+    )
   }
 }
