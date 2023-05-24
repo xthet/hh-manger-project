@@ -3,7 +3,7 @@ pragma solidity ^0.8.8;
 
 contract Reward {
   address public immutable i_campaignAddress;
-  address public immutable i_cdf;
+  // address public immutable i_crf;
   address public immutable i_creator;
 
   uint256 public immutable i_price;
@@ -41,7 +41,6 @@ contract Reward {
 
   constructor ( 
     address _campaignAddress, 
-    address _cdf, 
     address _creator,
     uint256 _price, 
     string memory _title, 
@@ -55,7 +54,6 @@ contract Reward {
     ) {
     i_price = _price;
     i_campaignAddress = _campaignAddress;
-    i_cdf = _cdf;
     i_creator = _creator;
 
     title = _title;
@@ -68,7 +66,7 @@ contract Reward {
     shipsTo = _shipsTo;
   }
 
-  function updateSurveyLink(string calldata _surveylink) external isCreator {
+  function updateSurveyLink(string memory _surveylink) external isCreator {
     surveyLink = _surveylink;
   }
 
@@ -98,10 +96,10 @@ contract Reward {
     return donators.length;
   }
 
-  function removeDonator(address _donator) external {
-    uint256 index = true_donator[_donator] - 1;
-    delete donators[index];
-  }
+  // function removeDonator(address _donator) external {
+  //   uint256 index = true_donator[_donator] - 1;
+  //   delete donators[index];
+  // }
 
   function getValidDonator(address _donator) external view returns(bool) {
     if((true_donator[_donator] > 0)){

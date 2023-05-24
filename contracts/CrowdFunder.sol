@@ -68,8 +68,8 @@ contract CrowdFunder {
   }
 
   function addCampaign (
-    string calldata _title, 
-    string calldata _description,
+    string memory _title, 
+    string memory _description,
     string memory _category,
     string memory _tags, 
     uint256 _goalAmount,

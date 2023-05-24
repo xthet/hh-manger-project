@@ -182,7 +182,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     ) external isCreator {
     if(rewards[_price] != address(0)){revert();}
     rKeys.push(_price);
-    Reward newReward = new Reward(address(this), i_crf, i_creator, _price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
+    Reward newReward = new Reward(address(this), i_creator, _price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
     rewards[_price] = address(newReward);
   }
 
