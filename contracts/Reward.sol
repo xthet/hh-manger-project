@@ -35,11 +35,6 @@ contract Reward {
   mapping (address => uint256) public true_donator;  
   mapping (address => string) public surveyResponses;
 
-  modifier isCreator() {
-    if(msg.sender != i_creator){revert();}
-    _;
-  }
-
   constructor ( 
     address _campaignAddress, 
     address _creator,
@@ -67,7 +62,8 @@ contract Reward {
     shipsTo = _shipsTo;
   }
 
-  function updateSurveyLink(string memory _surveylink) external isCreator {
+  function updateSurveyLink(string memory _surveylink) external {
+    if(msg.sender != i_creator){revert();}
     surveyLink = _surveylink;
   }
 
@@ -78,12 +74,12 @@ contract Reward {
     if(!infinite){
       if(quantity > 0){
         quantity = quantity - 1;
-        uint256 currNo = getNumDonators(); // get array length
+        uint256 currNo = donators.length; // get array length
         true_donator[_donator] = currNo + 1; 
         donators.push(_donator);
       }else{revert();} // rwd has finished no longer available
     }else{
-      uint256 currNo = getNumDonators(); // get array length
+      uint256 currNo = donators.length; // get array length
       true_donator[_donator] = currNo + 1; 
       donators.push(_donator);
     }
@@ -91,10 +87,6 @@ contract Reward {
 
   function getDonators() external view returns(address[] memory){
     return donators;
-  }
-
-  function getNumDonators() public view returns (uint256){
-    return donators.length;
   }
 
   function removeDonator(address _donator) external {
@@ -105,11 +97,11 @@ contract Reward {
     delete true_donator[_donator];
   }
 
-  function getValidDonator(address _donator) external view returns(bool) {
-    if((true_donator[_donator] > 0)){
-      return false;
-    }else{return true;}
-  }
+  // function getValidDonator(address _donator) external view returns(bool) {
+  //   if((true_donator[_donator] > 0)){
+  //     return false;
+  //   }else{return true;}
+  // }
 
   function respondToSurvey(string memory _response) external {
     if(!(true_donator[msg.sender] > 0)){revert();} // not a donator

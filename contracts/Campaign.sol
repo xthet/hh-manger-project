@@ -63,7 +63,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   // mapping (uint256 => reward) public rewards;
   mapping (uint256 => address) public rewards;
-  // mapping (address => uint256[]) public entDonations;
+  mapping (address => uint256[]) public entDonations;
   mapping (address => uint256) public aggrDonations;
 
   uint256[] public rKeys;
@@ -124,6 +124,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
       if(rewards[msg.value] != address(0)){
         (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
         if(!success){revert();}
+        entDonations[_donator].push(msg.value);
       }
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value); 
@@ -171,6 +172,10 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert();}
     delete(aggrDonations[_donator]);
+    for(uint i=0; i<entDonations[_donator].length; i++){
+      Reward(rewards[i]).removeDonator(_donator);
+    }
+    delete entDonations[_donator];
   }
 
   function makeReward( 
