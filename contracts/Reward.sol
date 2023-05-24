@@ -98,8 +98,11 @@ contract Reward {
   }
 
   function removeDonator(address _donator) external {
+    if(msg.sender != i_campaignAddress){revert();}
+    if(!(true_donator[_donator] > 0)){revert();} // not a donator
     uint256 index = true_donator[_donator] - 1;
     delete donators[index];
+    delete true_donator[_donator];
   }
 
   function getValidDonator(address _donator) external view returns(bool) {
@@ -108,7 +111,7 @@ contract Reward {
     }else{return true;}
   }
 
-  function respondToSurvey(string memory _response) external{
+  function respondToSurvey(string memory _response) external {
     if(!(true_donator[msg.sender] > 0)){revert();} // not a donator
     surveyResponses[msg.sender] = _response;
   }
