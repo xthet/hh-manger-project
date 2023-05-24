@@ -175,8 +175,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     delete aggrDonations[_donator];
     if(entDonations[_donator].length > 0){    
       for(uint i=0; i<entDonations[_donator].length; i++){
-        if(!(rewards[i] != address(0))){
-          // Reward(rewards[i]).removeDonator(_donator);
+        if(!(rewards[entDonations[_donator][i]] != address(0))){
+          Reward(rewards[entDonations[_donator][i]] ).removeDonator(_donator);
         }
       }
     }
