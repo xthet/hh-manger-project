@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+// import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "./Campaign.sol";
 
 // errors
@@ -12,7 +12,7 @@ import "./Campaign.sol";
 // error Crf_PubF();
 
 contract CrowdFunder {
-  using SafeMath for uint256;
+  // using SafeMath for uint256;
 
   event UserAdded(
     address indexed _address,

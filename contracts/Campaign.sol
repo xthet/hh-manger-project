@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+// import "@openzeppelin/contracts/utils/math/SafeMath.sol"; 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
@@ -19,7 +19,7 @@ import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/Lin
 // error Cmp_Bankrupt();
 
 contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
-  using SafeMath for uint256;
+  // using SafeMath for uint256;
 
   // enums
   enum C_State {
@@ -140,7 +140,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   returns (bool upkeepNeeded, bytes memory /**performData */) 
   {
     bool isOpen = c_state == C_State.Fundraising;
-    bool timePassed = ((block.timestamp.sub(i_initTimeStamp)) > duration);
+    bool timePassed = ((block.timestamp - i_initTimeStamp) > duration);
     upkeepNeeded = (timePassed && isOpen);
     return (upkeepNeeded, "0x0");
   }
@@ -169,7 +169,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(aggrDonations[_donator] == 0 ){revert();}
     uint256 amountToRefund = aggrDonations[_donator];
     if(currentBalance < amountToRefund){revert();}
-    currentBalance = currentBalance.sub(amountToRefund);
+    currentBalance = currentBalance - amountToRefund;
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert();}
     delete aggrDonations[_donator];
