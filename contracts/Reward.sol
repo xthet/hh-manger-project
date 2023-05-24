@@ -4,7 +4,7 @@ pragma solidity ^0.8.8;
 contract Reward {
   address public immutable i_campaignAddress;
   address public immutable i_cdf;
-  address public immutable i_creator
+  address public immutable i_creator;
 
   uint256 public immutable i_price;
   string public title;
@@ -38,13 +38,17 @@ contract Reward {
   }
 
   constructor ( 
-    uint256 _price, 
     address _campaignAddress, 
-    address _cdf, address _creator
+    address _cdf, 
+    address _creator,
+    uint256 _price, 
     string memory _title, 
-    string memory _description, string memory _rpic,
+    string memory _description, 
+    string memory _rpic,
     string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity, bool _infinite, 
+    uint256 _deadline, 
+    uint256 _quantity, 
+    bool _infinite, 
     string[] memory _shipsTo
     ) {
     i_price = _price;
@@ -79,6 +83,6 @@ contract Reward {
       shipsTo,
       donators,
       surveyLink
-    )
+    );
   }
 }

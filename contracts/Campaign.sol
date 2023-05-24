@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
+import { Reward } from "./Reward.sol";
 import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 
 // errors
@@ -60,21 +61,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 deadline;
   }
 
-  struct reward {
-    uint256 price;
-    string title;
-    string description;
-    string rpic;
-    string[] perks;
-    uint256 delDate;
-    uint256 quantity;
-    bool infinite;
-    string[] shipsTo;
-    address[] donators;
-  }
-
-  mapping (uint256 => reward) public rewards;
-  mapping (uint256 => address) public i_rewards;
+  // mapping (uint256 => reward) public rewards;
+  mapping (uint256 => address) public rewards;
   // mapping (address => uint256[]) public entDonations;
   mapping (address => uint256) public aggrDonations;
 
@@ -197,10 +185,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 _deadline, uint256 _quantity, bool _infinite, 
     string[] memory _shipsTo
     ) external isCreator {
-    if(rewards[_price].price != 0){revert();}
+    if(rewards[_price] != address(0)){revert();}
     rKeys.push(_price);
     address[] memory _donators;
-    rewards[_price] = reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
+    Reward newReward = new Reward(_price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo, _donators);
+    rewards[_price] = address(newReward);
   }
 
   function endCampaign() external isCreator {
