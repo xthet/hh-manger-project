@@ -126,7 +126,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
         if(!success){revert();}
       }
     }
-    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
+    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value); 
     emit FundingRecieved(_donator, msg.value, currentBalance);
   }
 
