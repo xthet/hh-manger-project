@@ -120,6 +120,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert();}
     if(_donator == i_creator){revert();}
+    currentBalance = currentBalance.add(msg.value);
     if(_rewardable){
       if(rewards[msg.value] != address(0)){
         (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
@@ -167,16 +168,16 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(c_state == C_State.Expired){revert();}
     if(aggrDonations[_donator] == 0 ){revert();}
     uint256 amountToRefund = aggrDonations[_donator];
-    // if(currentBalance < amountToRefund){revert();}
-    // currentBalance = currentBalance.sub(amountToRefund);
-    // (bool success, ) = payable(_donator).call{value: amountToRefund}("");
-    // if(!success){revert();}
-    // delete aggrDonations[_donator];
-    // if(entDonations[_donator].length > 0){    
-    //   for(uint i=0; i<entDonations[_donator].length; i++){
-    //     Reward(rewards[i]).removeDonator(_donator);
-    //   }
-    // }
+    if(currentBalance < amountToRefund){revert();}
+    currentBalance = currentBalance.sub(amountToRefund);
+    (bool success, ) = payable(_donator).call{value: amountToRefund}("");
+    if(!success){revert();}
+    delete aggrDonations[_donator];
+    if(entDonations[_donator].length > 0){    
+      for(uint i=0; i<entDonations[_donator].length; i++){
+        Reward(rewards[i]).removeDonator(_donator);
+      }
+    }
     delete entDonations[_donator];
   }
 
