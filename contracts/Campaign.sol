@@ -74,6 +74,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   mapping (uint256 => reward) public rewards;
+  mapping (uint256 => address) public i_rewards;
   // mapping (address => uint256[]) public entDonations;
   mapping (address => uint256) public aggrDonations;
 
