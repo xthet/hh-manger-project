@@ -104,7 +104,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     goalAmount = _goalAmount;
     i_initTimeStamp = block.timestamp;
     duration = _duration > i_maxDur ? i_maxDur : _duration;
-    deadline = i_initTimeStamp.add(duration);
+    deadline = i_initTimeStamp + duration;
     s_imageURI = _imageURI;
     currentBalance = 0;
   }
@@ -120,7 +120,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     // if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert();}
     if(_donator == i_creator){revert();}
-    currentBalance = currentBalance.add(msg.value);
+    currentBalance = currentBalance + msg.value;
     if(_rewardable){
       if(rewards[msg.value] != address(0)){
         (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
@@ -128,7 +128,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
         entDonations[_donator].push(msg.value);
       }
     }
-    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value); 
+    aggrDonations[_donator] = aggrDonations[_donator] + msg.value; 
     emit FundingRecieved(_donator, msg.value, currentBalance);
   }
 
@@ -208,8 +208,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function updateDur(uint256 _addedDur) external isCreator {
-    duration = ((duration.add(_addedDur)) > i_maxDur) ? i_maxDur : duration.add(_addedDur);
-    deadline = i_initTimeStamp.add(duration);
+    duration = (((duration + _addedDur)) > i_maxDur) ? i_maxDur : (duration + _addedDur);
+    deadline = i_initTimeStamp + duration;
   }
 
   // getter functions
