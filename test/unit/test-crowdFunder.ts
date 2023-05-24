@@ -68,7 +68,10 @@ import { CrowdFunder } from "../../typechain-types"
         const donator = accounts[1].address
         const crowdFunderv2 = crowdFunder.connect(accounts[1])
         console.log(crowdFunderv2.address)
-        const donationAmount = ethers.utils.parseEther("1")
+        const donationAmount = ethers.utils.parseEther("2")
+        const olderBalance = (await accounts[1].getBalance()).toString()
+        // console.log(donateTxR.events)
+        console.log(olderBalance)
         const donateTx = await crowdFunderv2.donateToCampaign(campaignAddress,false,{ value: donationAmount })
         const donateTxR = await donateTx.wait(1)
         const oldBalance = (await accounts[1].getBalance()).toString()
