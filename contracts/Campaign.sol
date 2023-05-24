@@ -116,37 +116,15 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
   }
 
-  function donate(address _donator) public payable nonReentrant{
+  function donate(address _donator, bool _rewardable) public payable nonReentrant{
     if(msg.sender != i_crf){revert();}
     if(c_state != C_State.Fundraising){revert();}
     if(_donator == i_creator){revert();}
-    // if(rewards[msg.value] != address(0)){
-    //   (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
-    //   if(!success){revert();}
-    // }
-    // if(!(Reward(rewards[msg.value]).getValidDonator(_donator))){revert();}
-    // currentBalance = currentBalance.add(msg.value);
-    // if((rewards[msg.value] != address(0)) && !(rewards[msg.value].infinite)) // exists and is not infinite
-    // {
-    //   if(rewards[msg.value].quantity > 0){ // if the rwd is still available
-    //     rewards[msg.value].quantity = rewards[msg.value].quantity.sub(1);
-    //     rewards[msg.value].donators.push(_donator);
-    //   }
-    // }
-    // if((rewards[msg.value].price > 0) && (rewards[msg.value].infinite)){ // exists and is infinite
-    //   rewards[msg.value].donators.push(_donator);
-    // }
-    aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
-    emit FundingRecieved(_donator, msg.value, currentBalance);
-  }
-
-  function donateForReward(address _donator) public payable nonReentrant {
-    if(msg.sender != i_crf){revert();}
-    if(c_state != C_State.Fundraising){revert();}
-    if(_donator == i_creator){revert();}
-    if(rewards[msg.value] != address(0)){
-      (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
-      if(!success){revert();}
+    if(_rewardable){
+      if(rewards[msg.value] != address(0)){
+        (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
+        if(!success){revert();}
+      }
     }
     aggrDonations[_donator] = aggrDonations[_donator].add(msg.value);
     emit FundingRecieved(_donator, msg.value, currentBalance);

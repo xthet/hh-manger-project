@@ -87,9 +87,9 @@ contract CrowdFunder {
     emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _imageURI);
   }
 
-  function donateToCampaign(address _campaignAddress) external payable {
+  function donateToCampaign(address _campaignAddress, bool _rewardable) external payable {
     address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();
-    (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature("donate(address)",msg.sender));
+    (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature("donate(address,bool)",msg.sender,_rewardable));
     if(success){
       emit CampaignFunded(msg.sender, _campaignAddress, msg.value, c_creator);
     }else{
