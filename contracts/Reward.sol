@@ -102,19 +102,19 @@ contract Reward {
     surveyResponses[msg.sender] = _response;
   }
 
-  // function getRewardDetails() external view returns(RewardObject memory){
-  //   return RewardObject(
-  //     i_price,
-  //     title,
-  //     description,
-  //     rpic,
-  //     perks,
-  //     delDate,
-  //     quantity,
-  //     infinite,
-  //     shipsTo,
-  //     donators,
-  //     surveyLink
-  //   );
-  // }
+  function getRewardDetails() external view returns(RewardObject memory){
+    return RewardObject(
+      i_price,
+      title,
+      description,
+      rpic,
+      perks,
+      delDate,
+      quantity,
+      infinite,
+      shipsTo,
+      donators,
+      surveyLink
+    );
+  }
 }

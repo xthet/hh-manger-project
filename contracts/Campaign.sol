@@ -217,25 +217,25 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     return rKeys;
   }
   
-  // function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
-  //   Reward reward = Reward(rewards[_priceID]);
-  //   return reward.getRewardDetails();
-  // }
+  function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
+    Reward reward = Reward(rewards[_priceID]);
+    return reward.getRewardDetails();
+  }
 
-  // function getCampaignDetails() external view returns(CampaignObject memory) {
-  //   return CampaignObject(
-  //     i_creator,
-  //     s_title,
-  //     s_description,
-  //     s_category,
-  //     s_tags,
-  //     goalAmount,
-  //     duration,
-  //     currentBalance,
-  //     c_state,
-  //     s_imageURI,
-  //     s_campaignURI,
-  //     deadline
-  //   );
-  // }
+  function getCampaignDetails() external view returns(CampaignObject memory) {
+    return CampaignObject(
+      i_creator,
+      s_title,
+      s_description,
+      s_category,
+      s_tags,
+      goalAmount,
+      duration,
+      currentBalance,
+      c_state,
+      s_imageURI,
+      s_campaignURI,
+      deadline
+    );
+  }
 }
