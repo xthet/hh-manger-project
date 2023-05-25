@@ -1,12 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.8;
 
-// import "@openzeppelin/contracts/utils/math/SafeMath.sol"; 
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
-import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
 import { Reward } from "./Reward.sol";
-import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
@@ -19,7 +16,6 @@ import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/Lin
 // error Cmp_Bankrupt();
 
 contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
-  // using SafeMath for uint256;
 
   // enums
   enum C_State {
