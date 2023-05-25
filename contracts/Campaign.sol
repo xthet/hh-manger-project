@@ -109,12 +109,12 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     currentBalance = 0;
   }
 
-  function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress, address _campaignAddress) external isCreator {
-    UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreatorAddress);
-    LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
-    if(token.balanceOf(_upkeepCreatorAddress) == 0){revert("no funds");}
-    rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
-  }
+  // function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress, address _campaignAddress) external isCreator {
+  //   // UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreatorAddress);
+  //   // LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
+  //   // if(token.balanceOf(_upkeepCreatorAddress) == 0){revert("no funds");}
+  //   // rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
+  // }
 
   function donate(address _donator, bool _rewardable) public payable nonReentrant{
     if(msg.sender != i_crf){revert();}
@@ -185,14 +185,16 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
   function makeReward( 
     uint256 _price, string memory _title, 
-    string memory _description, string memory _rpic,
-    string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity, bool _infinite, 
-    string[] memory _shipsTo
+    string memory _detsLink
+    // string memory _description, string memory _rpic,
+    // string[] memory _perks, 
+    // uint256 _deadline, uint256 _quantity, bool _infinite, 
+    // string[] memory _shipsTo
     ) external isCreator {
     if(rewards[_price] != address(0)){revert();}
     rKeys.push(_price);
-    Reward newReward = new Reward(address(this), i_creator, _price, _title, _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
+    Reward newReward = new Reward(address(this), i_creator, _price, _title, _detsLink);
+    // _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
     rewards[_price] = address(newReward);
   }
 
@@ -207,35 +209,35 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     s_campaignURI = _campaignURI;
   }
 
-  function updateDur(uint256 _addedDur) external isCreator {
-    duration = (((duration + _addedDur)) > i_maxDur) ? i_maxDur : (duration + _addedDur);
-    deadline = i_initTimeStamp + duration;
-  }
+  // function updateDur(uint256 _addedDur) external isCreator {
+  //   duration = (((duration + _addedDur)) > i_maxDur) ? i_maxDur : (duration + _addedDur);
+  //   deadline = i_initTimeStamp + duration;
+  // }
 
   // getter functions
   function getRewardKeys() external view returns(uint256[] memory){
     return rKeys;
   }
   
-  function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
-    Reward reward = Reward(rewards[_priceID]);
-    return reward.getRewardDetails();
-  }
+  // function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
+  //   Reward reward = Reward(rewards[_priceID]);
+  //   return reward.getRewardDetails();
+  // }
 
-  function getCampaignDetails() external view returns(CampaignObject memory) {
-    return CampaignObject(
-      i_creator,
-      s_title,
-      s_description,
-      s_category,
-      s_tags,
-      goalAmount,
-      duration,
-      currentBalance,
-      c_state,
-      s_imageURI,
-      s_campaignURI,
-      deadline
-    );
-  }
+  // function getCampaignDetails() external view returns(CampaignObject memory) {
+  //   return CampaignObject(
+  //     i_creator,
+  //     s_title, 
+  //     s_description,
+  //     s_category,
+  //     s_tags,
+  //     goalAmount,
+  //     duration,
+  //     currentBalance,
+  //     c_state,
+  //     s_imageURI,
+  //     s_campaignURI,
+  //     deadline
+  //   );
+  // }
 }
