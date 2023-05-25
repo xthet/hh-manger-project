@@ -40,27 +40,27 @@ contract Reward {
     address _creator,
     uint256 _price, 
     string memory _title, 
-    string memory _detsLink
-    // string memory _description, 
-    // string memory _rpic,
-    // string[] memory _perks, 
-    // uint256 _deadline, 
-    // uint256 _quantity, 
-    // bool _infinite, 
-    // string[] memory _shipsTo
+    // string memory _detsLink,
+    string memory _description, 
+    string memory _rpic,
+    string[] memory _perks, 
+    uint256 _deadline, 
+    uint256 _quantity, 
+    bool _infinite, 
+    string[] memory _shipsTo
     ) {
     i_price = _price;
     i_campaignAddress = _campaignAddress;
     i_creator = _creator;
 
     title = _title;
-    // description = _description;
-    // rpic = _rpic;
-    // perks = _perks;
-    // delDate = _deadline;
-    // quantity = _quantity;
-    // infinite = _infinite;
-    // shipsTo = _shipsTo;
+    description = _description;
+    rpic = _rpic;
+    perks = _perks;
+    delDate = _deadline;
+    quantity = _quantity;
+    infinite = _infinite;
+    shipsTo = _shipsTo;
   }
 
   function updateSurveyLink(string memory _surveylink) external {
@@ -103,19 +103,19 @@ contract Reward {
     surveyResponses[msg.sender] = _response;
   }
 
-  // function getRewardDetails() external view returns(RewardObject memory){
-  //   return RewardObject(
-  //     i_price,
-  //     title,
-  //     description,
-  //     rpic,
-  //     perks,
-  //     delDate,
-  //     quantity,
-  //     infinite,
-  //     shipsTo,
-  //     donators,
-  //     surveyLink
-  //   );
-  // }
+  function getRewardDetails() external view returns(RewardObject memory){
+    return RewardObject(
+      i_price,
+      title,
+      description,
+      rpic,
+      perks,
+      delDate,
+      quantity,
+      infinite,
+      shipsTo,
+      donators,
+      surveyLink
+    );
+  }
 }
