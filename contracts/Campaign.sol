@@ -196,11 +196,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     rewards[_price] = address(newReward);
   }
 
-  // function endCampaign() external isCreator {
-  //   if(c_state == C_State.Expired){revert();}
-  //   c_state = C_State.Canceled;
-  //   emit CampaignCanceled();
-  // }
+  function endCampaign() external isCreator {
+    if(c_state == C_State.Expired){revert();}
+    c_state = C_State.Canceled;
+    emit CampaignCanceled();
+  }
 
   // update functions
   function updateCampaignURI(string memory _campaignURI) external isCreator {
