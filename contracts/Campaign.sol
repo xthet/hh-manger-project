@@ -215,9 +215,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   // }
 
   // getter functions
-  function getRewardKeys() external view returns(uint256[] memory){
-    return rKeys;
-  }
+  // function getRewardKeys() external view returns(uint256[] memory){
+  //   return rKeys;
+  // }
   
   // function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {
   //   Reward reward = Reward(rewards[_priceID]);

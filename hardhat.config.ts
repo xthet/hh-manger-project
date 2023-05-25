@@ -7,6 +7,7 @@ import "dotenv/config"
 import "solidity-coverage"
 import "hardhat-deploy"
 import "solidity-coverage"
+import "hardhat-contract-sizer"
 import { HardhatUserConfig } from "hardhat/config"
 
 
@@ -17,12 +18,19 @@ const config: HardhatUserConfig =
     settings:{ 
       optimizer: {
         enabled: true,
-        runs: 2000,
+        runs: 200,
       }, 
       "viaIR": true,
     },  
   },
-  
+  contractSizer: {
+    alphaSort: true,
+    disambiguatePaths: false,
+    runOnCompile: true,
+    strict: true,
+    // only: [":ERC20$"],
+    unit: "kB"
+  },
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
