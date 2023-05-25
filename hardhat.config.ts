@@ -14,15 +14,35 @@ import { HardhatUserConfig } from "hardhat/config"
 const config: HardhatUserConfig = 
 {
   solidity: {
-    compilers: [{ version: "0.8.11" }, { version: "0.8.8" }, { version: "0.6.6" }, { version: "0.4.19" }, { version: "0.6.12" }, { version: "0.4.11" }],
-    settings:{ 
-      optimizer: {
-        enabled: true,
-        runs: 200,
-        details: { yul: false },
+    compilers: [
+      { 
+        version: "0.8.11", 
+        settings:{
+          optimizer: {
+            enabled: true,
+            runs: 200,
+            details: {
+              yul: false
+            }
+          }
+        } 
       }, 
-      "viaIR": true,
-    },  
+      { version: "0.8.8" }, { version: "0.6.6" }, { version: "0.4.19" }, { version: "0.6.12" }, { version: "0.4.11" }
+    ],
+    // settings:{ 
+    //   "optimizer": {
+    //     "enabled": true,
+    //     "runs": 200,
+    //     details: {
+    //       yul: true,
+    //       yulDetails: {
+    //         stackAllocation: true,
+    //         optimizerSteps: "dhfoDgvulfnTUtnIf"
+    //       }
+    //     }
+    //   }, 
+    //   "viaIR": true,
+    // },  
   },
   contractSizer: {
     alphaSort: true,

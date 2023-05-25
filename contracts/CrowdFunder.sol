@@ -12,11 +12,11 @@ import "./Campaign.sol";
 // error Crf_RefF();
 // error Crf_PubF();
 
-contract CampaignFactory {
-  function createCampaign() external returns(Campaign) {
-    return new Campaign();
-  }
-}
+// contract CampaignFactory {
+//   function createCampaign() external returns(Campaign) {
+//     return new Campaign();
+//   }
+// }
 
 contract CrowdFunder {
   // using SafeMath for uint256;
