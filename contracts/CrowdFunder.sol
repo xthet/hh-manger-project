@@ -129,10 +129,10 @@ contract CrowdFunder {
     LinkTokenInterface token = LinkTokenInterface(_linkToken);
     if(token.balanceOf(_upkeepCreator) == 0){revert("no funds");}
     newUpkeepCreator.registerAndPredictID(Campaign(_campaignAddress).s_title(), "0x", _campaignAddress, 500000, Campaign(_campaignAddress).i_creator(), "0x", "0x", 2000000000000000000);
+    campaignCounter = campaignCounter + 1;
+    emit CampaignPublished(_campaignAddress, msg.sender);
     // (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature("timeBox(address,address,address)", _upkeepCreator, _linkToken, _campaignAddress));
     // if(success){
-    //   campaignCounter = campaignCounter + 1;
-    //   emit CampaignPublished(_campaignAddress, msg.sender);
     // }else{revert();}
   }
 }
