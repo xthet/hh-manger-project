@@ -3,6 +3,7 @@ pragma solidity ^0.8.11;
 
 import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
 import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
+import { CampaignFactory } from "./CampaignFactory.sol";
 import "./Campaign.sol";
 
 // errors
@@ -11,12 +12,6 @@ import "./Campaign.sol";
 // error Crf_DonF();
 // error Crf_RefF();
 // error Crf_PubF();
-
-// contract CampaignFactory {
-//   function createCampaign() external returns(Campaign) {
-//     return new Campaign();
-//   }
-// }
 
 contract CrowdFunder {
   // using SafeMath for uint256;
@@ -62,8 +57,15 @@ contract CrowdFunder {
     address _creator
   );
 
+  address immutable public i_cmpFactory;
+  address immutable public i_rewardFactory;
   uint256 public campaignCounter;
   mapping (address => address) private campaigns;
+
+  constructor (address _cmpFactory, address _rwdFactory){
+    i_rewardFactory = _rwdFactory;
+    i_cmpFactory = _cmpFactory;
+  }
 
   function addUser(
     address _address, string memory _username, 
@@ -74,24 +76,18 @@ contract CrowdFunder {
     emit UserAdded(_address, _username, _email, _shipAddress, _pfp);
   }
 
-  function addCampaign (
-    string memory _title, 
-    string memory _description,
-    string memory _category,
-    string memory _tags, 
-    uint256 _goalAmount,
-    uint256 _duration,
-    string calldata _imageURI
-    ) external {
-    Campaign newCampaign = new Campaign(
-      address(this),
-      payable(msg.sender), _title, 
-      _description, _category, 
-      _tags, _goalAmount, 
-      _duration, _imageURI
-    );
+  function addCampaign (CampaignFactory.cmpInput memory _cmp) external {
+    address newCampaign = CampaignFactory(i_cmpFactory).createCampaign(address(this), payable(msg.sender), i_rewardFactory,  _cmp);
     campaigns[address(newCampaign)] = address(newCampaign);
-    emit CampaignAdded(address(newCampaign), msg.sender, _title, _description, _category, _tags, _imageURI);
+    emit CampaignAdded(
+      newCampaign, 
+      msg.sender, 
+      _cmp._title, 
+      _cmp._description, 
+      _cmp._category, 
+      _cmp._tags, 
+      _cmp._imageURI
+    );
   }
 
   function donateToCampaign(address _campaignAddress, bool _rewardable) external payable {

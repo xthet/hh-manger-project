@@ -40,7 +40,6 @@ contract Reward {
     address _creator,
     uint256 _price, 
     string memory _title, 
-    // string memory _detsLink,
     string memory _description, 
     string memory _rpic,
     string[] memory _perks, 

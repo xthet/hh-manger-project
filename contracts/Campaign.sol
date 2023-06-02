@@ -4,6 +4,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { Reward } from "./Reward.sol";
+import { RewardFactory } from "./RewardFactory.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
@@ -27,6 +28,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   // c_state variables
   address immutable private i_crf;
   address payable immutable public i_creator;
+  address immutable public i_rwdFactory;
   string public s_title;
   string public s_description;
   string public s_category;
@@ -39,8 +41,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   uint256 private immutable i_initTimeStamp;
   uint256 private constant i_maxDur = 5184000;
   uint256 public deadline;
-  C_State public c_state = C_State.Fundraising; // default c_state
   uint256 private rId;
+  C_State public c_state = C_State.Fundraising; // default c_state
 
   struct CampaignObject {
     address i_creator;
@@ -83,6 +85,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   constructor (
     address _crowdfunder,
     address _creator,
+    address _rwdFactory,
     string memory _title,
     string memory _description,
     string memory _category,
@@ -91,6 +94,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 _duration,
     string memory _imageURI
   ) {
+    i_rwdFactory = _rwdFactory;
     i_crf = _crowdfunder;
     i_creator = payable(_creator);
     s_title = _title;
@@ -104,13 +108,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     s_imageURI = _imageURI;
     currentBalance = 0;
   }
-
-  // function timeBox(address _upkeepCreatorAddress, address _linkTokenAddress, address _campaignAddress) external isCreator {
-  //   // UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreatorAddress);
-  //   // LinkTokenInterface token = LinkTokenInterface(_linkTokenAddress);
-  //   // if(token.balanceOf(_upkeepCreatorAddress) == 0){revert("no funds");}
-  //   // rId = newUpkeepCreator.registerAndPredictID(s_title, "0x", _campaignAddress, 500000, i_creator, "0x", "0x", 2000000000000000000);
-  // }
 
   function donate(address _donator, bool _rewardable) public payable nonReentrant{
     if(msg.sender != i_crf){revert();}
@@ -179,19 +176,11 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     delete entDonations[_donator];
   }
 
-  function makeReward( 
-    uint256 _price, string memory _title, 
-    // string memory _detsLink,
-    string memory _description, string memory _rpic,
-    string[] memory _perks, 
-    uint256 _deadline, uint256 _quantity, bool _infinite, 
-    string[] memory _shipsTo
-    ) external isCreator {
-    if(rewards[_price] != address(0)){revert();}
-    rKeys.push(_price);
-    Reward newReward = new Reward(address(this), i_creator, _price, _title,
-    _description, _rpic, _perks, _deadline, _quantity, _infinite, _shipsTo);
-    rewards[_price] = address(newReward);
+  function makeReward(RewardFactory.rwdInput memory _rwd) external isCreator {
+    if(rewards[_rwd.price] != address(0)){revert();}
+    rKeys.push(_rwd.price);
+    address newReward = RewardFactory(i_rwdFactory).createReward(address(this), i_creator, _rwd);
+    rewards[_rwd.price] = newReward;
   }
 
   function endCampaign() external isCreator {
