@@ -12,7 +12,21 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
   const waitBlockConfirmations = chainId?.toString() == "31337" ? 1 : 5
 
   log("==========================")
-  const args:any[] = []
+  const campaignFactory = await deploy("CampaignFactory", {
+    from: deployer,
+    args: [],
+    log: true,
+    waitConfirmations: waitBlockConfirmations
+  })
+
+  const rewardFactory = await deploy("RewardFactory", {
+    from: deployer,
+    args: [],
+    log: true,
+    waitConfirmations: waitBlockConfirmations
+  })
+
+  const args:any[] = [rewardFactory.address, campaignFactory.address]
   const crowdFunder = await deploy("CrowdFunder", {
     from: deployer,
     args: args,
@@ -22,6 +36,8 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
     log("Verifying...")
+    await verify(campaignFactory.address, [])
+    await verify(rewardFactory.address, [])
     await verify(crowdFunder.address, args)
   }
   log("==========================")

@@ -5,7 +5,7 @@ import { developmentChains, networkConfig } from "../helper-hardhat-config"
 import verify from "../utils/verify"
 import hasKey from "../utils/hasKey"
 
-const deployCampaignFactory: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+const deployUpkeepIDConsumer: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const { deployments, getNamedAccounts } = hre
   const { deploy, log } = deployments
   const { deployer } = await getNamedAccounts()
@@ -14,8 +14,12 @@ const deployCampaignFactory: DeployFunction = async function (hre: HardhatRuntim
 
   log("==========================")
   if(hasKey(networkConfig, chainId!))
-  { const args:any[] = []
-    const campaignFactory = await deploy("CampaignFactory", {
+  { const args:any[] = [
+      networkConfig[chainId].linkTokenAddress, 
+      networkConfig[chainId].registrarAddress, 
+      networkConfig[chainId].registryAddress
+    ]
+    const upkeepIDConsumer = await deploy("UpkeepIDConsumer", {
       from: deployer,
       args,
       log: true,
@@ -24,11 +28,11 @@ const deployCampaignFactory: DeployFunction = async function (hre: HardhatRuntim
 
     if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
       log("Verifying...")
-      await verify(campaignFactory.address, args)
+      await verify(upkeepIDConsumer.address, args)
     }
     log("==========================")
   }
 }
 
-export default deployCampaignFactory
-deployCampaignFactory.tags = ["all", "campaignfactory"]
+export default deployUpkeepIDConsumer
+deployUpkeepIDConsumer.tags = ["all", "upkeepidconsumer"]

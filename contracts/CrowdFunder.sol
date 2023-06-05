@@ -4,7 +4,7 @@ pragma solidity ^0.8.11;
 import { UpkeepIDConsumer } from "./UpkeepIDConsumer.sol";
 import { LinkTokenInterface } from "@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol";
 import { CampaignFactory } from "./factories/CampaignFactory.sol";
-import "./Campaign.sol";
+import { Campaign } from "./Campaign.sol";
 
 // errors
 // error Crf_NotCrtr();

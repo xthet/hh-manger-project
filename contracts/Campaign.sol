@@ -5,6 +5,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { Reward } from "./Reward.sol";
 import { RewardFactory } from "./factories/RewardFactory.sol";
+import { RefunderLib } from "./libraries/campaign/RefunderLib.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
@@ -59,6 +60,12 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     uint256 deadline;
   }
 
+  struct refunder_pckg {
+    uint256 currentBalance;
+    C_State c_state;
+  }
+
+
   // mapping (uint256 => reward) public rewards;
   mapping (uint256 => address) public rewards;
   mapping (address => uint256[]) public entDonations;
@@ -81,6 +88,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(msg.sender != i_creator){revert();}
     _;
   }
+
+  refunder_pckg _refP = refunder_pckg(currentBalance, c_state);
 
   constructor (
     address _crowdfunder,
@@ -108,6 +117,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     s_imageURI = _imageURI;
     currentBalance = 0;
   }
+
 
   function donate(address _donator, bool _rewardable) public payable nonReentrant{
     if(msg.sender != i_crf){revert();}
@@ -156,30 +166,32 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     else{revert();}
   }
 
+
   function refund(address _donator) external nonReentrant{
-    if(msg.sender != i_crf){revert();}
-    if(c_state == C_State.Expired){revert();}
-    if(aggrDonations[_donator] == 0 ){revert();}
+    RefunderLib.refund(i_crf, _refP, rewards, aggrDonations, entDonations, _donator);
+    // if(msg.sender != i_crf){revert();}
+    // if(c_state == C_State.Expired){revert();}
+    // if(aggrDonations[_donator] == 0 ){revert();}
 
-    uint256 amountToRefund = aggrDonations[_donator];
+    // uint256 amountToRefund = aggrDonations[_donator];
 
-    if(currentBalance < amountToRefund){revert();}
-    currentBalance = currentBalance - amountToRefund;
+    // if(currentBalance < amountToRefund){revert();}
+    // currentBalance = currentBalance - amountToRefund;
 
-    (bool success, ) = payable(_donator).call{value: amountToRefund}("");
-    if(!success){revert();}
+    // (bool success, ) = payable(_donator).call{value: amountToRefund}("");
+    // if(!success){revert();}
 
-    delete aggrDonations[_donator];
+    // delete aggrDonations[_donator];
 
-    if(entDonations[_donator].length > 0){    
-      for(uint i=0; i<entDonations[_donator].length; i++){
-        if(!(rewards[entDonations[_donator][i]] != address(0))){
-          Reward(rewards[entDonations[_donator][i]]).removeDonator(_donator);
-        }
-      }
-    }
+    // if(entDonations[_donator].length > 0){    
+    //   for(uint i=0; i<entDonations[_donator].length; i++){
+    //     if(!(rewards[entDonations[_donator][i]] != address(0))){
+    //       Reward(rewards[entDonations[_donator][i]]).removeDonator(_donator);
+    //     }
+    //   }
+    // }
 
-    delete entDonations[_donator];
+    // delete entDonations[_donator];
   }
 
   function makeReward(RewardFactory.rwdInput memory _rwd) external isCreator {
