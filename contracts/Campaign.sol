@@ -130,7 +130,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
         (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature("addDonator(address)", _donator));
         if(!success){revert();}
         entDonations[_donator].push(msg.value);
-      }
+      }else{revert();}
     }
     aggrDonations[_donator] = aggrDonations[_donator] + msg.value; 
     emit FundingRecieved(_donator, msg.value, currentBalance);
@@ -169,8 +169,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
 
   function refund(address _donator) external nonReentrant{
-    console.log("currBal");
-    console.log(currentBalance);
+    // console.log("currBal");
+    // console.log(currentBalance);
     _refP = refunder_pckg(currentBalance, c_state);
     RefunderLib.refund(i_crf, _refP, rewards, aggrDonations, entDonations, _donator);
     // if(msg.sender != i_crf){revert();}
@@ -199,10 +199,10 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   function makeReward(RewardFactory.rwdInput memory _rwd) external isCreator {
-    if(rewards[_rwd.price] != address(0)){revert();}
-    rKeys.push(_rwd.price);
+    if(rewards[_rwd._price] != address(0)){revert();}
+    rKeys.push(_rwd._price);
     address newReward = RewardFactory(i_rwdFactory).createReward(address(this), i_creator, _rwd);
-    rewards[_rwd.price] = newReward;
+    rewards[_rwd._price] = newReward;
   }
 
   function endCampaign() external isCreator {
@@ -231,20 +231,20 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     return reward.getRewardDetails();
   }
 
-  // function getCampaignDetails() external view returns(CampaignObject memory) {
-  //   return CampaignObject(
-  //     i_creator,
-  //     s_title, 
-  //     s_description,
-  //     s_category,
-  //     s_tags,
-  //     goalAmount,
-  //     duration,
-  //     currentBalance,
-  //     c_state,
-  //     s_imageURI,
-  //     s_campaignURI,
-  //     deadline
-  //   );
-  // }
+  function getCampaignDetails() external view returns(CampaignObject memory) {
+    return CampaignObject(
+      i_creator,
+      s_title, 
+      s_description,
+      s_category,
+      s_tags,
+      goalAmount,
+      duration,
+      currentBalance,
+      c_state,
+      s_imageURI,
+      s_campaignURI,
+      deadline
+    );
+  }
 }

@@ -272,15 +272,17 @@ import { Campaign } from "../../typechain-types"
       it("successfully creates rewards", async ()=>{
         const getDeadline = await campaign.deadline()
         const addRwdTx = campaign.makeReward(
-          ethers.utils.parseEther("0.022"),
-          "Digital Copy with OST",
-          "A digital copy of the game for STEAM (PC/MAC).",
-          "ipfs://",
-          ["Digital Artbook", "Original Soundtrack"],
-          getDeadline,
-          100,
-          true,
-          ["_NW"] // digital
+          {
+            _price: ethers.utils.parseEther("0.022"),
+            _title: "Digital Copy with OST",
+            _description: "A digital copy of the game for STEAM (PC/MAC).",
+            _rpic: "ipfs://",
+            _perks: ["mochas and biggs"],
+            _deadline: getDeadline,
+            _quantity: 100,
+            _infinite: true,
+            _shipsTo: ["_NW"]
+          }
         )
 
         const addRwdTxR = (await addRwdTx).wait(1)
@@ -308,28 +310,32 @@ import { Campaign } from "../../typechain-types"
       it("fails on rwd edit", async ()=>{
         const getDeadline = await campaign.deadline()
         const addRwdTx = campaign.makeReward(
-          ethers.utils.parseEther("0.025"),
-          "Digital Copy with OST",
-          "A digital copy of the game for STEAM (PC/MAC).",
-          "ipfs://",
-          ["Digital Artbook", "Original Soundtrack"],
-          getDeadline,
-          100,
-          true,
-          ["_NW"] // digital
+          {
+            _price: ethers.utils.parseEther("0.022"),
+            _title: "Digital Copy with OST",
+            _description: "A digital copy of the game for STEAM (PC/MAC).",
+            _rpic: "ipfs://",
+            _perks: ["mochas and biggs"],
+            _deadline: getDeadline,
+            _quantity: 100,
+            _infinite: true,
+            _shipsTo: ["_NW"]
+          }
         )
         const addRwdTxR = (await addRwdTx).wait(1)
 
         await expect( campaign.makeReward(
-          ethers.utils.parseEther("0.025"),
-          "Digital Copy with OST",
-          "A physical copy of the game for STEAM (PC/MAC).",
-          "ipfs://",
-          ["Digital Artbook", "Original Soundtrack"],
-          getDeadline,
-          100,
-          true,
-          ["_NW"] // digital
+          {
+            _price: ethers.utils.parseEther("0.022"),
+            _title: "Digital Copy with OST",
+            _description: "A digital copy of the game for STEAM (PC/MAC).",
+            _rpic: "ipfs://",
+            _perks: ["mochas and biggs"],
+            _deadline: getDeadline,
+            _quantity: 100,
+            _infinite: true,
+            _shipsTo: ["_NW"]
+          }
         )).to.be.reverted
       })
     })

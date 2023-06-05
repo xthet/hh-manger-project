@@ -11,19 +11,23 @@ const deployCampaign: DeployFunction = async function (hre: HardhatRuntimeEnviro
   const { deployer } = await getNamedAccounts()
   const chainId = network.config.chainId
   const waitBlockConfirmations = chainId?.toString() == "31337" ? 1 : 5
+  await deployments.fixture(["crowdfunder"])
+  const crowdfunder = await ethers.getContract("CrowdFunder", deployer)
+  const refunderLib = await ethers.getContract("RefunderLib", deployer)
+  const rewardFactory = await ethers.getContract("RewardFactory", deployer)
 
   log("==========================")
-  const refunderLib = await deploy("RefunderLib", {
-    from: deployer,
-    args: [],
-    log: true,
-    waitConfirmations: waitBlockConfirmations
-  })
+  // const refunderLib = await deploy("RefunderLib", {
+  //   from: deployer,
+  //   args: [],
+  //   log: true,
+  //   waitConfirmations: waitBlockConfirmations
+  // })
 
   const args:any[] = [
-    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    crowdfunder.address, // i_crf from console
     deployer,
-    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    rewardFactory.address, // i_rwdFactory
     "Piratopia: Raiders of Pirate Bay",
     "A P2E masterpiece on the AVAX chain",
     "P2E",

@@ -14,17 +14,14 @@ library RefunderLib {
     mapping (address => uint256[]) storage _entDons, 
     address _donator
     ) external {
-    console.log("here");
     if(msg.sender != _i_crf){revert();}
     if(_refP.c_state == Campaign.C_State.Expired){revert();}
     if(_aggrDons[_donator] == 0 ){revert();}
-    console.log("there");
 
     uint256 amountToRefund = _aggrDons[_donator];
     console.log(_refP.currentBalance);
 
     if(_refP.currentBalance < amountToRefund){revert();}
-    console.log("where");
     _refP.currentBalance = _refP.currentBalance - amountToRefund;
 
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
@@ -41,6 +38,5 @@ library RefunderLib {
     }
 
     delete _entDons[_donator];
-    console.log("zhere");
   }
 }
