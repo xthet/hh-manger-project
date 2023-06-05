@@ -64,7 +64,7 @@ contract CrowdFunder {
 
   constructor (address _cmpFactory, address _rwdFactory){
     i_rewardFactory = _rwdFactory;
-    i_cmpFactory = _cmpFactory;
+    i_cmpFactory = _cmpFactory; 
   }
 
   function addUser(
