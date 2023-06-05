@@ -4,7 +4,7 @@ pragma solidity ^0.8.11;
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { Reward } from "./Reward.sol";
-import { RewardFactory } from "./RewardFactory.sol";
+import { RewardFactory } from "./factories/RewardFactory.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
@@ -26,7 +26,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
   }
 
   // c_state variables
-  address immutable private i_crf;
+  address immutable public i_crf;
   address payable immutable public i_creator;
   address immutable public i_rwdFactory;
   string public s_title;
@@ -160,12 +160,17 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     if(msg.sender != i_crf){revert();}
     if(c_state == C_State.Expired){revert();}
     if(aggrDonations[_donator] == 0 ){revert();}
+
     uint256 amountToRefund = aggrDonations[_donator];
+
     if(currentBalance < amountToRefund){revert();}
     currentBalance = currentBalance - amountToRefund;
+
     (bool success, ) = payable(_donator).call{value: amountToRefund}("");
     if(!success){revert();}
+
     delete aggrDonations[_donator];
+
     if(entDonations[_donator].length > 0){    
       for(uint i=0; i<entDonations[_donator].length; i++){
         if(!(rewards[entDonations[_donator][i]] != address(0))){
@@ -173,6 +178,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
         }
       }
     }
+
     delete entDonations[_donator];
   }
 
@@ -209,20 +215,20 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     return reward.getRewardDetails();
   }
 
-  function getCampaignDetails() external view returns(CampaignObject memory) {
-    return CampaignObject(
-      i_creator,
-      s_title, 
-      s_description,
-      s_category,
-      s_tags,
-      goalAmount,
-      duration,
-      currentBalance,
-      c_state,
-      s_imageURI,
-      s_campaignURI,
-      deadline
-    );
-  }
+  // function getCampaignDetails() external view returns(CampaignObject memory) {
+  //   return CampaignObject(
+  //     i_creator,
+  //     s_title, 
+  //     s_description,
+  //     s_category,
+  //     s_tags,
+  //     goalAmount,
+  //     duration,
+  //     currentBalance,
+  //     c_state,
+  //     s_imageURI,
+  //     s_campaignURI,
+  //     deadline
+  //   );
+  // }
 }

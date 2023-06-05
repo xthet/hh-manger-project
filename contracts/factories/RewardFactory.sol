@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.11;
 
-import { Reward } from "./Reward.sol";
+import { Reward } from "../Reward.sol";
 
 contract RewardFactory {
   struct rwdInput {
