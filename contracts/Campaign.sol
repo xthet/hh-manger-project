@@ -6,6 +6,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { Reward } from "./Reward.sol";
 import { RewardFactory } from "./factories/RewardFactory.sol";
 import { RefunderLib } from "./libraries/campaign/RefunderLib.sol";
+import "../node_modules/hardhat/console.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
@@ -89,7 +90,7 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     _;
   }
 
-  refunder_pckg _refP = refunder_pckg(currentBalance, c_state);
+  refunder_pckg _refP;
 
   constructor (
     address _crowdfunder,
@@ -168,6 +169,9 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
 
   function refund(address _donator) external nonReentrant{
+    console.log("currBal");
+    console.log(currentBalance);
+    _refP = refunder_pckg(currentBalance, c_state);
     RefunderLib.refund(i_crf, _refP, rewards, aggrDonations, entDonations, _donator);
     // if(msg.sender != i_crf){revert();}
     // if(c_state == C_State.Expired){revert();}

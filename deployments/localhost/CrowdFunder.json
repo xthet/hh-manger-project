@@ -1,0 +1,467 @@
+{
+  "address": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_cmpFactory",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_rwdFactory",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_creator",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_title",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_description",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_category",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_tags",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_imageURI",
+          "type": "string"
+        }
+      ],
+      "name": "CampaignAdded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_funder",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_val",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_c_creator",
+          "type": "address"
+        }
+      ],
+      "name": "CampaignFunded",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "_creator",
+          "type": "address"
+        }
+      ],
+      "name": "CampaignPublished",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        }
+      ],
+      "name": "CampaignRemoved",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_withdrawer",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "_val",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_c_creator",
+          "type": "address"
+        }
+      ],
+      "name": "CampaignShrunk",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_username",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_email",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_shipAddress",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "_pfp",
+          "type": "string"
+        }
+      ],
+      "name": "UserAdded",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "string",
+              "name": "_title",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_description",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_category",
+              "type": "string"
+            },
+            {
+              "internalType": "string",
+              "name": "_tags",
+              "type": "string"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_goalAmount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "_duration",
+              "type": "uint256"
+            },
+            {
+              "internalType": "string",
+              "name": "_imageURI",
+              "type": "string"
+            }
+          ],
+          "internalType": "struct CampaignFactory.cmpInput",
+          "name": "_cmp",
+          "type": "tuple"
+        }
+      ],
+      "name": "addCampaign",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        },
+        {
+          "internalType": "string",
+          "name": "_username",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_email",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_shipAddress",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_pfp",
+          "type": "string"
+        }
+      ],
+      "name": "addUser",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "campaignCounter",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bool",
+          "name": "_rewardable",
+          "type": "bool"
+        }
+      ],
+      "name": "donateToCampaign",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "i_cmpFactory",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "i_rewardFactory",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_upkeepCreator",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_linkToken",
+          "type": "address"
+        }
+      ],
+      "name": "publishCampaign",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        }
+      ],
+      "name": "refundFromCampaign",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_campaignAddress",
+          "type": "address"
+        }
+      ],
+      "name": "removeCampaign",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x2fe4779139dd193a3914a6556dc584351505ef059b252ccb5f393e3ca7df3827",
+  "receipt": {
+    "to": null,
+    "from": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    "contractAddress": "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
+    "transactionIndex": 0,
+    "gasUsed": "1158262",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x011f2a5cc2fb6ca385f56539dd48b9acade76139db2d78045ce9945829510246",
+    "transactionHash": "0x2fe4779139dd193a3914a6556dc584351505ef059b252ccb5f393e3ca7df3827",
+    "logs": [],
+    "blockNumber": 4,
+    "cumulativeGasUsed": "1158262",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
+    "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "645465ac11977412cb83284d15e4bd14",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_cmpFactory\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_rwdFactory\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_creator\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_title\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_category\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_tags\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_imageURI\",\"type\":\"string\"}],\"name\":\"CampaignAdded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_funder\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_val\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_c_creator\",\"type\":\"address\"}],\"name\":\"CampaignFunded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_creator\",\"type\":\"address\"}],\"name\":\"CampaignPublished\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"}],\"name\":\"CampaignRemoved\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_withdrawer\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_val\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_c_creator\",\"type\":\"address\"}],\"name\":\"CampaignShrunk\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_username\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_shipAddress\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_pfp\",\"type\":\"string\"}],\"name\":\"UserAdded\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"_title\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_category\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_tags\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_goalAmount\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_duration\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_imageURI\",\"type\":\"string\"}],\"internalType\":\"struct CampaignFactory.cmpInput\",\"name\":\"_cmp\",\"type\":\"tuple\"}],\"name\":\"addCampaign\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_username\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_shipAddress\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_pfp\",\"type\":\"string\"}],\"name\":\"addUser\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"campaignCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"_rewardable\",\"type\":\"bool\"}],\"name\":\"donateToCampaign\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"i_cmpFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"i_rewardFactory\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_upkeepCreator\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_linkToken\",\"type\":\"address\"}],\"name\":\"publishCampaign\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"}],\"name\":\"refundFromCampaign\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_campaignAddress\",\"type\":\"address\"}],\"name\":\"removeCampaign\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/CrowdFunder.sol\":\"CrowdFunder\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"details\":{\"constantOptimizer\":true,\"cse\":true,\"deduplicate\":true,\"inliner\":true,\"jumpdestRemover\":true,\"orderLiterals\":true,\"peephole\":true,\"yul\":false},\"runs\":200},\"remappings\":[]},\"sources\":{\"@chainlink/contracts/src/v0.8/interfaces/AutomationCompatibleInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface AutomationCompatibleInterface {\\n  /**\\n   * @notice method that is simulated by the keepers to see if any work actually\\n   * needs to be performed. This method does does not actually need to be\\n   * executable, and since it is only ever simulated it can consume lots of gas.\\n   * @dev To ensure that it is never called, you may want to add the\\n   * cannotExecute modifier from KeeperBase to your implementation of this\\n   * method.\\n   * @param checkData specified in the upkeep registration so it is always the\\n   * same for a registered upkeep. This can easily be broken down into specific\\n   * arguments using `abi.decode`, so multiple upkeeps can be registered on the\\n   * same contract and easily differentiated by the contract.\\n   * @return upkeepNeeded boolean to indicate whether the keeper should call\\n   * performUpkeep or not.\\n   * @return performData bytes that the keeper should call performUpkeep with, if\\n   * upkeep is needed. If you would like to encode data to decode later, try\\n   * `abi.encode`.\\n   */\\n  function checkUpkeep(bytes calldata checkData) external returns (bool upkeepNeeded, bytes memory performData);\\n\\n  /**\\n   * @notice method that is actually executed by the keepers, via the registry.\\n   * The data returned by the checkUpkeep simulation will be passed into\\n   * this method to actually be executed.\\n   * @dev The input to this method should not be trusted, and the caller of the\\n   * method should not even be restricted to any single registry. Anyone should\\n   * be able call it, and the input should be validated, there is no guarantee\\n   * that the data passed in is the performData returned from checkUpkeep. This\\n   * could happen due to malicious keepers, racing keepers, or simply a state\\n   * change while the performUpkeep transaction is waiting for confirmation.\\n   * Always validate the data passed in.\\n   * @param performData is the data which was passed back from the checkData\\n   * simulation. If it is encoded, it can easily be decoded into other types by\\n   * calling `abi.decode`. This data should not be trusted, and should be\\n   * validated against the contract's current state.\\n   */\\n  function performUpkeep(bytes calldata performData) external;\\n}\\n\",\"keccak256\":\"0x67076747c6f66d8d43472a56e72879c350056bff82e069addaf9064922863340\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.8/interfaces/AutomationRegistryInterface2_0.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\n/**\\n * @notice OnchainConfig of the registry\\n * @dev only used in params and return values\\n * @member paymentPremiumPPB payment premium rate oracles receive on top of\\n * being reimbursed for gas, measured in parts per billion\\n * @member flatFeeMicroLink flat fee paid to oracles for performing upkeeps,\\n * priced in MicroLink; can be used in conjunction with or independently of\\n * paymentPremiumPPB\\n * @member checkGasLimit gas limit when checking for upkeep\\n * @member stalenessSeconds number of seconds that is allowed for feed data to\\n * be stale before switching to the fallback pricing\\n * @member gasCeilingMultiplier multiplier to apply to the fast gas feed price\\n * when calculating the payment ceiling for keepers\\n * @member minUpkeepSpend minimum LINK that an upkeep must spend before cancelling\\n * @member maxPerformGas max executeGas allowed for an upkeep on this registry\\n * @member fallbackGasPrice gas price used if the gas price feed is stale\\n * @member fallbackLinkPrice LINK price used if the LINK price feed is stale\\n * @member transcoder address of the transcoder contract\\n * @member registrar address of the registrar contract\\n */\\nstruct OnchainConfig {\\n  uint32 paymentPremiumPPB;\\n  uint32 flatFeeMicroLink; // min 0.000001 LINK, max 4294 LINK\\n  uint32 checkGasLimit;\\n  uint24 stalenessSeconds;\\n  uint16 gasCeilingMultiplier;\\n  uint96 minUpkeepSpend;\\n  uint32 maxPerformGas;\\n  uint32 maxCheckDataSize;\\n  uint32 maxPerformDataSize;\\n  uint256 fallbackGasPrice;\\n  uint256 fallbackLinkPrice;\\n  address transcoder;\\n  address registrar;\\n}\\n\\n/**\\n * @notice state of the registry\\n * @dev only used in params and return values\\n * @member nonce used for ID generation\\n * @member ownerLinkBalance withdrawable balance of LINK by contract owner\\n * @member expectedLinkBalance the expected balance of LINK of the registry\\n * @member totalPremium the total premium collected on registry so far\\n * @member numUpkeeps total number of upkeeps on the registry\\n * @member configCount ordinal number of current config, out of all configs applied to this contract so far\\n * @member latestConfigBlockNumber last block at which this config was set\\n * @member latestConfigDigest domain-separation tag for current config\\n * @member latestEpoch for which a report was transmitted\\n * @member paused freeze on execution scoped to the entire registry\\n */\\nstruct State {\\n  uint32 nonce;\\n  uint96 ownerLinkBalance;\\n  uint256 expectedLinkBalance;\\n  uint96 totalPremium;\\n  uint256 numUpkeeps;\\n  uint32 configCount;\\n  uint32 latestConfigBlockNumber;\\n  bytes32 latestConfigDigest;\\n  uint32 latestEpoch;\\n  bool paused;\\n}\\n\\n/**\\n * @notice all information about an upkeep\\n * @dev only used in return values\\n * @member target the contract which needs to be serviced\\n * @member executeGas the gas limit of upkeep execution\\n * @member checkData the checkData bytes for this upkeep\\n * @member balance the balance of this upkeep\\n * @member admin for this upkeep\\n * @member maxValidBlocknumber until which block this upkeep is valid\\n * @member lastPerformBlockNumber the last block number when this upkeep was performed\\n * @member amountSpent the amount this upkeep has spent\\n * @member paused if this upkeep has been paused\\n * @member skipSigVerification skip signature verification in transmit for a low security low cost model\\n */\\nstruct UpkeepInfo {\\n  address target;\\n  uint32 executeGas;\\n  bytes checkData;\\n  uint96 balance;\\n  address admin;\\n  uint64 maxValidBlocknumber;\\n  uint32 lastPerformBlockNumber;\\n  uint96 amountSpent;\\n  bool paused;\\n  bytes offchainConfig;\\n}\\n\\nenum UpkeepFailureReason {\\n  NONE,\\n  UPKEEP_CANCELLED,\\n  UPKEEP_PAUSED,\\n  TARGET_CHECK_REVERTED,\\n  UPKEEP_NOT_NEEDED,\\n  PERFORM_DATA_EXCEEDS_LIMIT,\\n  INSUFFICIENT_BALANCE\\n}\\n\\ninterface AutomationRegistryBaseInterface {\\n  function registerUpkeep(\\n    address target,\\n    uint32 gasLimit,\\n    address admin,\\n    bytes calldata checkData,\\n    bytes calldata offchainConfig\\n  ) external returns (uint256 id);\\n\\n  function cancelUpkeep(uint256 id) external;\\n\\n  function pauseUpkeep(uint256 id) external;\\n\\n  function unpauseUpkeep(uint256 id) external;\\n\\n  function transferUpkeepAdmin(uint256 id, address proposed) external;\\n\\n  function acceptUpkeepAdmin(uint256 id) external;\\n\\n  function updateCheckData(uint256 id, bytes calldata newCheckData) external;\\n\\n  function addFunds(uint256 id, uint96 amount) external;\\n\\n  function setUpkeepGasLimit(uint256 id, uint32 gasLimit) external;\\n\\n  function setUpkeepOffchainConfig(uint256 id, bytes calldata config) external;\\n\\n  function getUpkeep(uint256 id) external view returns (UpkeepInfo memory upkeepInfo);\\n\\n  function getActiveUpkeepIDs(uint256 startIndex, uint256 maxCount) external view returns (uint256[] memory);\\n\\n  function getTransmitterInfo(address query)\\n    external\\n    view\\n    returns (\\n      bool active,\\n      uint8 index,\\n      uint96 balance,\\n      uint96 lastCollected,\\n      address payee\\n    );\\n\\n  function getState()\\n    external\\n    view\\n    returns (\\n      State memory state,\\n      OnchainConfig memory config,\\n      address[] memory signers,\\n      address[] memory transmitters,\\n      uint8 f\\n    );\\n}\\n\\n/**\\n * @dev The view methods are not actually marked as view in the implementation\\n * but we want them to be easily queried off-chain. Solidity will not compile\\n * if we actually inherit from this interface, so we document it here.\\n */\\ninterface AutomationRegistryInterface is AutomationRegistryBaseInterface {\\n  function checkUpkeep(uint256 upkeepId)\\n    external\\n    view\\n    returns (\\n      bool upkeepNeeded,\\n      bytes memory performData,\\n      UpkeepFailureReason upkeepFailureReason,\\n      uint256 gasUsed,\\n      uint256 fastGasWei,\\n      uint256 linkNative\\n    );\\n}\\n\\ninterface AutomationRegistryExecutableInterface is AutomationRegistryBaseInterface {\\n  function checkUpkeep(uint256 upkeepId)\\n    external\\n    returns (\\n      bool upkeepNeeded,\\n      bytes memory performData,\\n      UpkeepFailureReason upkeepFailureReason,\\n      uint256 gasUsed,\\n      uint256 fastGasWei,\\n      uint256 linkNative\\n    );\\n}\\n\",\"keccak256\":\"0x9faf0551509440bd9c25a4a2f14b23bce2f82e5ab5691058b9664edab808468c\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n/**\\n * @notice This is a deprecated interface. Please use AutomationCompatibleInterface directly.\\n */\\npragma solidity ^0.8.0;\\nimport {AutomationCompatibleInterface as KeeperCompatibleInterface} from \\\"./AutomationCompatibleInterface.sol\\\";\\n\",\"keccak256\":\"0xac76a31c20c6d66196247376d113a0f19229569ab8c123989649d50be3333e0a\",\"license\":\"MIT\"},\"@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface LinkTokenInterface {\\n  function allowance(address owner, address spender) external view returns (uint256 remaining);\\n\\n  function approve(address spender, uint256 value) external returns (bool success);\\n\\n  function balanceOf(address owner) external view returns (uint256 balance);\\n\\n  function decimals() external view returns (uint8 decimalPlaces);\\n\\n  function decreaseApproval(address spender, uint256 addedValue) external returns (bool success);\\n\\n  function increaseApproval(address spender, uint256 subtractedValue) external;\\n\\n  function name() external view returns (string memory tokenName);\\n\\n  function symbol() external view returns (string memory tokenSymbol);\\n\\n  function totalSupply() external view returns (uint256 totalTokensIssued);\\n\\n  function transfer(address to, uint256 value) external returns (bool success);\\n\\n  function transferAndCall(\\n    address to,\\n    uint256 value,\\n    bytes calldata data\\n  ) external returns (bool success);\\n\\n  function transferFrom(\\n    address from,\\n    address to,\\n    uint256 value\\n  ) external returns (bool success);\\n}\\n\",\"keccak256\":\"0xc7d7cd730d36825485ef4107d93c3ff18b9f3a5a00ea3d5988ba9a0bd70b10c5\",\"license\":\"MIT\"},\"@openzeppelin/contracts/security/ReentrancyGuard.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts v4.4.1 (security/ReentrancyGuard.sol)\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Contract module that helps prevent reentrant calls to a function.\\n *\\n * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\\n * available, which can be applied to functions to make sure there are no nested\\n * (reentrant) calls to them.\\n *\\n * Note that because there is a single `nonReentrant` guard, functions marked as\\n * `nonReentrant` may not call one another. This can be worked around by making\\n * those functions `private`, and then adding `external` `nonReentrant` entry\\n * points to them.\\n *\\n * TIP: If you would like to learn more about reentrancy and alternative ways\\n * to protect against it, check out our blog post\\n * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\\n */\\nabstract contract ReentrancyGuard {\\n    // Booleans are more expensive than uint256 or any type that takes up a full\\n    // word because each write operation emits an extra SLOAD to first read the\\n    // slot's contents, replace the bits taken up by the boolean, and then write\\n    // back. This is the compiler's defense against contract upgrades and\\n    // pointer aliasing, and it cannot be disabled.\\n\\n    // The values being non-zero value makes deployment a bit more expensive,\\n    // but in exchange the refund on every call to nonReentrant will be lower in\\n    // amount. Since refunds are capped to a percentage of the total\\n    // transaction's gas, it is best to keep them low in cases like this one, to\\n    // increase the likelihood of the full refund coming into effect.\\n    uint256 private constant _NOT_ENTERED = 1;\\n    uint256 private constant _ENTERED = 2;\\n\\n    uint256 private _status;\\n\\n    constructor() {\\n        _status = _NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Prevents a contract from calling itself, directly or indirectly.\\n     * Calling a `nonReentrant` function from another `nonReentrant`\\n     * function is not supported. It is possible to prevent this from happening\\n     * by making the `nonReentrant` function external, and making it call a\\n     * `private` function that does the actual work.\\n     */\\n    modifier nonReentrant() {\\n        // On the first call to nonReentrant, _notEntered will be true\\n        require(_status != _ENTERED, \\\"ReentrancyGuard: reentrant call\\\");\\n\\n        // Any calls to nonReentrant after this point will fail\\n        _status = _ENTERED;\\n\\n        _;\\n\\n        // By storing the original value once again, a refund is triggered (see\\n        // https://eips.ethereum.org/EIPS/eip-2200)\\n        _status = _NOT_ENTERED;\\n    }\\n}\\n\",\"keccak256\":\"0x0e9621f60b2faabe65549f7ed0f24e8853a45c1b7990d47e8160e523683f3935\",\"license\":\"MIT\"},\"contracts/Campaign.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\nimport \\\"@openzeppelin/contracts/security/ReentrancyGuard.sol\\\";\\r\\nimport \\\"@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol\\\";\\r\\nimport { Reward } from \\\"./Reward.sol\\\";\\r\\nimport { RewardFactory } from \\\"./factories/RewardFactory.sol\\\";\\r\\nimport { RefunderLib } from \\\"./libraries/campaign/RefunderLib.sol\\\";\\r\\n\\r\\n// errors\\r\\n// error Cmp_NIS(); /**not in state */\\r\\n// error Cmp_NotCrtr();\\r\\n// error Cmp_DIC(); /**donator is creator */\\r\\n// error Cmp_NoDns();\\r\\n// error Cmp_RefF();\\r\\n// error Cmp_UpkNN();\\r\\n// error Cmp_NotRef();\\r\\n// error Cmp_Bankrupt();\\r\\n\\r\\ncontract Campaign is KeeperCompatibleInterface, ReentrancyGuard{\\r\\n\\r\\n  // enums\\r\\n  enum C_State {\\r\\n    Fundraising,\\r\\n    Expired,\\r\\n    Canceled\\r\\n  }\\r\\n\\r\\n  // c_state variables\\r\\n  address immutable public i_crf;\\r\\n  address payable immutable public i_creator;\\r\\n  address immutable public i_rwdFactory;\\r\\n  string public s_title;\\r\\n  string public s_description;\\r\\n  string public s_category;\\r\\n  string public s_imageURI;\\r\\n  string public s_campaignURI;\\r\\n  string public s_tags;\\r\\n  uint256 public goalAmount;\\r\\n  uint256 public duration;\\r\\n  uint256 public currentBalance;\\r\\n  uint256 private immutable i_initTimeStamp;\\r\\n  uint256 private constant i_maxDur = 5184000;\\r\\n  uint256 public deadline;\\r\\n  uint256 private rId;\\r\\n  C_State public c_state = C_State.Fundraising; // default c_state\\r\\n\\r\\n  struct CampaignObject {\\r\\n    address i_creator;\\r\\n    string s_title;\\r\\n    string s_description;\\r\\n    string s_category;\\r\\n    string s_tags;\\r\\n    uint256 goalAmount;\\r\\n    uint256 duration;\\r\\n    uint256 currentBalance;\\r\\n    C_State currentC_State;\\r\\n    string s_imageURI;\\r\\n    string s_campaignURI;\\r\\n    uint256 deadline;\\r\\n  }\\r\\n\\r\\n  struct refunder_pckg {\\r\\n    uint256 currentBalance;\\r\\n    C_State c_state;\\r\\n  }\\r\\n\\r\\n\\r\\n  // mapping (uint256 => reward) public rewards;\\r\\n  mapping (uint256 => address) public rewards;\\r\\n  mapping (address => uint256[]) public entDonations;\\r\\n  mapping (address => uint256) public aggrDonations;\\r\\n\\r\\n  uint256[] public rKeys;\\r\\n\\r\\n  // events\\r\\n  event FundingRecieved (\\r\\n    address indexed contributor,\\r\\n    uint256 amount,\\r\\n    uint256 currentBalance\\r\\n  );\\r\\n  event CreatorPaid(address creator, address campaignAddress);\\r\\n  event CampaignExpired(address campaignAddress);\\r\\n  event CampaignCanceled();\\r\\n\\r\\n  // modifiers\\r\\n  modifier isCreator() {\\r\\n    if(msg.sender != i_creator){revert();}\\r\\n    _;\\r\\n  }\\r\\n\\r\\n  refunder_pckg _refP = refunder_pckg(currentBalance, c_state);\\r\\n\\r\\n  constructor (\\r\\n    address _crowdfunder,\\r\\n    address _creator,\\r\\n    address _rwdFactory,\\r\\n    string memory _title,\\r\\n    string memory _description,\\r\\n    string memory _category,\\r\\n    string memory _tags,\\r\\n    uint256 _goalAmount,\\r\\n    uint256 _duration,\\r\\n    string memory _imageURI\\r\\n  ) {\\r\\n    i_rwdFactory = _rwdFactory;\\r\\n    i_crf = _crowdfunder;\\r\\n    i_creator = payable(_creator);\\r\\n    s_title = _title;\\r\\n    s_description = _description;\\r\\n    s_category = _category;\\r\\n    s_tags = _tags;\\r\\n    goalAmount = _goalAmount;\\r\\n    i_initTimeStamp = block.timestamp;\\r\\n    duration = _duration > i_maxDur ? i_maxDur : _duration;\\r\\n    deadline = i_initTimeStamp + duration;\\r\\n    s_imageURI = _imageURI;\\r\\n    currentBalance = 0;\\r\\n  }\\r\\n\\r\\n\\r\\n  function donate(address _donator, bool _rewardable) public payable nonReentrant{\\r\\n    if(msg.sender != i_crf){revert();}\\r\\n    if(c_state != C_State.Fundraising){revert();}\\r\\n    if(_donator == i_creator){revert();}\\r\\n    currentBalance = currentBalance + msg.value;\\r\\n    if(_rewardable){\\r\\n      if(rewards[msg.value] != address(0)){\\r\\n        (bool success, ) = rewards[msg.value].call(abi.encodeWithSignature(\\\"addDonator(address)\\\", _donator));\\r\\n        if(!success){revert();}\\r\\n        entDonations[_donator].push(msg.value);\\r\\n      }\\r\\n    }\\r\\n    aggrDonations[_donator] = aggrDonations[_donator] + msg.value; \\r\\n    emit FundingRecieved(_donator, msg.value, currentBalance);\\r\\n  }\\r\\n\\r\\n  /**\\r\\n    @dev this is the function chainlink keepers calls\\r\\n    chekupkeep returns true to trigger the action after the interval has passed\\r\\n   */\\r\\n  function checkUpkeep(bytes memory /**checkData */) public view override\\r\\n  returns (bool upkeepNeeded, bytes memory /**performData */) \\r\\n  {\\r\\n    bool isOpen = c_state == C_State.Fundraising;\\r\\n    bool timePassed = ((block.timestamp - i_initTimeStamp) > duration);\\r\\n    upkeepNeeded = (timePassed && isOpen);\\r\\n    return (upkeepNeeded, \\\"0x0\\\");\\r\\n  }\\r\\n\\r\\n  function performUpkeep(bytes calldata /**performData */) external override {\\r\\n    (bool upkeepNeeded, ) = checkUpkeep(\\\"\\\");\\r\\n    if(!upkeepNeeded){revert();}\\r\\n    c_state = C_State.Expired;\\r\\n    emit CampaignExpired(address(this));\\r\\n  }\\r\\n\\r\\n  function payout() external isCreator{\\r\\n    if(c_state != C_State.Expired){revert();}\\r\\n    uint256 totalRaised = currentBalance;\\r\\n    currentBalance = 0;\\r\\n    (bool success, ) = i_creator.call{value: totalRaised}(\\\"\\\");\\r\\n    if(success){\\r\\n      emit CreatorPaid(i_creator, address(this));\\r\\n    }\\r\\n    else{revert();}\\r\\n  }\\r\\n\\r\\n\\r\\n  function refund(address _donator) external nonReentrant{\\r\\n    RefunderLib.refund(i_crf, _refP, rewards, aggrDonations, entDonations, _donator);\\r\\n    // if(msg.sender != i_crf){revert();}\\r\\n    // if(c_state == C_State.Expired){revert();}\\r\\n    // if(aggrDonations[_donator] == 0 ){revert();}\\r\\n\\r\\n    // uint256 amountToRefund = aggrDonations[_donator];\\r\\n\\r\\n    // if(currentBalance < amountToRefund){revert();}\\r\\n    // currentBalance = currentBalance - amountToRefund;\\r\\n\\r\\n    // (bool success, ) = payable(_donator).call{value: amountToRefund}(\\\"\\\");\\r\\n    // if(!success){revert();}\\r\\n\\r\\n    // delete aggrDonations[_donator];\\r\\n\\r\\n    // if(entDonations[_donator].length > 0){    \\r\\n    //   for(uint i=0; i<entDonations[_donator].length; i++){\\r\\n    //     if(!(rewards[entDonations[_donator][i]] != address(0))){\\r\\n    //       Reward(rewards[entDonations[_donator][i]]).removeDonator(_donator);\\r\\n    //     }\\r\\n    //   }\\r\\n    // }\\r\\n\\r\\n    // delete entDonations[_donator];\\r\\n  }\\r\\n\\r\\n  function makeReward(RewardFactory.rwdInput memory _rwd) external isCreator {\\r\\n    if(rewards[_rwd.price] != address(0)){revert();}\\r\\n    rKeys.push(_rwd.price);\\r\\n    address newReward = RewardFactory(i_rwdFactory).createReward(address(this), i_creator, _rwd);\\r\\n    rewards[_rwd.price] = newReward;\\r\\n  }\\r\\n\\r\\n  function endCampaign() external isCreator {\\r\\n    if(c_state == C_State.Expired){revert();}\\r\\n    c_state = C_State.Canceled;\\r\\n    emit CampaignCanceled();\\r\\n  }\\r\\n\\r\\n  // update functions\\r\\n  function updateCampaignURI(string memory _campaignURI) external isCreator {\\r\\n    s_campaignURI = _campaignURI;\\r\\n  }\\r\\n\\r\\n  function updateDur(uint256 _addedDur) external isCreator {\\r\\n    duration = (((duration + _addedDur)) > i_maxDur) ? i_maxDur : (duration + _addedDur);\\r\\n    deadline = i_initTimeStamp + duration;\\r\\n  }\\r\\n\\r\\n  // getter functions\\r\\n  function getRewardKeys() external view returns(uint256[] memory){\\r\\n    return rKeys;\\r\\n  }\\r\\n  \\r\\n  function getReward(uint256 _priceID) external view returns(Reward.RewardObject memory) {\\r\\n    Reward reward = Reward(rewards[_priceID]);\\r\\n    return reward.getRewardDetails();\\r\\n  }\\r\\n\\r\\n  // function getCampaignDetails() external view returns(CampaignObject memory) {\\r\\n  //   return CampaignObject(\\r\\n  //     i_creator,\\r\\n  //     s_title, \\r\\n  //     s_description,\\r\\n  //     s_category,\\r\\n  //     s_tags,\\r\\n  //     goalAmount,\\r\\n  //     duration,\\r\\n  //     currentBalance,\\r\\n  //     c_state,\\r\\n  //     s_imageURI,\\r\\n  //     s_campaignURI,\\r\\n  //     deadline\\r\\n  //   );\\r\\n  // }\\r\\n}\",\"keccak256\":\"0x17787e59024602c7753511fe0ccd52aa4ed9155f577fbab37b68d154770edecd\",\"license\":\"MIT\"},\"contracts/CrowdFunder.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\nimport { UpkeepIDConsumer } from \\\"./UpkeepIDConsumer.sol\\\";\\r\\nimport { LinkTokenInterface } from \\\"@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol\\\";\\r\\nimport { CampaignFactory } from \\\"./factories/CampaignFactory.sol\\\";\\r\\nimport { Campaign } from \\\"./Campaign.sol\\\";\\r\\n\\r\\n// errors\\r\\n// error Crf_NotCrtr();\\r\\n// error Crf_CSA(); /** cmp still active */\\r\\n// error Crf_DonF();\\r\\n// error Crf_RefF();\\r\\n// error Crf_PubF();\\r\\n\\r\\ncontract CrowdFunder {\\r\\n  // using SafeMath for uint256;\\r\\n\\r\\n  event UserAdded(\\r\\n    address indexed _address,\\r\\n    string _username,\\r\\n    string _email,\\r\\n    string _shipAddress,\\r\\n    string _pfp\\r\\n  );\\r\\n\\r\\n  event CampaignAdded(\\r\\n    address indexed _campaignAddress,\\r\\n    address indexed _creator,\\r\\n    string _title,\\r\\n    string _description,\\r\\n    string _category,\\r\\n    string _tags,\\r\\n    string _imageURI\\r\\n  );\\r\\n\\r\\n  event CampaignFunded(\\r\\n    address indexed _funder,\\r\\n    address indexed _campaignAddress,\\r\\n    uint256 _val,\\r\\n    address indexed _c_creator\\r\\n  );\\r\\n\\r\\n  event CampaignShrunk(\\r\\n    address indexed _withdrawer,\\r\\n    address indexed _campaignAddress,\\r\\n    uint256 _val,\\r\\n    address indexed _c_creator\\r\\n  );\\r\\n\\r\\n  event CampaignRemoved(\\r\\n    address indexed _campaignAddress\\r\\n  );\\r\\n\\r\\n  event CampaignPublished(\\r\\n    address _campaignAddress,\\r\\n    address _creator\\r\\n  );\\r\\n\\r\\n  address immutable public i_cmpFactory;\\r\\n  address immutable public i_rewardFactory;\\r\\n  uint256 public campaignCounter;\\r\\n  mapping (address => address) private campaigns;\\r\\n\\r\\n  constructor (address _cmpFactory, address _rwdFactory){\\r\\n    i_rewardFactory = _rwdFactory;\\r\\n    i_cmpFactory = _cmpFactory; \\r\\n  }\\r\\n\\r\\n  function addUser(\\r\\n    address _address, string memory _username, \\r\\n    string memory _email, \\r\\n    string memory _shipAddress,\\r\\n    string memory _pfp\\r\\n    ) external {\\r\\n    emit UserAdded(_address, _username, _email, _shipAddress, _pfp);\\r\\n  }\\r\\n\\r\\n  function addCampaign (CampaignFactory.cmpInput memory _cmp) external {\\r\\n    address newCampaign = CampaignFactory(i_cmpFactory).createCampaign(address(this), msg.sender, i_rewardFactory,  _cmp);\\r\\n    campaigns[newCampaign] = newCampaign;\\r\\n    emit CampaignAdded(\\r\\n      newCampaign, \\r\\n      msg.sender, \\r\\n      _cmp._title, \\r\\n      _cmp._description, \\r\\n      _cmp._category, \\r\\n      _cmp._tags, \\r\\n      _cmp._imageURI\\r\\n    );\\r\\n  }\\r\\n\\r\\n  function donateToCampaign(address _campaignAddress, bool _rewardable) external payable {\\r\\n    address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();\\r\\n    (bool success, ) = _campaignAddress.call{value:msg.value}(abi.encodeWithSignature(\\\"donate(address,bool)\\\",msg.sender,_rewardable));\\r\\n    if(success){\\r\\n      emit CampaignFunded(msg.sender, _campaignAddress, msg.value, c_creator);\\r\\n    }else{\\r\\n      revert();\\r\\n    }\\r\\n  }\\r\\n\\r\\n  function refundFromCampaign(address _campaignAddress) external {\\r\\n    address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();\\r\\n    uint256 refVal = Campaign(campaigns[_campaignAddress]).aggrDonations(msg.sender);\\r\\n    if(!(refVal > 0)){revert();}\\r\\n    (bool success,) = _campaignAddress.call(abi.encodeWithSignature(\\\"refund(address)\\\", msg.sender));\\r\\n    if(success){\\r\\n      emit CampaignShrunk(msg.sender, _campaignAddress, refVal, c_creator);\\r\\n    }else{\\r\\n      revert();\\r\\n    }\\r\\n  }\\r\\n\\r\\n  function removeCampaign (address _campaignAddress) external {\\r\\n    if(Campaign(campaigns[_campaignAddress]).i_creator() != msg.sender){revert();}\\r\\n    if(Campaign(campaigns[_campaignAddress]).currentBalance() > 0){revert();}\\r\\n    // either payout or leave for refunds\\r\\n    delete(campaigns[_campaignAddress]);\\r\\n    emit CampaignRemoved(_campaignAddress);\\r\\n  }\\r\\n\\r\\n  function publishCampaign(address _campaignAddress, address _upkeepCreator, address _linkToken) external {\\r\\n    UpkeepIDConsumer newUpkeepCreator = UpkeepIDConsumer(_upkeepCreator);\\r\\n    LinkTokenInterface token = LinkTokenInterface(_linkToken);\\r\\n    if(token.balanceOf(_upkeepCreator) == 0){revert(\\\"no funds\\\");}\\r\\n    newUpkeepCreator.registerAndPredictID(Campaign(_campaignAddress).s_title(), \\\"0x\\\", _campaignAddress, 500000, Campaign(_campaignAddress).i_creator(), \\\"0x\\\", \\\"0x\\\", 2000000000000000000);\\r\\n    campaignCounter = campaignCounter + 1;\\r\\n    emit CampaignPublished(_campaignAddress, msg.sender);\\r\\n    // (bool success, ) = _campaignAddress.delegatecall(abi.encodeWithSignature(\\\"timeBox(address,address,address)\\\", _upkeepCreator, _linkToken, _campaignAddress));\\r\\n    // if(success){\\r\\n    // }else{revert();}\\r\\n  }\\r\\n}\",\"keccak256\":\"0x4e64ec71381e956dbbb872a68fb0dea2549fd298aa81fc533f4593a78cbdaf24\",\"license\":\"MIT\"},\"contracts/Reward.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\ncontract Reward {\\r\\n  address public immutable i_campaignAddress;\\r\\n  // address public immutable i_crf;\\r\\n  address public immutable i_creator;\\r\\n\\r\\n  uint256 public immutable i_price;\\r\\n  string public title;\\r\\n  string public description;\\r\\n  string public rpic;\\r\\n  string[] public perks;\\r\\n  uint256 public delDate;\\r\\n  uint256 public quantity;\\r\\n  bool public infinite = true;\\r\\n  string[] public shipsTo;\\r\\n  address[] public donators;\\r\\n  string public surveyLink;\\r\\n\\r\\n  struct RewardObject {\\r\\n    uint256 price;\\r\\n    string title;\\r\\n    string description;\\r\\n    string rpic;\\r\\n    string[] perks;\\r\\n    uint256 delDate;\\r\\n    uint256 quantity;\\r\\n    bool infinite;\\r\\n    string[] shipsTo;\\r\\n    address[] donators;\\r\\n    string surveyLink;\\r\\n  }\\r\\n\\r\\n  mapping (address => uint256) public true_donator;  \\r\\n  mapping (address => string) public surveyResponses;\\r\\n\\r\\n  constructor ( \\r\\n    address _campaignAddress, \\r\\n    address _creator,\\r\\n    uint256 _price, \\r\\n    string memory _title, \\r\\n    string memory _description, \\r\\n    string memory _rpic,\\r\\n    string[] memory _perks, \\r\\n    uint256 _deadline, \\r\\n    uint256 _quantity, \\r\\n    bool _infinite, \\r\\n    string[] memory _shipsTo\\r\\n    ) {\\r\\n    i_price = _price;\\r\\n    i_campaignAddress = _campaignAddress;\\r\\n    i_creator = _creator;\\r\\n\\r\\n    title = _title;\\r\\n    description = _description;\\r\\n    rpic = _rpic;\\r\\n    perks = _perks;\\r\\n    delDate = _deadline;\\r\\n    quantity = _quantity;\\r\\n    infinite = _infinite;\\r\\n    shipsTo = _shipsTo;\\r\\n  }\\r\\n\\r\\n  function updateSurveyLink(string memory _surveylink) external {\\r\\n    if(msg.sender != i_creator){revert();}\\r\\n    surveyLink = _surveylink;\\r\\n  }\\r\\n\\r\\n  function addDonator(address _donator) external {\\r\\n    if(msg.sender != i_campaignAddress){revert();}\\r\\n    if((true_donator[_donator] > 0)){revert();} // already has id ...has therefor donated for this reward before\\r\\n\\r\\n    if(!infinite){\\r\\n      if(quantity > 0){\\r\\n        quantity = quantity - 1;\\r\\n        uint256 currNo = donators.length; // get array length\\r\\n        true_donator[_donator] = currNo + 1; \\r\\n        donators.push(_donator);\\r\\n      }else{revert();} // rwd has finished no longer available\\r\\n    }else{\\r\\n      uint256 currNo = donators.length; // get array length\\r\\n      true_donator[_donator] = currNo + 1; \\r\\n      donators.push(_donator);\\r\\n    }\\r\\n  }\\r\\n\\r\\n  function getDonators() external view returns(address[] memory){\\r\\n    return donators;\\r\\n  }\\r\\n\\r\\n  function removeDonator(address _donator) external {\\r\\n    if(msg.sender != i_campaignAddress){revert();}\\r\\n    if(!(true_donator[_donator] > 0)){revert();} // not a donator\\r\\n    uint256 index = true_donator[_donator] - 1;\\r\\n    delete donators[index];\\r\\n    delete true_donator[_donator];\\r\\n  }\\r\\n\\r\\n  function respondToSurvey(string memory _response) external {\\r\\n    if(!(true_donator[msg.sender] > 0)){revert();} // not a donator\\r\\n    surveyResponses[msg.sender] = _response;\\r\\n  }\\r\\n\\r\\n  function getRewardDetails() external view returns(RewardObject memory){\\r\\n    return RewardObject(\\r\\n      i_price,\\r\\n      title,\\r\\n      description,\\r\\n      rpic,\\r\\n      perks,\\r\\n      delDate,\\r\\n      quantity,\\r\\n      infinite,\\r\\n      shipsTo,\\r\\n      donators,\\r\\n      surveyLink\\r\\n    );\\r\\n  }\\r\\n}\",\"keccak256\":\"0x16520b0d7ec2ca2e9c34cc0738e1db48661eef392ca464f8b0ee003169d06603\",\"license\":\"MIT\"},\"contracts/UpkeepIDConsumer.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.6;\\r\\n\\r\\n// UpkeepIDConsumerExample.sol imports functions from both ./AutomationRegistryInterface2_0.sol and\\r\\n// ./interfaces/LinkTokenInterface.sol\\r\\n\\r\\nimport {AutomationRegistryInterface, State, OnchainConfig} from \\\"@chainlink/contracts/src/v0.8/interfaces/AutomationRegistryInterface2_0.sol\\\";\\r\\nimport {LinkTokenInterface} from \\\"@chainlink/contracts/src/v0.8/interfaces/LinkTokenInterface.sol\\\";\\r\\n\\r\\n/**\\r\\n * THIS IS AN EXAMPLE CONTRACT THAT USES HARDCODED VALUES FOR CLARITY.\\r\\n * THIS IS AN EXAMPLE CONTRACT THAT USES UN-AUDITED CODE.\\r\\n * DO NOT USE THIS CODE IN PRODUCTION.\\r\\n */\\r\\n\\r\\ninterface KeeperRegistrarInterface {\\r\\n    function register(\\r\\n        string memory name,\\r\\n        bytes calldata encryptedEmail,\\r\\n        address upkeepContract,\\r\\n        uint32 gasLimit,\\r\\n        address adminAddress,\\r\\n        bytes calldata checkData,\\r\\n        bytes calldata offchainConfig,\\r\\n        uint96 amount,\\r\\n        address sender\\r\\n    ) external;\\r\\n}\\r\\n\\r\\ncontract UpkeepIDConsumer {\\r\\n    LinkTokenInterface public immutable i_link;\\r\\n    address public immutable registrar;\\r\\n    AutomationRegistryInterface public immutable i_registry;\\r\\n    bytes4 registerSig = KeeperRegistrarInterface.register.selector;\\r\\n\\r\\n    constructor(\\r\\n        LinkTokenInterface _link,\\r\\n        address _registrar,\\r\\n        AutomationRegistryInterface _registry\\r\\n    ) {\\r\\n        i_link = _link;\\r\\n        registrar = _registrar;\\r\\n        i_registry = _registry;\\r\\n    }\\r\\n\\r\\n    function registerAndPredictID(\\r\\n        string memory name,\\r\\n        bytes calldata encryptedEmail,\\r\\n        address upkeepContract,\\r\\n        uint32 gasLimit,\\r\\n        address adminAddress,\\r\\n        bytes calldata checkData,\\r\\n        bytes calldata offchainConfig,\\r\\n        uint96 amount\\r\\n    ) public returns(uint256) {\\r\\n        (State memory state, , , , ) = i_registry.getState();\\r\\n        uint256 oldNonce = state.nonce;\\r\\n        bytes memory payload = abi.encode(\\r\\n            name,\\r\\n            encryptedEmail,\\r\\n            upkeepContract,\\r\\n            gasLimit,\\r\\n            adminAddress,\\r\\n            checkData,\\r\\n            offchainConfig,\\r\\n            amount,\\r\\n            address(this)\\r\\n        );\\r\\n\\r\\n        i_link.transferAndCall(\\r\\n            registrar,\\r\\n            amount,\\r\\n            bytes.concat(registerSig, payload)\\r\\n        );\\r\\n        (state, , , , ) = i_registry.getState();\\r\\n        uint256 newNonce = state.nonce;\\r\\n        if (newNonce == oldNonce + 1) {\\r\\n            uint256 upkeepID = uint256(\\r\\n                keccak256(\\r\\n                    abi.encodePacked(\\r\\n                        blockhash(block.number - 1),\\r\\n                        address(i_registry),\\r\\n                        uint32(oldNonce)\\r\\n                    )\\r\\n                )\\r\\n            );\\r\\n            // DEV - Use the upkeepID however you see fit\\r\\n            return upkeepID;\\r\\n        } else {\\r\\n            revert(\\\"auto-approve disabled\\\");\\r\\n        }\\r\\n    }\\r\\n}\\r\\n\",\"keccak256\":\"0x1712d2ac002e57e74e5367f9a88c9466f935fada95bd9ad98111e434110f0b3f\",\"license\":\"MIT\"},\"contracts/factories/CampaignFactory.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\nimport { Campaign } from \\\"../Campaign.sol\\\";\\r\\n\\r\\ncontract CampaignFactory {\\r\\n  struct cmpInput {\\r\\n    string  _title; \\r\\n    string  _description;\\r\\n    string  _category;\\r\\n    string  _tags; \\r\\n    uint256 _goalAmount;\\r\\n    uint256 _duration;\\r\\n    string _imageURI;\\r\\n  }\\r\\n\\r\\n  function createCampaign(address _crf, address _creator, address _rwdFactory, cmpInput memory _cmp) external returns (address) {\\r\\n    Campaign cmp = new Campaign(\\r\\n      _crf,\\r\\n      payable(_creator),\\r\\n      _rwdFactory,\\r\\n      _cmp._title,\\r\\n      _cmp._description,\\r\\n      _cmp._category,\\r\\n      _cmp._tags,\\r\\n      _cmp._goalAmount,\\r\\n      _cmp._duration,\\r\\n      _cmp._imageURI\\r\\n    );\\r\\n\\r\\n    return address(cmp);\\r\\n  }\\r\\n}\",\"keccak256\":\"0xae3a189ad6f1504c63d874152a930c38bf2289506a36db75d26107500f0b79a6\",\"license\":\"MIT\"},\"contracts/factories/RewardFactory.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\nimport { Reward } from \\\"../Reward.sol\\\";\\r\\n\\r\\ncontract RewardFactory {\\r\\n  struct rwdInput {\\r\\n    uint256 price;\\r\\n    string  _title; \\r\\n    string  _description; \\r\\n    string  _rpic;\\r\\n    string[]  _perks; \\r\\n    uint256 _deadline; \\r\\n    uint256 _quantity; \\r\\n    bool _infinite; \\r\\n    string[]  _shipsTo;\\r\\n  }\\r\\n\\r\\n  function createReward(address _cmpAddress, address _creator, rwdInput memory _rwd) public returns (address) {\\r\\n    Reward rwd = new Reward(\\r\\n      _cmpAddress, \\r\\n      _creator,\\r\\n      _rwd.price,\\r\\n      _rwd._title,\\r\\n      _rwd._description,\\r\\n      _rwd._rpic,\\r\\n      _rwd._perks,\\r\\n      _rwd._deadline,\\r\\n      _rwd._quantity,\\r\\n      _rwd._infinite,\\r\\n      _rwd._shipsTo \\r\\n    );\\r\\n\\r\\n    return address(rwd);\\r\\n  }\\r\\n}\",\"keccak256\":\"0x605f1939c58c0ae725deb037e68f89d755e65e22146ee9a56b212ae8d674e443\",\"license\":\"MIT\"},\"contracts/libraries/campaign/RefunderLib.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\r\\npragma solidity ^0.8.11;\\r\\n\\r\\nimport { Campaign } from \\\"../../Campaign.sol\\\";\\r\\nimport { Reward } from \\\"../../Reward.sol\\\";\\r\\n\\r\\nlibrary RefunderLib {\\r\\n  function refund (\\r\\n    address _i_crf,\\r\\n    Campaign.refunder_pckg storage _refP, \\r\\n    mapping (uint256 => address) storage _rewards, \\r\\n    mapping (address => uint256) storage _aggrDons, \\r\\n    mapping (address => uint256[]) storage _entDons, \\r\\n    address _donator\\r\\n    ) external {\\r\\n    if(msg.sender != _i_crf){revert();}\\r\\n    if(_refP.c_state == Campaign.C_State.Expired){revert();}\\r\\n    if(_aggrDons[_donator] == 0 ){revert();}\\r\\n\\r\\n    uint256 amountToRefund = _aggrDons[_donator];\\r\\n\\r\\n    if(_refP.currentBalance < amountToRefund){revert();}\\r\\n    _refP.currentBalance = _refP.currentBalance - amountToRefund;\\r\\n\\r\\n    (bool success, ) = payable(_donator).call{value: amountToRefund}(\\\"\\\");\\r\\n    if(!success){revert();}\\r\\n\\r\\n    delete _aggrDons[_donator];\\r\\n\\r\\n    if(_entDons[_donator].length > 0){    \\r\\n      for(uint i=0; i<_entDons[_donator].length; i++){\\r\\n        if(!(_rewards[_entDons[_donator][i]] != address(0))){\\r\\n          Reward(_rewards[_entDons[_donator][i]]).removeDonator(_donator);\\r\\n        }\\r\\n      }\\r\\n    }\\r\\n\\r\\n    delete _entDons[_donator];\\r\\n  }\\r\\n}\",\"keccak256\":\"0xacea134a5959c86c7ca67a50b965a2ad2666dccf020c1e3d97b908a79937da03\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60c06040523480156200001157600080fd5b50604051620014ec380380620014ec833981016040819052620000349162000086565b6001600160a01b0390811660a05216608052620000c9565b60006001600160a01b0382165b92915050565b6200006a816200004c565b81146200007657600080fd5b50565b805162000059816200005f565b600080604083850312156200009e576200009e600080fd5b6000620000ac858562000079565b9250506020620000bf8582860162000079565b9150509250929050565b60805160a0516113f1620000fb60003960008181609d015261059e01526000818160e7015261056d01526113f16000f3fe6080604052600436106100865760003560e01c8063ccf5f27f11610059578063ccf5f27f1461013e578063cd274a401461015e578063e4663a5b1461017e578063fab62a1d1461019e578063fca604d7146101be57600080fd5b806357168c791461008b5780636feb02a1146100d55780639083ef5814610109578063ac3d15fb1461011e575b600080fd5b34801561009757600080fd5b506100bf7f000000000000000000000000000000000000000000000000000000000000000081565b6040516100cc9190610a94565b60405180910390f35b3480156100e157600080fd5b506100bf7f000000000000000000000000000000000000000000000000000000000000000081565b61011c610117366004610ad7565b6101e1565b005b34801561012a57600080fd5b5061011c610139366004610b14565b61035b565b34801561014a57600080fd5b5061011c610159366004610d76565b610553565b34801561016a57600080fd5b5061011c610179366004610db0565b61068d565b34801561018a57600080fd5b5061011c610199366004610b14565b6106db565b3480156101aa57600080fd5b5061011c6101b9366004610e90565b610841565b3480156101ca57600080fd5b506101d460005481565b6040516100cc9190610ee6565b6001600160a01b0380831660009081526001602090815260408083205481516358a2b01f60e11b815291519394169263b145603e926004808401939192918290030181865afa158015610238573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061025c9190610eff565b90506000836001600160a01b031634338560405160240161027e929190610f28565b60408051601f198184030181529181526020820180516001600160e01b0316637be4bae160e01b179052516102b39190610f98565b60006040518083038185875af1925050503d80600081146102f0576040519150601f19603f3d011682016040523d82523d6000602084013e6102f5565b606091505b50509050801561008657816001600160a01b0316846001600160a01b0316336001600160a01b03167f5f0f580a49a433afc0cd61faf31f545ff739f7874dd091ba39ecfd0383c8462c3460405161034c9190610ee6565b60405180910390a45b50505050565b6001600160a01b0380821660009081526001602090815260408083205481516358a2b01f60e11b815291519394169263b145603e926004808401939192918290030181865afa1580156103b2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103d69190610eff565b6001600160a01b03808416600090815260016020526040808220549051629917c560e41b815293945090929116906309917c5090610418903390600401610a94565b602060405180830381865afa158015610435573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104599190610faf565b90506000811161046857600080fd5b6000836001600160a01b0316336040516024016104859190610a94565b60408051601f198184030181529181526020820180516001600160e01b0316637d44a00d60e11b179052516104ba9190610f98565b6000604051808303816000865af19150503d80600081146104f7576040519150601f19603f3d011682016040523d82523d6000602084013e6104fc565b606091505b50509050801561008657826001600160a01b0316846001600160a01b0316336001600160a01b03167fe627e40c5979c5da4cf94d4b3ce15ce68a4103b1480ec047eec9736d39a0123d8560405161034c9190610ee6565b604051632213cc3b60e21b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063884f30ec906105c890309033907f00000000000000000000000000000000000000000000000000000000000000009088906004016110b1565b6020604051808303816000875af11580156105e7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061060b9190610eff565b6001600160a01b03811660008181526001602090815260409182902080546001600160a01b0319168417905585519086015186830151606088015160c0890151945196975033967fce55db2394471943657aaa63a10999909b55d5948702c94255bb9ba41ad07e289561068195949392916110f5565b60405180910390a35050565b846001600160a01b03167f10bb073e1ce0977d8bf7b641de8a59b02dd9c9d1c4badc9b30e5a48ac9fc8cb9858585856040516106cc9493929190611161565b60405180910390a25050505050565b6001600160a01b038181166000908152600160209081526040918290205482516358a2b01f60e11b815292513394919091169263b145603e9260048083019391928290030181865afa158015610735573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107599190610eff565b6001600160a01b03161461076c57600080fd5b6001600160a01b03808216600090815260016020908152604080832054815163ce845d1d60e01b815291519394169263ce845d1d926004808401939192918290030181865afa1580156107c3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107e79190610faf565b11156107f257600080fd5b6001600160a01b03811660008181526001602052604080822080546001600160a01b0319169055517fd41d62ed7a46b1f2f4c0a4c0fa40c95bbe14a7d55034ff9817b743d6cb7935369190a250565b6040516370a0823160e01b8152829082906001600160a01b038216906370a0823190610871908590600401610a94565b602060405180830381865afa15801561088e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108b29190610faf565b6108d75760405162461bcd60e51b81526004016108ce906111d0565b60405180910390fd5b816001600160a01b0316634c7e9be3866001600160a01b03166399a8502d6040518163ffffffff1660e01b8152600401600060405180830381865afa158015610924573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261094c9190810190611238565b876207a120896001600160a01b031663b145603e6040518163ffffffff1660e01b8152600401602060405180830381865afa15801561098f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109b39190610eff565b671bc16d674ec800006040518663ffffffff1660e01b81526004016109dc9594939291906112f1565b6020604051808303816000875af11580156109fb573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610a1f9190610faf565b50600054610a2e906001611388565b6000556040517f4ee76a1c89ccbef26f098ac48c95b7da87fe34749fea8758a71a3dc4ccc28bcd90610a6390879033906113a0565b60405180910390a15050505050565b60006001600160a01b0382165b92915050565b610a8e81610a72565b82525050565b60208101610a7f8284610a85565b610aab81610a72565b8114610ab657600080fd5b50565b8035610a7f81610aa2565b801515610aab565b8035610a7f81610ac4565b60008060408385031215610aed57610aed600080fd5b6000610af98585610ab9565b9250506020610b0a85828601610acc565b9150509250929050565b600060208284031215610b2957610b29600080fd5b6000610b358484610ab9565b949350505050565b634e487b7160e01b600052604160045260246000fd5b601f19601f83011681018181106001600160401b0382111715610b7857610b78610b3d565b6040525050565b6000610b8a60405190565b9050610b968282610b53565b919050565b60006001600160401b03821115610bb457610bb4610b3d565b601f19601f83011660200192915050565b82818337506000910152565b6000610be4610bdf84610b9b565b610b7f565b905082815260208101848484011115610bff57610bff600080fd5b610c0a848285610bc5565b509392505050565b600082601f830112610c2657610c26600080fd5b8135610b35848260208601610bd1565b80610aab565b8035610a7f81610c36565b600060e08284031215610c5c57610c5c600080fd5b610c6660e0610b7f565b905081356001600160401b03811115610c8157610c81600080fd5b610c8d84828501610c12565b82525060208201356001600160401b03811115610cac57610cac600080fd5b610cb884828501610c12565b60208301525060408201356001600160401b03811115610cda57610cda600080fd5b610ce684828501610c12565b60408301525060608201356001600160401b03811115610d0857610d08600080fd5b610d1484828501610c12565b6060830152506080610d2884828501610c3c565b60808301525060a0610d3c84828501610c3c565b60a08301525060c08201356001600160401b03811115610d5e57610d5e600080fd5b610d6a84828501610c12565b60c08301525092915050565b600060208284031215610d8b57610d8b600080fd5b81356001600160401b03811115610da457610da4600080fd5b610b3584828501610c47565b600080600080600060a08688031215610dcb57610dcb600080fd5b6000610dd78888610ab9565b95505060208601356001600160401b03811115610df657610df6600080fd5b610e0288828901610c12565b94505060408601356001600160401b03811115610e2157610e21600080fd5b610e2d88828901610c12565b93505060608601356001600160401b03811115610e4c57610e4c600080fd5b610e5888828901610c12565b92505060808601356001600160401b03811115610e7757610e77600080fd5b610e8388828901610c12565b9150509295509295909350565b600080600060608486031215610ea857610ea8600080fd5b6000610eb48686610ab9565b9350506020610ec586828701610ab9565b9250506040610ed686828701610ab9565b9150509250925092565b80610a8e565b60208101610a7f8284610ee0565b8051610a7f81610aa2565b600060208284031215610f1457610f14600080fd5b6000610b358484610ef4565b801515610a8e565b60408101610f368285610a85565b610f436020830184610f20565b9392505050565b60005b83811015610f65578181015183820152602001610f4d565b838111156103555750506000910152565b6000610f80825190565b610f8e818560208601610f4a565b9290920192915050565b6000610f438284610f76565b8051610a7f81610c36565b600060208284031215610fc457610fc4600080fd5b6000610b358484610fa4565b6000610fda825190565b808452602084019350610ff1818560208601610f4a565b601f01601f19169290920192915050565b805160e08084526000919084019061101a8282610fd0565b915050602083015184820360208601526110348282610fd0565b9150506040830151848203604086015261104e8282610fd0565b915050606083015184820360608601526110688282610fd0565b915050608083015161107d6080860182610ee0565b5060a083015161109060a0860182610ee0565b5060c083015184820360c08601526110a88282610fd0565b95945050505050565b608081016110bf8287610a85565b6110cc6020830186610a85565b6110d96040830185610a85565b81810360608301526110eb8184611002565b9695505050505050565b60a080825281016111068188610fd0565b9050818103602083015261111a8187610fd0565b9050818103604083015261112e8186610fd0565b905081810360608301526111428185610fd0565b905081810360808301526111568184610fd0565b979650505050505050565b608080825281016111728187610fd0565b905081810360208301526111868186610fd0565b9050818103604083015261119a8185610fd0565b905081810360608301526110eb8184610fd0565b60088152600060208201676e6f2066756e647360c01b815291505b5060200190565b60208082528101610a7f816111ae565b60006111ee610bdf84610b9b565b90508281526020810184848401111561120957611209600080fd5b610c0a848285610f4a565b600082601f83011261122857611228600080fd5b8151610b358482602086016111e0565b60006020828403121561124d5761124d600080fd5b81516001600160401b0381111561126657611266600080fd5b610b3584828501611214565b6002815260006020820161060f60f31b815291506111c9565b600063ffffffff8216610a7f565b610a8e8161128b565b60006001600160a01b038216610a7f565b6000610a7f826112a2565b6000610a7f826112b3565b610a8e816112be565b60006bffffffffffffffffffffffff8216610a7f565b610a8e816112d2565b61010080825281016113038188610fd0565b9050818103602083015261131681611272565b90506113256040830187610a85565b6113326060830186611299565b61133f60808301856112c9565b81810360a083015261135081611272565b905081810360c083015261136381611272565b90506110eb60e08301846112e8565b634e487b7160e01b600052601160045260246000fd5b6000821982111561139b5761139b611372565b500190565b604081016113ae8285610a85565b610f436020830184610a8556fea2646970667358221220904c1ce9593d8d613457c36dc56fb19cc187b805c4c17c5b9fbf272a774122fa64736f6c634300080b0033",
+  "deployedBytecode": "0x6080604052600436106100865760003560e01c8063ccf5f27f11610059578063ccf5f27f1461013e578063cd274a401461015e578063e4663a5b1461017e578063fab62a1d1461019e578063fca604d7146101be57600080fd5b806357168c791461008b5780636feb02a1146100d55780639083ef5814610109578063ac3d15fb1461011e575b600080fd5b34801561009757600080fd5b506100bf7f000000000000000000000000000000000000000000000000000000000000000081565b6040516100cc9190610a94565b60405180910390f35b3480156100e157600080fd5b506100bf7f000000000000000000000000000000000000000000000000000000000000000081565b61011c610117366004610ad7565b6101e1565b005b34801561012a57600080fd5b5061011c610139366004610b14565b61035b565b34801561014a57600080fd5b5061011c610159366004610d76565b610553565b34801561016a57600080fd5b5061011c610179366004610db0565b61068d565b34801561018a57600080fd5b5061011c610199366004610b14565b6106db565b3480156101aa57600080fd5b5061011c6101b9366004610e90565b610841565b3480156101ca57600080fd5b506101d460005481565b6040516100cc9190610ee6565b6001600160a01b0380831660009081526001602090815260408083205481516358a2b01f60e11b815291519394169263b145603e926004808401939192918290030181865afa158015610238573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061025c9190610eff565b90506000836001600160a01b031634338560405160240161027e929190610f28565b60408051601f198184030181529181526020820180516001600160e01b0316637be4bae160e01b179052516102b39190610f98565b60006040518083038185875af1925050503d80600081146102f0576040519150601f19603f3d011682016040523d82523d6000602084013e6102f5565b606091505b50509050801561008657816001600160a01b0316846001600160a01b0316336001600160a01b03167f5f0f580a49a433afc0cd61faf31f545ff739f7874dd091ba39ecfd0383c8462c3460405161034c9190610ee6565b60405180910390a45b50505050565b6001600160a01b0380821660009081526001602090815260408083205481516358a2b01f60e11b815291519394169263b145603e926004808401939192918290030181865afa1580156103b2573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906103d69190610eff565b6001600160a01b03808416600090815260016020526040808220549051629917c560e41b815293945090929116906309917c5090610418903390600401610a94565b602060405180830381865afa158015610435573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906104599190610faf565b90506000811161046857600080fd5b6000836001600160a01b0316336040516024016104859190610a94565b60408051601f198184030181529181526020820180516001600160e01b0316637d44a00d60e11b179052516104ba9190610f98565b6000604051808303816000865af19150503d80600081146104f7576040519150601f19603f3d011682016040523d82523d6000602084013e6104fc565b606091505b50509050801561008657826001600160a01b0316846001600160a01b0316336001600160a01b03167fe627e40c5979c5da4cf94d4b3ce15ce68a4103b1480ec047eec9736d39a0123d8560405161034c9190610ee6565b604051632213cc3b60e21b81526000906001600160a01b037f0000000000000000000000000000000000000000000000000000000000000000169063884f30ec906105c890309033907f00000000000000000000000000000000000000000000000000000000000000009088906004016110b1565b6020604051808303816000875af11580156105e7573d6000803e3d6000fd5b505050506040513d601f19601f8201168201806040525081019061060b9190610eff565b6001600160a01b03811660008181526001602090815260409182902080546001600160a01b0319168417905585519086015186830151606088015160c0890151945196975033967fce55db2394471943657aaa63a10999909b55d5948702c94255bb9ba41ad07e289561068195949392916110f5565b60405180910390a35050565b846001600160a01b03167f10bb073e1ce0977d8bf7b641de8a59b02dd9c9d1c4badc9b30e5a48ac9fc8cb9858585856040516106cc9493929190611161565b60405180910390a25050505050565b6001600160a01b038181166000908152600160209081526040918290205482516358a2b01f60e11b815292513394919091169263b145603e9260048083019391928290030181865afa158015610735573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107599190610eff565b6001600160a01b03161461076c57600080fd5b6001600160a01b03808216600090815260016020908152604080832054815163ce845d1d60e01b815291519394169263ce845d1d926004808401939192918290030181865afa1580156107c3573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906107e79190610faf565b11156107f257600080fd5b6001600160a01b03811660008181526001602052604080822080546001600160a01b0319169055517fd41d62ed7a46b1f2f4c0a4c0fa40c95bbe14a7d55034ff9817b743d6cb7935369190a250565b6040516370a0823160e01b8152829082906001600160a01b038216906370a0823190610871908590600401610a94565b602060405180830381865afa15801561088e573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906108b29190610faf565b6108d75760405162461bcd60e51b81526004016108ce906111d0565b60405180910390fd5b816001600160a01b0316634c7e9be3866001600160a01b03166399a8502d6040518163ffffffff1660e01b8152600401600060405180830381865afa158015610924573d6000803e3d6000fd5b505050506040513d6000823e601f3d908101601f1916820160405261094c9190810190611238565b876207a120896001600160a01b031663b145603e6040518163ffffffff1660e01b8152600401602060405180830381865afa15801561098f573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109b39190610eff565b671bc16d674ec800006040518663ffffffff1660e01b81526004016109dc9594939291906112f1565b6020604051808303816000875af11580156109fb573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610a1f9190610faf565b50600054610a2e906001611388565b6000556040517f4ee76a1c89ccbef26f098ac48c95b7da87fe34749fea8758a71a3dc4ccc28bcd90610a6390879033906113a0565b60405180910390a15050505050565b60006001600160a01b0382165b92915050565b610a8e81610a72565b82525050565b60208101610a7f8284610a85565b610aab81610a72565b8114610ab657600080fd5b50565b8035610a7f81610aa2565b801515610aab565b8035610a7f81610ac4565b60008060408385031215610aed57610aed600080fd5b6000610af98585610ab9565b9250506020610b0a85828601610acc565b9150509250929050565b600060208284031215610b2957610b29600080fd5b6000610b358484610ab9565b949350505050565b634e487b7160e01b600052604160045260246000fd5b601f19601f83011681018181106001600160401b0382111715610b7857610b78610b3d565b6040525050565b6000610b8a60405190565b9050610b968282610b53565b919050565b60006001600160401b03821115610bb457610bb4610b3d565b601f19601f83011660200192915050565b82818337506000910152565b6000610be4610bdf84610b9b565b610b7f565b905082815260208101848484011115610bff57610bff600080fd5b610c0a848285610bc5565b509392505050565b600082601f830112610c2657610c26600080fd5b8135610b35848260208601610bd1565b80610aab565b8035610a7f81610c36565b600060e08284031215610c5c57610c5c600080fd5b610c6660e0610b7f565b905081356001600160401b03811115610c8157610c81600080fd5b610c8d84828501610c12565b82525060208201356001600160401b03811115610cac57610cac600080fd5b610cb884828501610c12565b60208301525060408201356001600160401b03811115610cda57610cda600080fd5b610ce684828501610c12565b60408301525060608201356001600160401b03811115610d0857610d08600080fd5b610d1484828501610c12565b6060830152506080610d2884828501610c3c565b60808301525060a0610d3c84828501610c3c565b60a08301525060c08201356001600160401b03811115610d5e57610d5e600080fd5b610d6a84828501610c12565b60c08301525092915050565b600060208284031215610d8b57610d8b600080fd5b81356001600160401b03811115610da457610da4600080fd5b610b3584828501610c47565b600080600080600060a08688031215610dcb57610dcb600080fd5b6000610dd78888610ab9565b95505060208601356001600160401b03811115610df657610df6600080fd5b610e0288828901610c12565b94505060408601356001600160401b03811115610e2157610e21600080fd5b610e2d88828901610c12565b93505060608601356001600160401b03811115610e4c57610e4c600080fd5b610e5888828901610c12565b92505060808601356001600160401b03811115610e7757610e77600080fd5b610e8388828901610c12565b9150509295509295909350565b600080600060608486031215610ea857610ea8600080fd5b6000610eb48686610ab9565b9350506020610ec586828701610ab9565b9250506040610ed686828701610ab9565b9150509250925092565b80610a8e565b60208101610a7f8284610ee0565b8051610a7f81610aa2565b600060208284031215610f1457610f14600080fd5b6000610b358484610ef4565b801515610a8e565b60408101610f368285610a85565b610f436020830184610f20565b9392505050565b60005b83811015610f65578181015183820152602001610f4d565b838111156103555750506000910152565b6000610f80825190565b610f8e818560208601610f4a565b9290920192915050565b6000610f438284610f76565b8051610a7f81610c36565b600060208284031215610fc457610fc4600080fd5b6000610b358484610fa4565b6000610fda825190565b808452602084019350610ff1818560208601610f4a565b601f01601f19169290920192915050565b805160e08084526000919084019061101a8282610fd0565b915050602083015184820360208601526110348282610fd0565b9150506040830151848203604086015261104e8282610fd0565b915050606083015184820360608601526110688282610fd0565b915050608083015161107d6080860182610ee0565b5060a083015161109060a0860182610ee0565b5060c083015184820360c08601526110a88282610fd0565b95945050505050565b608081016110bf8287610a85565b6110cc6020830186610a85565b6110d96040830185610a85565b81810360608301526110eb8184611002565b9695505050505050565b60a080825281016111068188610fd0565b9050818103602083015261111a8187610fd0565b9050818103604083015261112e8186610fd0565b905081810360608301526111428185610fd0565b905081810360808301526111568184610fd0565b979650505050505050565b608080825281016111728187610fd0565b905081810360208301526111868186610fd0565b9050818103604083015261119a8185610fd0565b905081810360608301526110eb8184610fd0565b60088152600060208201676e6f2066756e647360c01b815291505b5060200190565b60208082528101610a7f816111ae565b60006111ee610bdf84610b9b565b90508281526020810184848401111561120957611209600080fd5b610c0a848285610f4a565b600082601f83011261122857611228600080fd5b8151610b358482602086016111e0565b60006020828403121561124d5761124d600080fd5b81516001600160401b0381111561126657611266600080fd5b610b3584828501611214565b6002815260006020820161060f60f31b815291506111c9565b600063ffffffff8216610a7f565b610a8e8161128b565b60006001600160a01b038216610a7f565b6000610a7f826112a2565b6000610a7f826112b3565b610a8e816112be565b60006bffffffffffffffffffffffff8216610a7f565b610a8e816112d2565b61010080825281016113038188610fd0565b9050818103602083015261131681611272565b90506113256040830187610a85565b6113326060830186611299565b61133f60808301856112c9565b81810360a083015261135081611272565b905081810360c083015261136381611272565b90506110eb60e08301846112e8565b634e487b7160e01b600052601160045260246000fd5b6000821982111561139b5761139b611372565b500190565b604081016113ae8285610a85565b610f436020830184610a8556fea2646970667358221220904c1ce9593d8d613457c36dc56fb19cc187b805c4c17c5b9fbf272a774122fa64736f6c634300080b0033",
+  "libraries": {
+    "RefunderLib": "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  },
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 1097,
+        "contract": "contracts/CrowdFunder.sol:CrowdFunder",
+        "label": "campaignCounter",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 1101,
+        "contract": "contracts/CrowdFunder.sol:CrowdFunder",
+        "label": "campaigns",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_address)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_address)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}

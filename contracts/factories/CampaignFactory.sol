@@ -14,10 +14,10 @@ contract CampaignFactory {
     string _imageURI;
   }
 
-  function createCampaign(address _crf, address payable _creator, address _rwdFactory, cmpInput memory _cmp) public returns (address) {
+  function createCampaign(address _crf, address _creator, address _rwdFactory, cmpInput memory _cmp) external returns (address) {
     Campaign cmp = new Campaign(
       _crf,
-      _creator,
+      payable(_creator),
       _rwdFactory,
       _cmp._title,
       _cmp._description,

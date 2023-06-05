@@ -12,10 +12,20 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
   const waitBlockConfirmations = chainId?.toString() == "31337" ? 1 : 5
 
   log("==========================")
+  const refunderLib = await deploy("RefunderLib", {
+    from: deployer,
+    args: [],
+    log: true,
+    waitConfirmations: waitBlockConfirmations
+  })
+
   const campaignFactory = await deploy("CampaignFactory", {
     from: deployer,
     args: [],
     log: true,
+    libraries: {
+      RefunderLib: refunderLib.address
+    },
     waitConfirmations: waitBlockConfirmations
   })
 
@@ -23,14 +33,20 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
     from: deployer,
     args: [],
     log: true,
+    libraries: {
+      RefunderLib: refunderLib.address
+    },
     waitConfirmations: waitBlockConfirmations
   })
 
-  const args:any[] = [rewardFactory.address, campaignFactory.address]
+  const args:any[] = [campaignFactory.address, rewardFactory.address]
   const crowdFunder = await deploy("CrowdFunder", {
     from: deployer,
     args: args,
     log: true,
+    libraries: {
+      RefunderLib: refunderLib.address
+    },
     waitConfirmations: waitBlockConfirmations
   })
 

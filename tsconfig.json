@@ -9,6 +9,6 @@
     "outDir": "dist",
     "resolveJsonModule": true
   },
-  "include": ["./scripts", "./test", "./deploy", "./deploy-helpers", "deploy/00-deploy-crowdFunder.ts", "test/unit/test-crowdFunder.ts", "./**/*.json"],
+  "include": ["./scripts", "./test", "./deploy", "./deploy-helpers", "deploy/03-deploy-crowdFunder.ts", "test/unit/test-crowdFunder.ts", "./**/*.json"],
   "files": ["./hardhat.config.ts", "./helper-hardhat-config.ts"]
 }

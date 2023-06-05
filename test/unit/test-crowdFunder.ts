@@ -20,13 +20,15 @@ import { CrowdFunder } from "../../typechain-types"
       await deployments.fixture(["crowdfunder"])
       crowdFunder = await ethers.getContract("CrowdFunder", deployer)
       addCampaignTx = await crowdFunder.addCampaign(
-        "Furry Mittens",
-        "Making mittens furry.",
-        "Cooking",
-        "cooking/household/culinary",
-        "2",
-        BigNumber.from("1296000"),
-        "ipfs://campaignuri",
+        {
+          _title: "Furry Mitens",
+          _description: "Making mittens furry",
+          _category: "Cooking",
+          _tags: "cooking/household/culinary",
+          _goalAmount: ethers.utils.parseEther("2"),
+          _duration: BigNumber.from("1296000"),
+          _imageURI: "ipfs://campaignuri"
+        }
       )
       addCampaignTxR = await addCampaignTx.wait(1)
       campaignAddress = addCampaignTxR.events![0].args!._campaignAddress

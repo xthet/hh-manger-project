@@ -77,8 +77,8 @@ contract CrowdFunder {
   }
 
   function addCampaign (CampaignFactory.cmpInput memory _cmp) external {
-    address newCampaign = CampaignFactory(i_cmpFactory).createCampaign(address(this), payable(msg.sender), i_rewardFactory,  _cmp);
-    campaigns[address(newCampaign)] = address(newCampaign);
+    address newCampaign = CampaignFactory(i_cmpFactory).createCampaign(address(this), msg.sender, i_rewardFactory,  _cmp);
+    campaigns[newCampaign] = newCampaign;
     emit CampaignAdded(
       newCampaign, 
       msg.sender, 
@@ -103,12 +103,12 @@ contract CrowdFunder {
   function refundFromCampaign(address _campaignAddress) external {
     address c_creator = Campaign(campaigns[_campaignAddress]).i_creator();
     uint256 refVal = Campaign(campaigns[_campaignAddress]).aggrDonations(msg.sender);
-    if(!(refVal > 0)){revert();}
+    if(!(refVal > 0)){revert("Yo");}
     (bool success,) = _campaignAddress.call(abi.encodeWithSignature("refund(address)", msg.sender));
     if(success){
       emit CampaignShrunk(msg.sender, _campaignAddress, refVal, c_creator);
     }else{
-      revert();
+      revert("Yh");
     }
   }
 
