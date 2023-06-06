@@ -2,8 +2,6 @@
 pragma solidity ^0.8.11;
 
 import { Reward } from "../Reward.sol";
-import "../../node_modules/hardhat/console.sol";
-
 
 contract RewardFactory {
   struct rwdInput {
@@ -19,7 +17,6 @@ contract RewardFactory {
   }
 
   function createReward(address _cmpAddress, address _creator, rwdInput memory _rwd) public returns (address) {
-    // console.log("over");
     Reward rwd = new Reward(
       _cmpAddress, 
       _creator,

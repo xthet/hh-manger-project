@@ -52,6 +52,7 @@ const deployCrowdFunder: DeployFunction = async function (hre: HardhatRuntimeEnv
 
   if(!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
     log("Verifying...")
+    await verify(refunderLib.address, [])
     await verify(campaignFactory.address, [])
     await verify(rewardFactory.address, [])
     await verify(crowdFunder.address, args)

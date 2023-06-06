@@ -3,7 +3,6 @@ pragma solidity ^0.8.11;
 
 import { Campaign } from "../../Campaign.sol";
 import { Reward } from "../../Reward.sol";
-import "../../../node_modules/hardhat/console.sol";
 
 library RefunderLib {
   function refund (
@@ -19,7 +18,6 @@ library RefunderLib {
     if(_aggrDons[_donator] == 0 ){revert();}
 
     uint256 amountToRefund = _aggrDons[_donator];
-    console.log(_refP.currentBalance);
 
     if(_refP.currentBalance < amountToRefund){revert();}
     _refP.currentBalance = _refP.currentBalance - amountToRefund;

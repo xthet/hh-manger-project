@@ -6,7 +6,6 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 import { Reward } from "./Reward.sol";
 import { RewardFactory } from "./factories/RewardFactory.sol";
 import { RefunderLib } from "./libraries/campaign/RefunderLib.sol";
-import "../node_modules/hardhat/console.sol";
 
 // errors
 // error Cmp_NIS(); /**not in state */
