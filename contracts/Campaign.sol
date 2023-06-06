@@ -66,7 +66,6 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
     C_State c_state;
   }
 
-
   // mapping (uint256 => reward) public rewards;
   mapping (uint256 => address) public rewards;
   mapping (address => uint256[]) public entDonations;
@@ -169,33 +168,8 @@ contract Campaign is KeeperCompatibleInterface, ReentrancyGuard{
 
 
   function refund(address _donator) external nonReentrant{
-    // console.log("currBal");
-    // console.log(currentBalance);
     _refP = refunder_pckg(currentBalance, c_state);
     RefunderLib.refund(i_crf, _refP, rewards, aggrDonations, entDonations, _donator);
-    // if(msg.sender != i_crf){revert();}
-    // if(c_state == C_State.Expired){revert();}
-    // if(aggrDonations[_donator] == 0 ){revert();}
-
-    // uint256 amountToRefund = aggrDonations[_donator];
-
-    // if(currentBalance < amountToRefund){revert();}
-    // currentBalance = currentBalance - amountToRefund;
-
-    // (bool success, ) = payable(_donator).call{value: amountToRefund}("");
-    // if(!success){revert();}
-
-    // delete aggrDonations[_donator];
-
-    // if(entDonations[_donator].length > 0){    
-    //   for(uint i=0; i<entDonations[_donator].length; i++){
-    //     if(!(rewards[entDonations[_donator][i]] != address(0))){
-    //       Reward(rewards[entDonations[_donator][i]]).removeDonator(_donator);
-    //     }
-    //   }
-    // }
-
-    // delete entDonations[_donator];
   }
 
   function makeReward(RewardFactory.rwdInput memory _rwd) external isCreator {
