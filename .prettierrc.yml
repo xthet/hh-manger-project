@@ -1,0 +1,5 @@
+overrides:
+  - files: ".sol"
+    options:
+      semi: true
+      tabWidth: 4
