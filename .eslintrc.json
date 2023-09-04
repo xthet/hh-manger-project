@@ -1,0 +1,17 @@
+{
+	"root": true,
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended"
+	],
+	"rules": {
+		"react-hooks/exhaustive-deps": "off",
+		"space-infix-ops": ["warn", { "int32Hint": false }],
+		"@typescript-eslint/no-explicit-any": ["off"],
+		"@next/next/no-img-element": ["off"],
+		"@typescript-eslint/no-non-null-assertion": ["off"]
+	}
+}
